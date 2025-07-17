@@ -21,6 +21,9 @@ await build({
 			url: "https://github.com/danteasc4/nanocharts/issues",
 		},
 	},
+	compilerOptions: {
+		lib: ["ESNext", "DOM"],
+	},
 	postBuild() {
 		Deno.copyFileSync("LICENSE", "npm/LICENSE");
 		Deno.copyFileSync("README.md", "npm/README.md");

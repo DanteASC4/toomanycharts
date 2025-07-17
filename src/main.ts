@@ -162,13 +162,13 @@ export function barchart(options: BarChartOptions) {
 	}
 }
 
-barchart({ data: [1, 2, 3], labels: ["a", "b"], type: "numerical" });
-barchart({
-	data: [
-		[1, 2, 3],
-		[4, 5, 6],
-	],
-	labels: ["a", "b"],
-	type: "stacked",
-	min: 10,
-});
+// barchart({ data: [1, 2, 3], labels: ["a", "b"], type: "numerical" });
+// barchart({
+// 	data: [
+// 		[1, 2, 3],
+// 		[4, 5, 6],
+// 	],
+// 	labels: ["a", "b"],
+// 	type: "stacked",
+// 	min: 10,
+// });
