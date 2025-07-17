@@ -1,16 +1,18 @@
 {
-	"tasks": {
-		"dev": "deno run --watch main.ts",
-		"test:utils": "deno test tests/utils_test.ts",
-		"format": "deno run -A npm:@biomejs/biome format --write",
-		"lint": "deno run -A npm:@biomejs/biome lint --write",
-		"check": "deno run -A npm:@biomejs/biome check --write"
-	},
-	"imports": {
-		"@biomejs/biome": "npm:@biomejs/biome@^2.1.1",
-		"@std/assert": "jsr:@std/assert@1"
-	},
-	"compilerOptions": {
-		"lib": ["dom", "deno.ns"]
-	}
+  "tasks": {
+    "dev": "deno run --watch main.ts",
+    "test:utils": "deno test tests/utils_test.ts",
+    "format": "deno run -A npm:@biomejs/biome format --write",
+    "lint": "deno run -A npm:@biomejs/biome lint --write",
+    "check": "deno run -A npm:@biomejs/biome check --write",
+    "examplebuild": "deno run -A scripts/build_npm.ts 0.0.1"
+  },
+  "imports": {
+    "@biomejs/biome": "npm:@biomejs/biome@^2.1.1",
+    "@deno/dnt": "jsr:@deno/dnt@^0.42.1",
+    "@std/assert": "jsr:@std/assert@1"
+  },
+  "compilerOptions": {
+    "lib": ["dom", "deno.ns"]
+  }
 }
