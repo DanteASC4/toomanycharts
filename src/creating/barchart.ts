@@ -1,3 +1,4 @@
+import type { BarChartNumericalOpts } from "../types.ts";
 import { createSVGElement } from "./common.ts";
 
 export const createNumericalVerticalGroup = (
@@ -7,6 +8,11 @@ export const createNumericalVerticalGroup = (
 	gap: number,
 	barWidth: number,
 	color: string,
+	{
+		groupClass,
+		barClass,
+		textClass,
+	}: Pick<BarChartNumericalOpts, "groupClass" | "barClass" | "textClass">,
 ) => {
 	const group = createSVGElement("g");
 	const text = createSVGElement("text");
@@ -24,6 +30,7 @@ export const createNumericalVerticalGroup = (
 	bar.setAttribute("y", `${barY}`);
 	bar.setAttribute("width", `${trueBarWidth}`);
 	bar.setAttribute("height", `${trueBarHeight}`);
+	if (barClass) bar.classList.add(barClass);
 
 	const textX = trueBarWidth + 10;
 	const textY = barY + trueBarHeight / 2;
@@ -32,9 +39,11 @@ export const createNumericalVerticalGroup = (
 	text.setAttribute("x", `${textX}`);
 	text.setAttribute("y", `${textY}`);
 	text.textContent = label;
+	if (textClass) text.classList.add(textClass);
 
 	group.appendChild(bar);
 	group.appendChild(text);
+	if (groupClass) group.classList.add(groupClass);
 
 	return group;
 };

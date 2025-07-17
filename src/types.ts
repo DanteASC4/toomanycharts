@@ -20,6 +20,10 @@ export type BarChartOptionsBase = {
 	responsive: boolean;
 	colors: string[];
 	barWidth: number;
+	groupClass: string;
+	parentClass: string;
+	barClass: string;
+	textClass: string;
 } & ChartOptions;
 
 // type BarChartData = BarChartOptionsBase["type"] extends "numerical"
