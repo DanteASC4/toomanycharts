@@ -69,7 +69,7 @@ function barchartNumerical({
 	for (let i = 0; i < data.length; i++) {
 		const label = labels[i];
 		const datap = data[i];
-		const color = colors ? colors[i % colors.length] : "#fffffff";
+		const color = colors ? colors[i % colors.length] : "#ffffff";
 		const resultGroup = createNumericalVerticalGroup(
 			i,
 			datap,

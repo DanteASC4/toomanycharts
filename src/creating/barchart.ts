@@ -30,6 +30,7 @@ export const createNumericalVerticalGroup = (
 	bar.setAttribute("y", `${barY}`);
 	bar.setAttribute("width", `${trueBarWidth}`);
 	bar.setAttribute("height", `${trueBarHeight}`);
+	bar.setAttribute("title", `Bar value of ${trueBarWidth}`);
 	if (barClass) bar.classList.add(barClass);
 
 	const textX = trueBarWidth + 10;
@@ -38,6 +39,7 @@ export const createNumericalVerticalGroup = (
 	text.setAttribute("fill", color);
 	text.setAttribute("x", `${textX}`);
 	text.setAttribute("y", `${textY}`);
+	text.setAttribute("title", `Bar label ${label}`);
 	text.textContent = label;
 	if (textClass) text.classList.add(textClass);
 
