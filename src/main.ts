@@ -1,3 +1,5 @@
+import { createNumericalVerticalGroup } from "./creating/barchart.ts";
+import { makeSVGParent } from "./creating/common.ts";
 import {
 	type BarChartNumericalOpts,
 	type BarChartOptions,
@@ -55,6 +57,23 @@ function barchartNumerical({
 		console.warn("NanoChart might exceed given size bounds");
 
 	// Chart creation begin
+	const parent = makeSVGParent(height, width);
+
+	for (let i = 0; i < data.length; i++) {
+		const label = labels[i];
+		const datap = data[i];
+		const resultGroup = createNumericalVerticalGroup(
+			i,
+			datap,
+			label,
+			gap,
+			barWidth,
+			"#ffffff",
+		);
+		parent.appendChild(resultGroup);
+	}
+
+	return parent;
 }
 
 function barchartStacked({
@@ -84,6 +103,8 @@ function barchartStacked({
 		const diff = Math.abs(labels.length - data.length);
 		fillEmptyArray(data, diff);
 	}
+
+	return "TODO";
 }
 
 export function barchart(options: BarChartOptions) {

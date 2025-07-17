@@ -1,6 +1,3 @@
-export const createSVGElement = (ele: string) =>
-	document.createElementNS("http://www.w3.org/2000/svg", ele);
-
 export const fillStrings = (arr: string[], amt: number) => {
 	let i = amt;
 	while (i !== 0) {
