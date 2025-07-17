@@ -3,6 +3,7 @@
   "specifiers": {
     "jsr:@std/assert@1": "1.0.13",
     "jsr:@std/internal@^1.0.6": "1.0.8",
+    "npm:@biomejs/biome@*": "2.1.1",
     "npm:@biomejs/biome@^2.1.1": "2.1.1"
   },
   "jsr": {
