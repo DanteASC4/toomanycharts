@@ -21,9 +21,27 @@ export const autoBarWidth = (
 	orientation: BarChartOptionsBase["orientation"],
 	width: number,
 	height: number,
-	gap: number,
 	numDataPoints: number,
 ) => {
-	if (orientation === "vertical") return width / numDataPoints - gap;
-	return height / numDataPoints - gap;
+	if (orientation === "vertical") {
+		const evenH = height / numDataPoints;
+		return evenH / 2;
+	}
+	const evenW = width / numDataPoints;
+	return evenW / 2;
+};
+
+export const autoGap = (
+	orientation: BarChartOptionsBase["orientation"],
+	width: number,
+	height: number,
+	numDataPoints: number,
+	barWidth: number,
+) => {
+	const spaceTaken = barWidth * numDataPoints;
+	const evenSpacedGap =
+		orientation === "horizontal"
+			? (height - spaceTaken) / numDataPoints
+			: (width - spaceTaken) / numDataPoints;
+	return evenSpacedGap;
 };

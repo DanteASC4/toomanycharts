@@ -13,7 +13,8 @@ export const createNumericalVerticalGroup = (
 	const bar = createSVGElement("rect");
 
 	const barX = 0;
-	const barY = gIdx * barWidth + gap;
+	const offY = gIdx * gap + gap * 0.5;
+	const barY = gIdx * barWidth + offY;
 
 	const trueBarHeight = barWidth;
 	const trueBarWidth = dataPoint;
