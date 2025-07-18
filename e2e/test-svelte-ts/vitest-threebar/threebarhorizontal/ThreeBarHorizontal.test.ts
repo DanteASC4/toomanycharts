@@ -1,20 +1,21 @@
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import ThreeBar from './ThreeBar.svelte';
+import ThreeBarHorizontal from './ThreeBarHorizontal.svelte';
 
 test('renders ultra basic three-bar chart rect element checks', async () => {
-  const screen = render(ThreeBar);
+  const screen = render(ThreeBarHorizontal);
   const bar50 = screen.baseElement.querySelector('[title="Bar value of 50"]');
   expect(bar50).toBeInTheDocument();
+  expect(bar50!.getAttribute('height')).toBe('50');
 
   const bar100 = screen.baseElement.querySelector('[title="Bar value of 100"]');
   expect(bar100).toBeInTheDocument();
+  expect(bar100!.getAttribute('height')).toBe('100');
 
   const bar30 = screen.baseElement.querySelector('[title="Bar value of 30"]');
   expect(bar30).toBeInTheDocument();
-});
-test('renders ultra basic three-bar chart text element checks', async () => {
-  const screen = render(ThreeBar);
+  expect(bar30!.getAttribute('height')).toBe('30');
+
   const labelAAA = screen.baseElement.querySelector('[title="Bar label aaa"]');
   expect(labelAAA).toBeInTheDocument();
 

@@ -3,7 +3,11 @@
 - MVP Todos
     - Bar charts
         - Basic creation
+            - Vertical
+            - Horizontal
         - Colors
+            - Gradients
+        - Stacked creation
 - Ideas
     - Histogram
     - Image labels

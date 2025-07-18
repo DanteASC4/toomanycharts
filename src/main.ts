@@ -1,4 +1,7 @@
-import { createNumericalVerticalGroup } from "./creating/barchart.ts";
+import {
+	createNumericalHorizontalGroup,
+	createNumericalVerticalGroup,
+} from "./creating/barchart.ts";
 import { makeSVGParent } from "./creating/common.ts";
 import {
 	type BarChartNumericalOpts,
@@ -70,15 +73,23 @@ function barchartNumerical({
 		const label = labels[i];
 		const datap = data[i];
 		const color = colors ? colors[i % colors.length] : "#ffffff";
-		const resultGroup = createNumericalVerticalGroup(
-			i,
-			datap,
-			label,
-			gap,
-			barWidth,
-			color,
-			{ groupClass, textClass, barClass },
-		);
+		const resultGroup =
+			orientation === "vertical"
+				? createNumericalVerticalGroup(i, datap, label, gap, barWidth, color, {
+						groupClass,
+						textClass,
+						barClass,
+					})
+				: createNumericalHorizontalGroup(
+						i,
+						datap,
+						label,
+						gap,
+						barWidth,
+						color,
+						height,
+						{ groupClass, textClass, barClass },
+					);
 		parent.appendChild(resultGroup);
 	}
 	if (parentClass) parent.classList.add(parentClass);
@@ -114,10 +125,11 @@ function barchartStacked({
 		fillEmptyArray(data, diff);
 	}
 
-	return "TODO";
+	console.log("TODO");
+	return null;
 }
 
-export function barchart(options: BarChartOptions) {
+export function barchart(options: BarChartOptions): SVGElement | null {
 	let { data, labels, type } = options;
 	if (data.length !== labels.length) {
 		console.warn("nanocharts: Not all datapoints have labels");
@@ -159,12 +171,20 @@ export function barchart(options: BarChartOptions) {
 	}
 
 	if (!type && typeof data[0] === "number") {
-		type = "numerical";
-		if (!isNumericalOptions(options)) return null;
+		// type = "numerical";
+		options.type = "numerical";
+		if (!isNumericalOptions(options)) {
+			console.warn("Bad options for numerical auto-type! Exiting...");
+			return null;
+		}
 		return barchartNumerical(options);
 	} else if (!type && Array.isArray(data[0])) {
-		type = "stacked";
-		if (!isStackedOptions(options)) return null;
+		// type = "stacked";
+		options.type = "numerical";
+		if (!isStackedOptions(options)) {
+			console.warn("Bad options for stacked auto-type! Exiting...");
+			return null;
+		}
 		return barchartStacked(options);
 	} else {
 		console.log("nanocharts: Cannot determine data type, exiting...");
