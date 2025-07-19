@@ -3,6 +3,7 @@ import { createSVGElement } from "./common.ts";
 
 export const createNumericalVerticalGroup = (
 	gIdx: number,
+	placement: "top" | "bottom",
 	dataPoint: number,
 	label: string,
 	gap: number,
@@ -19,8 +20,15 @@ export const createNumericalVerticalGroup = (
 	const bar = createSVGElement("rect");
 
 	const barX = 0;
-	const offY = gIdx * gap + gap * 0.5;
-	const barY = gIdx * barWidth + offY;
+
+	let barY = 0;
+	if (placement === "bottom") {
+		const offY = gIdx * gap + gap * 0.5;
+		barY = gIdx * barWidth + offY;
+	} else {
+		const offY = gIdx * gap + gap * 0.5;
+		barY = gIdx * barWidth - offY;
+	}
 
 	const trueBarHeight = barWidth;
 	const trueBarWidth = dataPoint;
@@ -34,7 +42,11 @@ export const createNumericalVerticalGroup = (
 	if (barClass) bar.classList.add(barClass);
 
 	const textX = trueBarWidth + 10;
-	const textY = barY + trueBarHeight / 2;
+
+	let textY = 0;
+
+	if (placement === "bottom") textY = barY + trueBarHeight / 2;
+	else textY = barY - trueBarHeight / 2;
 
 	text.setAttribute("fill", color);
 	text.setAttribute("x", `${textX}`);
@@ -52,6 +64,7 @@ export const createNumericalVerticalGroup = (
 
 export const createNumericalHorizontalGroup = (
 	gIdx: number,
+	placement: "left" | "right",
 	dataPoint: number,
 	label: string,
 	gap: number,
@@ -69,7 +82,13 @@ export const createNumericalHorizontalGroup = (
 	const bar = createSVGElement("rect");
 
 	const offX = gIdx * gap + gap * 0.5;
-	const barX = gIdx * barWidth + offX;
+
+	let barX = 0;
+	if (placement === "left") {
+		barX = gIdx * barWidth + offX;
+	} else {
+		barX = gIdx * barWidth - offX;
+	}
 	const barY = height - dataPoint;
 
 	const trueBarHeight = dataPoint;

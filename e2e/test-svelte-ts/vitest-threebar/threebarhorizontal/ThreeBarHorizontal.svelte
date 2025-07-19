@@ -7,7 +7,7 @@
     const tbarchart = barchart({
       data: [50, 100, 30],
       labels: ['aaa', 'bbb', 'ccc'],
-      orientation: 'horizontal',
+      placement: 'left'
     });
     console.log(tbarchart);
     if (tbarchart instanceof SVGElement) {

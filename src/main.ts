@@ -29,7 +29,7 @@ function barchartNumerical({
 	height,
 	width,
 	gap,
-	orientation,
+	placement,
 	barWidth,
 	parentClass,
 	groupClass,
@@ -41,7 +41,7 @@ function barchartNumerical({
 	if (!min) min = BarChartDefaults.min;
 	if (!height) height = BarChartDefaults.size;
 	if (!width) width = BarChartDefaults.size;
-	if (!orientation) orientation = BarChartDefaults.orientation;
+	if (!placement) placement = BarChartDefaults.placement;
 
 	const padLabels = labels.length < data.length;
 	if (padLabels) {
@@ -55,15 +55,16 @@ function barchartNumerical({
 	}
 	const dataPointsAmt = data.length;
 	if (!barWidth)
-		barWidth = autoBarWidth(orientation, width, height, dataPointsAmt);
+		barWidth = autoBarWidth(placement, width, height, dataPointsAmt);
 
-	if (!gap) gap = autoGap(orientation, width, height, dataPointsAmt, barWidth);
+	if (!gap) gap = autoGap(placement, width, height, dataPointsAmt, barWidth);
 
 	const estTotalSize = barWidth * dataPointsAmt + (gap * dataPointsAmt - 1);
 
-	if (orientation === "vertical" && estTotalSize > width)
+	const isVertical = placement === "top" || placement === "bottom";
+	if (isVertical && estTotalSize > width)
 		console.warn("NanoChart might exceed given size bounds");
-	if (orientation === "horizontal" && estTotalSize > height)
+	else if (!isVertical && estTotalSize > height)
 		console.warn("NanoChart might exceed given size bounds");
 
 	// Chart creation begin
@@ -73,24 +74,37 @@ function barchartNumerical({
 		const label = labels[i];
 		const datap = data[i];
 		const color = colors ? colors[i % colors.length] : "#ffffff";
-		const resultGroup =
-			orientation === "vertical"
-				? createNumericalVerticalGroup(i, datap, label, gap, barWidth, color, {
-						groupClass,
-						textClass,
-						barClass,
-					})
-				: createNumericalHorizontalGroup(
-						i,
-						datap,
-						label,
-						gap,
-						barWidth,
-						color,
-						height,
-						{ groupClass, textClass, barClass },
-					);
-		parent.appendChild(resultGroup);
+		let resultGroup: SVGElement | undefined;
+		// Probably a better way to do this while also type narrowing
+		if (placement === "top" || placement === "bottom") {
+			resultGroup = createNumericalVerticalGroup(
+				i,
+				placement,
+				datap,
+				label,
+				gap,
+				barWidth,
+				color,
+				{
+					groupClass,
+					textClass,
+					barClass,
+				},
+			);
+		} else {
+			resultGroup = createNumericalHorizontalGroup(
+				i,
+				placement,
+				datap,
+				label,
+				gap,
+				barWidth,
+				color,
+				height,
+				{ groupClass, textClass, barClass },
+			);
+		}
+		if (resultGroup) parent.appendChild(resultGroup);
 	}
 	if (parentClass) parent.classList.add(parentClass);
 
@@ -105,14 +119,14 @@ function barchartStacked({
 	height,
 	width,
 	gap,
-	orientation,
+	placement,
 }: BarChartStackedOpts) {
 	if (!max) max = autoMaxStacked(data);
 	if (!min) min = BarChartDefaults.min;
 	if (!height) height = BarChartDefaults.size;
 	if (!width) width = BarChartDefaults.size;
 	if (!gap) gap = BarChartDefaults.gap;
-	if (!orientation) orientation = BarChartDefaults.orientation;
+	if (!placement) placement = BarChartDefaults.placement;
 
 	const padLabels = labels.length < data.length;
 	if (padLabels) {

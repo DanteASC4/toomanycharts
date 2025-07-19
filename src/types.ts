@@ -16,7 +16,7 @@ export type ChartOptions = {
 
 export type BarChartOptionsBase = {
 	type: "numerical" | "stacked";
-	orientation: "horizontal" | "vertical";
+	placement: "top" | "right" | "bottom" | "left";
 	responsive: boolean;
 	colors: string[];
 	barWidth: number;

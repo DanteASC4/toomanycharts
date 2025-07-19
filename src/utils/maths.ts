@@ -18,12 +18,12 @@ export const autoMaxStacked = (data: number[][]) => {
 };
 
 export const autoBarWidth = (
-	orientation: BarChartOptionsBase["orientation"],
+	placement: BarChartOptionsBase["placement"],
 	width: number,
 	height: number,
 	numDataPoints: number,
 ) => {
-	if (orientation === "vertical") {
+	if (placement === "top" || placement === "bottom") {
 		const evenH = height / numDataPoints;
 		return evenH / 2;
 	}
@@ -32,7 +32,7 @@ export const autoBarWidth = (
 };
 
 export const autoGap = (
-	orientation: BarChartOptionsBase["orientation"],
+	placement: BarChartOptionsBase["placement"],
 	width: number,
 	height: number,
 	numDataPoints: number,
@@ -40,7 +40,7 @@ export const autoGap = (
 ) => {
 	const spaceTaken = barWidth * numDataPoints;
 	const evenSpacedGap =
-		orientation === "horizontal"
+		placement === "left" || placement === "right"
 			? (height - spaceTaken) / numDataPoints
 			: (width - spaceTaken) / numDataPoints;
 	return evenSpacedGap;
