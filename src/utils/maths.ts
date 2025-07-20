@@ -17,31 +17,38 @@ export const autoMaxStacked = (data: number[][]) => {
 	return roundToTen(Math.max(...summed));
 };
 
-export const autoBarWidth = (
-	placement: BarChartOptionsBase["placement"],
-	width: number,
-	height: number,
-	numDataPoints: number,
-) => {
-	if (placement === "top" || placement === "bottom") {
-		const evenH = height / numDataPoints;
-		return evenH / 2;
-	}
-	const evenW = width / numDataPoints;
-	return evenW / 2;
+export const autoBarWidth = (surfaceWidth: number, numBars: number) => {
+	return surfaceWidth / numBars / 2;
 };
 
-export const autoGap = (
-	placement: BarChartOptionsBase["placement"],
-	width: number,
-	height: number,
-	numDataPoints: number,
-	barWidth: number,
-) => {
-	const spaceTaken = barWidth * numDataPoints;
-	const evenSpacedGap =
-		placement === "left" || placement === "right"
-			? (height - spaceTaken) / numDataPoints
-			: (width - spaceTaken) / numDataPoints;
-	return evenSpacedGap;
+// export const autoBarWidth = (
+// 	placement: BarChartOptionsBase["placement"],
+// 	width: number,
+// 	height: number,
+// 	numDataPoints: number,
+// ) => {
+// 	if (placement === "top" || placement === "bottom") {
+// 		const evenH = height / numDataPoints;
+// 		return evenH / 2;
+// 	}
+// 	const evenW = width / numDataPoints;
+// 	return evenW / 2;
+// };
+
+export const autoGap = (surfaceLength: number, numBars: number) => {
+	return surfaceLength / numBars / 4;
 };
+// export const autoGap = (
+// 	placement: BarChartOptionsBase["placement"],
+// 	width: number,
+// 	height: number,
+// 	numDataPoints: number,
+// 	barWidth: number,
+// ) => {
+// 	const spaceTaken = barWidth * numDataPoints;
+// 	const evenSpacedGap =
+// 		placement === "left" || placement === "right"
+// 			? (height - spaceTaken) / numDataPoints
+// 			: (width - spaceTaken) / numDataPoints;
+// 	return evenSpacedGap;
+// };

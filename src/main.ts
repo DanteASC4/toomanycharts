@@ -1,7 +1,4 @@
-import {
-	createNumericalHorizontalGroup,
-	createNumericalVerticalGroup,
-} from "./creating/barchart.ts";
+import { createBarChartGroup } from "./creating/barchart.ts";
 import { makeSVGParent } from "./creating/common.ts";
 import {
 	type BarChartNumericalOpts,
@@ -20,6 +17,8 @@ import {
 	autoMaxStacked,
 } from "./utils/maths.ts";
 import { fillEmptyArray, fillStrings, fillZeros } from "./utils/misc.ts";
+
+Deno.env.set("MODE", "DEV");
 
 function barchartNumerical({
 	data,
@@ -54,13 +53,23 @@ function barchartNumerical({
 		fillZeros(data, diff);
 	}
 	const dataPointsAmt = data.length;
-	if (!barWidth)
-		barWidth = autoBarWidth(placement, width, height, dataPointsAmt);
+	if (!barWidth) {
+		// barWidth = autoBarWidth(placement, width, height, dataPointsAmt);
+		barWidth =
+			placement === "top" || placement === "bottom"
+				? autoBarWidth(width, dataPointsAmt)
+				: autoBarWidth(height, dataPointsAmt);
+	}
 
-	if (!gap) gap = autoGap(placement, width, height, dataPointsAmt, barWidth);
+	if (!gap) {
+		gap =
+			placement === "top" || placement === "bottom"
+				? autoGap(width, dataPointsAmt)
+				: autoGap(height, dataPointsAmt);
+	}
+	// if (!gap) gap = autoGap(placement, width, height, dataPointsAmt, barWidth);
 
 	const estTotalSize = barWidth * dataPointsAmt + (gap * dataPointsAmt - 1);
-
 	const isVertical = placement === "top" || placement === "bottom";
 	if (isVertical && estTotalSize > width)
 		console.warn("NanoChart might exceed given size bounds");
@@ -74,36 +83,19 @@ function barchartNumerical({
 		const label = labels[i];
 		const datap = data[i];
 		const color = colors ? colors[i % colors.length] : "#ffffff";
-		let resultGroup: SVGElement | undefined;
+		const resultGroup: SVGElement | undefined = createBarChartGroup(
+			i,
+			placement,
+			datap,
+			label,
+			gap,
+			barWidth,
+			color,
+			{ width, height },
+			{ groupClass, textClass, barClass },
+		);
 		// Probably a better way to do this while also type narrowing
-		if (placement === "top" || placement === "bottom") {
-			resultGroup = createNumericalVerticalGroup(
-				i,
-				placement,
-				datap,
-				label,
-				gap,
-				barWidth,
-				color,
-				{
-					groupClass,
-					textClass,
-					barClass,
-				},
-			);
-		} else {
-			resultGroup = createNumericalHorizontalGroup(
-				i,
-				placement,
-				datap,
-				label,
-				gap,
-				barWidth,
-				color,
-				height,
-				{ groupClass, textClass, barClass },
-			);
-		}
+
 		if (resultGroup) parent.appendChild(resultGroup);
 	}
 	if (parentClass) parent.classList.add(parentClass);

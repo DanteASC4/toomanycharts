@@ -1,6 +1,11 @@
 import { assertEquals } from "@std/assert";
 import { sum2DArrayInPlace } from "../src/utils/maths.ts";
-import { fillEmptyArray, fillStrings, fillZeros } from "../src/utils/misc.ts";
+import {
+	fillEmptyArray,
+	fillStrings,
+	fillZeros,
+	swapVals,
+} from "../src/utils/misc.ts";
 
 Deno.test(function sum2DTest() {
 	assertEquals(
