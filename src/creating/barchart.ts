@@ -10,6 +10,7 @@ export const createBarChartGroup = (
 	label: string,
 	gap: number,
 	barWidth: number,
+	evenWidth: number,
 	color: string,
 	{ width, height }: { width: number; height: number },
 	{
@@ -25,14 +26,14 @@ export const createBarChartGroup = (
 	let barX = 0;
 	let barY = 0;
 	let trueBarHeight = dataPoint;
-	let trueBarWidth = barWidth;
+	let trueBarWidth = evenWidth;
 
 	let textX = 0;
 	let textY = 0;
 	// let trueBarHeight = barWidth;
 	// let trueBarWidth = dataPoint;
 
-	const initial = barWidth * 2 * gIdx;
+	const initial = evenWidth * 2 * gIdx;
 	barX = initial + gap;
 
 	if (placement === "left") {
@@ -70,6 +71,16 @@ export const createBarChartGroup = (
 
 		textX = barX + trueBarWidth * 0.25;
 		textY = barY - textOffset;
+	}
+
+	if (barWidth !== evenWidth) {
+		if (placement === "top" || placement === "bottom") {
+			trueBarWidth = barWidth;
+			barX += Math.abs(evenWidth * 0.5 - barWidth);
+		} else {
+			trueBarHeight = barWidth;
+			barY += Math.abs(evenWidth * 0.5 - barWidth);
+		}
 	}
 
 	bar.setAttribute("fill", color);

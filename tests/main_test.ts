@@ -45,6 +45,7 @@ Deno.test(function barchartTests() {
 		data: [50, 100, 30],
 		labels: ["aaa", "bbb", "ccc"],
 		placement: "left",
+		barWidth: 5,
 	});
 	if (tbc5) {
 		console.log("%cTBC5", "color:magenta;");

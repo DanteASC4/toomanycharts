@@ -47,12 +47,14 @@ function barchartNumerical({
 		fillZeros(data, diff);
 	}
 	const dataPointsAmt = data.length;
+	const evenWidth =
+		placement === "top" || placement === "bottom"
+			? autoBarWidth(width, dataPointsAmt)
+			: autoBarWidth(height, dataPointsAmt);
+
 	if (!barWidth) {
 		// barWidth = autoBarWidth(placement, width, height, dataPointsAmt);
-		barWidth =
-			placement === "top" || placement === "bottom"
-				? autoBarWidth(width, dataPointsAmt)
-				: autoBarWidth(height, dataPointsAmt);
+		barWidth = evenWidth;
 	}
 
 	if (!gap) {
@@ -84,6 +86,7 @@ function barchartNumerical({
 			label,
 			gap,
 			barWidth,
+			evenWidth,
 			color,
 			{ width, height },
 			{ groupClass, textClass, barClass },

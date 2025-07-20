@@ -136,3 +136,63 @@ Additionally though later on, I'd like to support image labels. I think a small 
 
 **Mini update**
 Done!
+
+## Update3 - Colors
+
+One thing that hit me just now is responsiveness. I think the simplest way to do that would be making coordinates for things percentages. But I'll worry about that later.
+
+### Colors!
+
+Ah colors, I love how something that seems so simple can be so crazy deep. At least it surprised me how deep the world of color is when I first explored it.
+
+Any oklch enjoyers?
+
+Alright so here's what I'm thinking. Currently for bar charts, the data will have one of two structures.
+
+This: `[1,2,3]`
+Or: `[[1,2,3],[4,5,6],[7,8,9]]`
+
+*(stacked charts currently unimplemented, but later I'll do it - just slicing up a rect)*
+
+So I think the simplest thing for colors would be to allow the same data types.
+
+#### E.g.
+
+Data is: `[1,2,3]`
+Colors: `['red','green','blue']`
+
+then it's as simple as:
+- bar 1 = red
+- bar 2 = green
+- bar 3 = blue
+
+Additionally I can have it pick with modulo so we just wrap around allowing for something like:
+
+Data is: `[1,2,3,4,5,6]`
+Colors: `['red','green','blue']`
+
+then it's as simple as:
+- bar 1 = red
+- bar 2 = green
+- bar 3 = blue
+- bar 4 = red
+- bar 5 = green
+- bar 6 = blue
+
+And so on. This would also work for stacked arrays I'd just be moduloing twice depending on which sub-rect I'm coloring. Also this allows for any color type.
+
+**Mini Update**
+Got distracted and did a couple chore type things.
+
+- I've added a "philosophy" section to the readme, where later I'll elaborate on some decisions (like no min/max). But I'll get to that later.
+- Updated the readme to have a better checklist of pre-0.1.0 things
+
+Damn it I just remembered I left `barWidth` in the parameters. Prety sure that'd throw off the spacing.
+Tested it and yep. Of course. Ok well luckily - I can just use the proper width for calculating coords, and then offset the result by the bar width (if it's different).
+
+Surely it will be simple to implement.
+
+**Mini Update**
+Phew, it was as I thought - pretty straightforward. Took like 5 minutes. Ok re-focus time, back to colors!
+
+Except unfortunately I've run out of time for now. I've gotta do some other stuff but I'll come back to this soon!
