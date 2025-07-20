@@ -37,7 +37,7 @@ export type BarChartNumericalOpts = Optional<
 > & {
 	type?: "numerical";
 	readonly data: number[];
-	readonly labels: BarChartLabels;
+	readonly labels?: BarChartLabels;
 };
 
 export type BarChartStackedOpts = Optional<
@@ -45,7 +45,7 @@ export type BarChartStackedOpts = Optional<
 > & {
 	type?: "stacked";
 	readonly data: number[][];
-	readonly labels: BarChartLabels;
+	readonly labels?: BarChartLabels;
 };
 
 export type BarChartOptions = BarChartNumericalOpts | BarChartStackedOpts;

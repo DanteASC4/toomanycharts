@@ -1,6 +1,8 @@
 import type { BarChartNumericalOpts } from "../types.ts";
 import { createSVGElement } from "./common.ts";
 
+const textOffset = 15;
+
 export const createBarChartGroup = (
 	gIdx: number,
 	placement: BarChartNumericalOpts["placement"],
@@ -24,6 +26,9 @@ export const createBarChartGroup = (
 	let barY = 0;
 	let trueBarHeight = dataPoint;
 	let trueBarWidth = barWidth;
+
+	let textX = 0;
+	let textY = 0;
 	// let trueBarHeight = barWidth;
 	// let trueBarWidth = dataPoint;
 
@@ -39,17 +44,12 @@ export const createBarChartGroup = (
 		const tempC = barX;
 		barX = barY;
 		barY = tempC;
+
+		textX = trueBarWidth + textOffset;
+		textY = barY + trueBarHeight * 0.5;
 	} else if (placement === "top") {
-		// Do nothing for top
-		// console.group("\nDebugging");
-		// console.log("width", width);
-		// console.log("height", height);
-		// console.log("gap", gap);
-		// console.log("barX", barX);
-		// console.log("barY", barY);
-		// console.log("trueBH", trueBarHeight);
-		// console.log("trueBW", trueBarWidth);
-		// console.groupEnd();
+		textX = barX + trueBarWidth * 0.25;
+		textY = trueBarHeight + textOffset;
 	} else if (placement === "right") {
 		// Width -> height
 		// Datapoint -> width
@@ -62,8 +62,14 @@ export const createBarChartGroup = (
 		// const tempC = barY;
 		barY = barX;
 		barX = width - trueBarWidth;
+
+		textX = barX - textOffset * 2;
+		textY = barY + trueBarHeight * 0.5;
 	} else if (placement === "bottom") {
 		barY = height - trueBarHeight;
+
+		textX = barX + trueBarWidth * 0.25;
+		textY = barY - textOffset;
 	}
 
 	bar.setAttribute("fill", color);
@@ -73,13 +79,6 @@ export const createBarChartGroup = (
 	bar.setAttribute("height", `${trueBarHeight}`);
 	bar.setAttribute("title", `Bar value of ${trueBarWidth}`);
 	if (barClass) bar.classList.add(barClass);
-
-	const textX = trueBarWidth + 10;
-
-	let textY = 0;
-
-	if (placement === "bottom") textY = barY + trueBarHeight / 2;
-	else textY = barY - trueBarHeight / 2;
 
 	text.setAttribute("fill", color);
 	text.setAttribute("x", `${textX}`);

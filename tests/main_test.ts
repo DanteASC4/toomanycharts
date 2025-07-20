@@ -63,5 +63,16 @@ Deno.test(function barchartTests() {
 		Deno.writeTextFileSync("./temp/out/testbc6.svg", tbc6.outerHTML);
 	}
 
+	const tbc7 = barchart({
+		data: [50, 100, 30],
+		placement: "top",
+		height: 200,
+		width: 500,
+	});
+	if (tbc7) {
+		console.log("%cTBC7", "color:magenta;");
+		Deno.writeTextFileSync("./temp/out/testbc7.svg", tbc7.outerHTML);
+	}
+
 	assertEquals(1, 1);
 });

@@ -17,7 +17,7 @@ Deno.env.set("MODE", "DEV");
 
 function barchartNumerical({
 	data,
-	labels,
+	labels = [],
 	height,
 	width,
 	gap,
@@ -34,6 +34,7 @@ function barchartNumerical({
 	if (!height) height = BarChartDefaults.size;
 	if (!width) width = BarChartDefaults.size;
 	if (!placement) placement = BarChartDefaults.placement;
+	// if (!labels) labels = []
 
 	const padLabels = labels.length < data.length;
 	if (padLabels) {
@@ -98,7 +99,7 @@ function barchartNumerical({
 
 function barchartStacked({
 	data,
-	labels,
+	labels = [],
 	height,
 	width,
 	gap,
@@ -127,7 +128,7 @@ function barchartStacked({
 }
 
 export function barchart(options: BarChartOptions): SVGElement | null {
-	let { data, labels, type } = options;
+	let { data, labels = [], type } = options;
 	if (data.length !== labels.length) {
 		console.warn("nanocharts: Not all datapoints have labels");
 	}
