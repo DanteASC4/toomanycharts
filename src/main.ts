@@ -10,12 +10,7 @@ import {
 	isStackedOptions,
 } from "./types.ts";
 import { BarChartDefaults } from "./utils/defaults.ts";
-import {
-	autoBarWidth,
-	autoGap,
-	autoMaxNumerical,
-	autoMaxStacked,
-} from "./utils/maths.ts";
+import { autoBarWidth, autoGap } from "./utils/maths.ts";
 import { fillEmptyArray, fillStrings, fillZeros } from "./utils/misc.ts";
 
 Deno.env.set("MODE", "DEV");
@@ -23,8 +18,6 @@ Deno.env.set("MODE", "DEV");
 function barchartNumerical({
 	data,
 	labels,
-	min,
-	max,
 	height,
 	width,
 	gap,
@@ -36,8 +29,8 @@ function barchartNumerical({
 	textClass,
 	colors,
 }: BarChartNumericalOpts) {
-	if (!max) max = autoMaxNumerical(data);
-	if (!min) min = BarChartDefaults.min;
+	// if (!max) max = autoMaxNumerical(data);
+	// if (!min) min = BarChartDefaults.min;
 	if (!height) height = BarChartDefaults.size;
 	if (!width) width = BarChartDefaults.size;
 	if (!placement) placement = BarChartDefaults.placement;
@@ -106,15 +99,13 @@ function barchartNumerical({
 function barchartStacked({
 	data,
 	labels,
-	min,
-	max,
 	height,
 	width,
 	gap,
 	placement,
 }: BarChartStackedOpts) {
-	if (!max) max = autoMaxStacked(data);
-	if (!min) min = BarChartDefaults.min;
+	// if (!max) max = autoMaxStacked(data);
+	// if (!min) min = BarChartDefaults.min;
 	if (!height) height = BarChartDefaults.size;
 	if (!width) width = BarChartDefaults.size;
 	if (!gap) gap = BarChartDefaults.gap;
@@ -197,14 +188,3 @@ export function barchart(options: BarChartOptions): SVGElement | null {
 		return null;
 	}
 }
-
-// barchart({ data: [1, 2, 3], labels: ["a", "b"], type: "numerical" });
-// barchart({
-// 	data: [
-// 		[1, 2, 3],
-// 		[4, 5, 6],
-// 	],
-// 	labels: ["a", "b"],
-// 	type: "stacked",
-// 	min: 10,
-// });

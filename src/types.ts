@@ -7,8 +7,8 @@ export type Prettify<T> = {
 } & {};
 
 export type ChartOptions = {
-	min: number;
-	max: number;
+	// min: number;
+	// max: number;
 	height: number;
 	width: number;
 	gap: number;

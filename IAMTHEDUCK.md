@@ -103,3 +103,9 @@ After a small tweak to some math, it's working! For all four sides! I even teste
 
 Ok time to push.
 
+## Update2
+
+Alright so I think the next thing to do is to remove min/max for the afore mentioned reasons, and then tackle labels, then color.
+
+**Mini update**
+Ok that was easy, since I wasn't using them lol.
