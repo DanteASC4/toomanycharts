@@ -1,0 +1,46 @@
+# Things ToDo
+
+- Pre-0.1.0 Todos
+    - [x] Numerical Bar Charts Implemented
+        - [x] Placement
+        - [x] Sizing
+        - [x] Spacing
+        - [x] Labels
+        - [x] Colors
+    - [ ] Basic docs site
+    - [ ] README sections filled out!
+        - [ ] Logo (made of chart outputs) + tagline
+        - [ ] Those neat little badges you see everywhere
+        - [ ] Table of contents (should link to docs)
+        - [ ] License (mit)
+        - [ ] Contributing?
+        - [ ] keywords
+- Pre-0.2.0 Todos
+    - [ ] Stacked Bar Charts Implemented
+        - [ ] Placement
+        - [ ] Sizing
+        - [ ] Spacing
+        - [ ] Labels
+        - [ ] Colors
+- Ongoing
+    - [ ] Setup some tests for additional frameworks
+        - [ ] React
+        - [ ] Vanilla
+        - [ ] Solid
+        - [ ] Vue?
+        - [ ] ???
+- Ideas
+    - Histogram
+    - Image labels
+    - Pie/Donut/Torus chart
+    - ssr
+- Future Things
+- Make it modular?
+    - @nanocharts/barchart
+    - @nanocharts/histogram
+    - @nanocharts/line
+    - Etc...
+- Smaller things to fix
+    - Remove extra space or whole title when label is empty?
+
+

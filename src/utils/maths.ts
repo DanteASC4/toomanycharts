@@ -52,3 +52,15 @@ export const autoGap = (surfaceLength: number, numBars: number) => {
 // 			: (width - spaceTaken) / numDataPoints;
 // 	return evenSpacedGap;
 // };
+
+export const lgDistTest = (colorsAmt: number) => {
+	const result: number[] = [];
+
+	const dist = 1 / (colorsAmt - 1);
+	for (let i = 0; i < colorsAmt; i++) {
+		const p = i * dist * 100;
+		result.push(p);
+	}
+
+	return result;
+};

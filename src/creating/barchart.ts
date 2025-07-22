@@ -3,7 +3,7 @@ import { createSVGElement } from "./common.ts";
 
 const textOffset = 15;
 
-export const createBarChartGroup = (
+export const createBarAndText = (
 	gIdx: number,
 	placement: BarChartNumericalOpts["placement"],
 	dataPoint: number,
@@ -14,12 +14,16 @@ export const createBarChartGroup = (
 	color: string,
 	{ width, height }: { width: number; height: number },
 	{
-		groupClass,
 		barClass,
 		textClass,
 	}: Pick<BarChartNumericalOpts, "groupClass" | "barClass" | "textClass">,
 ) => {
-	const group = createSVGElement("g");
+	// const group = createSVGElement("g");
+
+	// So these type assertions aren't ideal - but the alternative as far as I can tell is to use a type predicate / guard fn again, which would mean every bar & label created has an additional if-statement.
+	// While that might not really amount to much in the grand scheme of things, until I know that for sure I'll just assert it here
+	// Also I'm not sure why exactly, but if I assert the type to be just "SVGRect" typescript complains below about "setAttribute" not being defined for "DOMRect"
+	// So for now, SILENCE TYPESCRIPT!
 	const text = createSVGElement("text");
 	const bar = createSVGElement("rect");
 
@@ -98,11 +102,11 @@ export const createBarChartGroup = (
 	text.textContent = label;
 	if (textClass) text.classList.add(textClass);
 
-	group.appendChild(bar);
-	group.appendChild(text);
-	if (groupClass) group.classList.add(groupClass);
+	// group.appendChild(bar);
+	// group.appendChild(text);
+	// if (groupClass) group.classList.add(groupClass);
 
-	return group;
+	return [bar, text] as const;
 };
 
 export const createNumericalVerticalGroup = (

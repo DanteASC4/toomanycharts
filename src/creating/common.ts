@@ -19,5 +19,7 @@ export const makeSVGParent = (height: number, width: number) => {
 	svg.setAttribute("width", `${width}`);
 	svg.setAttribute("height", `${height}`);
 	svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+	svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+	svg.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
 	return svg;
 };

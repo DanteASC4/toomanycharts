@@ -1,3 +1,9 @@
+# What is this file?
+
+This is kind of a mish-mash of my thoughts process and progress on things, mainly for myself because I work on this lib / tool primarily in odd bits of time I have which means it's a bit spontaneous, so it helps with remembering what I've been doing and why. It's also kind of a rubber-duck place as well for deciding on things.
+
+Since this is more of a passion project I thought it'd be fun to have here where anyone could see.
+
 # 7/18/2025
 
 Just realized I'm not really using min/max at all lol. I guess for now that's ok, I think incorporating those wouldn't be impossible but would be annoying to calc like a proportional automatic min or max based on given width/height.
@@ -196,3 +202,75 @@ Surely it will be simple to implement.
 Phew, it was as I thought - pretty straightforward. Took like 5 minutes. Ok re-focus time, back to colors!
 
 Except unfortunately I've run out of time for now. I've gotta do some other stuff but I'll come back to this soon!
+
+# 7/22/2025
+
+Two days later & I've done it! In my spare time I've got colors working, and not just normal solid colors - those are working just like I wanted & described above but I've added an additional coloring option! Gradients!
+
+Now gradients is yet another thing that you can really go far with, but for now at least I've kept things relatively basic.
+
+Here's a rough overview of coloring options:
+
+- **No supplied colors**
+    - Bars will be colored white when no form of coloring is chosen
+- **`colors` array**
+    - Colors will be chosen by using module on the index for each bar
+        - This means you don't need to supply a color for every bar
+        - Or you can add a single color to the array to have all the bars be that color
+    - Can be any valid color format
+- **`gradientColors` array**
+    - When supplied will automatically create an evenly-spread linearGradient consisting of the given colors
+        - E.g. `gradientColors: ['#ff00ff', '#00ffff']` will create a gradient like so:
+        - ```
+          #ff00ff #00ffff
+        <-0----------1->
+        ```
+    - This also takes precedence over the `colors` array when supplied (as-in if both are given, `gradientColors` will be used)
+    - Additional optional related params: `gradientDirection` and `gradientMode`, see docs for details!
+- Note that **text labels** are not affected by any coloring as of now.
+    - Mainly because I'm still a bit uncertain of whether labels will be fully supported given the difficulties involved, and perceived value added by overcoming them. At least for now.
+- **stroke** has been largely untouched, but the same process would work for that and I think it would be nice to have as well. That's coming soon!
+    - Unsure of whether gradients are possible in the same way. My gut says yes but I haven't tested it. Potential avenues for implementation:
+        - I think masking has "border-box" or something related as a property, maybe
+        - Could add a second `rect` behind each bar with a width calculated based on desired stroke width & bar width to give the perception of having an outline. This would also allow for coloring in the same way as bars at the cost of increasing the end payload size by a significant amount.
+            Perhaps size could be mitigated via `<use>` (I tried this for the gradient stuff but I couldn't get it to work which kind of makes sense I guess, I may revisit it later though!)
+
+This also meant doing a bit of a refactor in terms of output, particularly to support a really cool (I think) way of using gradient colors. That being the `gradientMode` of `'continuous'` which the docs will expand on.
+
+Previously the structure was something like:
+
+```html
+<svg>
+    <g>
+        <rect />
+        <text />
+    </g>
+    <!-- etc... -->
+</svg>
+```
+
+And now it's:
+```html
+<svg>
+    <!-- defs exists only if using gradients -->
+    <defs></defs>
+    <g>
+        <rect />
+        <!-- etc... -->
+    </g>
+    <g>
+        <text />
+        <!-- etc... -->
+    </g>
+</svg>
+```
+
+Which I think I actually like more anyway.
+
+## 0.1.0 release
+
+That being said I also did some more thinking and I've decided that for a `0.1.0` release `stacked` bar charts aren't really needed. I don't want to get sucked into the classic "I should do this before putting this out there" and then when I'm done with that I think "wait but this too" and whatnot.
+
+This started as bar charts only anyway so it'll go out with just that!
+
+That also means I've moved the todo-list to it's own markdown file.

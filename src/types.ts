@@ -14,17 +14,39 @@ export type ChartOptions = {
 	gap: number;
 };
 
-export type BarChartOptionsBase = {
-	type: "numerical" | "stacked";
-	placement: "top" | "right" | "bottom" | "left";
-	responsive: boolean;
-	colors: string[];
-	barWidth: number;
+export type LinearGradientDirection =
+	| "left-to-right"
+	| "right-to-left"
+	| "top-to-bottom"
+	| "bottom-to-top"
+	| `${number}`;
+
+export type LinearGradientType = "individual" | "continuous";
+
+export type BarChartClasses = {
 	groupClass: string;
 	parentClass: string;
 	barClass: string;
 	textClass: string;
-} & ChartOptions;
+	barGroupClass: string;
+	textGroupClass: string;
+};
+
+export type BarChartOptionsBase = {
+	type: "numerical" | "stacked";
+	placement: "top" | "right" | "bottom" | "left";
+	responsive: boolean;
+	barWidth: number;
+	// groupClass: string;
+	// parentClass: string;
+	// barClass: string;
+	// textClass: string;
+	colors: string[];
+	gradientColors: string[];
+	gradientMode: LinearGradientType;
+	gradientDirection: LinearGradientDirection;
+} & BarChartClasses &
+	ChartOptions;
 
 // type BarChartData = BarChartOptionsBase["type"] extends "numerical"
 // 	? number[]

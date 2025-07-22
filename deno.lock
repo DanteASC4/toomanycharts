@@ -21,6 +21,7 @@
     "jsr:@std/path@^1.0.8": "1.1.0",
     "jsr:@std/path@^1.1.0": "1.1.0",
     "jsr:@std/path@^1.1.1": "1.1.1",
+    "jsr:@std/random@~0.1.2": "0.1.2",
     "jsr:@ts-morph/bootstrap@0.25": "0.25.0",
     "jsr:@ts-morph/bootstrap@0.27": "0.27.0",
     "jsr:@ts-morph/common@0.25": "0.25.0",
@@ -126,6 +127,9 @@
         "jsr:@std/internal@^1.0.9"
       ]
     },
+    "@std/random@0.1.2": {
+      "integrity": "21e28f39dcc72d522bb0d2bc13586567d6044c86ee77a0056fcde0e13758c3ee"
+    },
     "@ts-morph/bootstrap@0.25.0": {
       "integrity": "3cd33ee80ac0aab8e5d2660c639a02187f0c8abfe454636ce86c00eb7e8407db",
       "dependencies": [
@@ -214,6 +218,7 @@
       "jsr:@b-fuze/deno-dom@~0.1.52",
       "jsr:@deno/dnt@~0.42.1",
       "jsr:@std/assert@1",
+      "jsr:@std/random@~0.1.2",
       "npm:@biomejs/biome@^2.1.1"
     ]
   }

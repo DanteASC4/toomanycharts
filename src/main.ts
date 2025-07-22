@@ -1,5 +1,9 @@
-import { createBarChartGroup } from "./creating/barchart.ts";
-import { makeSVGParent } from "./creating/common.ts";
+import { createBarAndText } from "./creating/barchart.ts";
+import { createSVGElement, makeSVGParent } from "./creating/common.ts";
+import {
+	createBarChartMask,
+	createLinearGradient,
+} from "./creating/gradients.ts";
 import {
 	type BarChartNumericalOpts,
 	type BarChartOptions,
@@ -23,11 +27,16 @@ function barchartNumerical({
 	gap,
 	placement,
 	barWidth,
-	parentClass,
 	groupClass,
+	parentClass,
 	barClass,
 	textClass,
+	barGroupClass,
+	textGroupClass,
 	colors,
+	gradientColors,
+	gradientMode,
+	gradientDirection,
 }: BarChartNumericalOpts) {
 	// if (!max) max = autoMaxNumerical(data);
 	// if (!min) min = BarChartDefaults.min;
@@ -63,6 +72,7 @@ function barchartNumerical({
 				? autoGap(width, dataPointsAmt)
 				: autoGap(height, dataPointsAmt);
 	}
+
 	// if (!gap) gap = autoGap(placement, width, height, dataPointsAmt, barWidth);
 
 	const estTotalSize = barWidth * dataPointsAmt + (gap * dataPointsAmt - 1);
@@ -74,12 +84,73 @@ function barchartNumerical({
 
 	// Chart creation begin
 	const parent = makeSVGParent(height, width);
+	let isGradient = false;
+	let gradientId: string | null = null;
+	let gradientDef: SVGElement | null = null;
+	let gradientBg: SVGElement | null = null;
+
+	// If we're doing a gradient, build the defs
+	// if it's continuous also append the background rect
+	// the defs uses a copy of the chart, with the bars filled with #fff and a bg rect of #000
+	// (check if we can do <use> ???)
+	// then the bars are filled with transparent
+	// if it's individual then the bars just get filled with a `url` call
+
+	if (gradientColors) {
+		isGradient = true;
+		if (!gradientMode) gradientMode = "individual";
+
+		const [gradDef, gradId, gradBg] = createLinearGradient(
+			gradientColors,
+			gradientDirection,
+			gradientMode,
+		);
+		gradientId = gradId;
+		gradientDef = gradDef;
+		gradientBg = gradBg;
+	}
+
+	if (gradientDef && gradientMode === "individual")
+		parent.appendChild(gradientDef);
+	// if (gradientBg) parent.appendChild(gradientBg);
+
+	const barGroup = createSVGElement("g");
+	const textGroup = createSVGElement("g");
+
+	if (groupClass) {
+		barGroup.classList.add(groupClass);
+		textGroup.classList.add(groupClass);
+	}
+	if (barGroupClass) barGroup.classList.add(barGroupClass);
+	if (textGroupClass) textGroup.classList.add(textGroupClass);
+
+	barGroup.classList.add("nc-bargroup");
+	textGroup.classList.add("nc-textgroup");
+
+	const bars = [];
 
 	for (let i = 0; i < data.length; i++) {
 		const label = labels[i];
 		const datap = data[i];
-		const color = colors ? colors[i % colors.length] : "#ffffff";
-		const resultGroup: SVGElement | undefined = createBarChartGroup(
+
+		// The ternary below is pretty cursed but I don't feel like abstracting currently it so here's a doc comment:
+		/*
+		 * If we're doing a gradient & we have the `gradientId`
+		 *  Then if it's a continuous one, fill is transparent
+		 *  Else since it's not transparent, we'll fill with the gradient itself
+		 * If we have a colors array
+		 *  Grab the color at the current modulated (is that the right word?) index
+		 *  Else fill with white
+		 */
+		const color =
+			isGradient && gradientId
+				? gradientMode === "continuous"
+					? "transparent"
+					: `url('#${gradientId}')`
+				: colors && colors.length > 0
+					? colors[i % colors.length]
+					: "#ffffff";
+		const [bar, text] = createBarAndText(
 			i,
 			placement,
 			datap,
@@ -89,12 +160,33 @@ function barchartNumerical({
 			evenWidth,
 			color,
 			{ width, height },
-			{ groupClass, textClass, barClass },
+			{ textClass, barClass },
 		);
-		// Probably a better way to do this while also type narrowing
+		barGroup.appendChild(bar);
+		textGroup.appendChild(text);
 
-		if (resultGroup) parent.appendChild(resultGroup);
+		// Setup for continuous gradient fill
+		if (gradientMode === "continuous" && gradientId) bars.push(bar);
+
+		// if (resultGroup) parent.appendChild(resultGroup);
 	}
+
+	if (
+		isGradient &&
+		gradientDef &&
+		gradientBg &&
+		gradientMode === "continuous"
+	) {
+		const [maskId, theMask] = createBarChartMask(bars);
+		gradientDef.appendChild(theMask);
+
+		gradientBg.setAttribute("mask", `url('#${maskId}')`);
+		parent.appendChild(gradientBg);
+	}
+
+	parent.appendChild(barGroup);
+	parent.appendChild(textGroup);
+
 	if (parentClass) parent.classList.add(parentClass);
 
 	return parent;
