@@ -4,6 +4,8 @@ This is kind of a mish-mash of my thoughts process and progress on things, mainl
 
 Since this is more of a passion project I thought it'd be fun to have here where anyone could see.
 
+The little **update#** are usually points in which I had stopped writing prior, but came back not to long after.
+
 # 7/18/2025
 
 Just realized I'm not really using min/max at all lol. I guess for now that's ok, I think incorporating those wouldn't be impossible but would be annoying to calc like a proportional automatic min or max based on given width/height.
@@ -274,3 +276,94 @@ That being said I also did some more thinking and I've decided that for a `0.1.0
 This started as bar charts only anyway so it'll go out with just that!
 
 That also means I've moved the todo-list to it's own markdown file.
+
+# 7/23/2025
+
+So I did some more thinking and had some more thoughts. Crazy, I know.
+
+## I forgor
+
+Ah I'm a fool. I was thinking about using the package myself now that it's mostly usable and then realized a major oversight. The way things are currently setup, with no max for the scale I had not considered making a barchart that exceeds the dimensions of it's container.
+
+Put simply, I've been testing things with values that are less than the resulting size, if I were to use something larger - the bar would be extending past the bounds of it's viewable area. This isn't a terrible thing, "breaking the scale" in a way is also conveying information - but I know it's important to be able to change that behavior.
+
+And tackling this means bringing back some form of `max`, I think what I'll do is:
+
+- Re-introduce just `max` and use this to set the viewbox dimensions
+    - Can be optional again, and when not supplied we'll assume something like 15% more than the highest datapoint value
+    - Would need to set height or width according to placement option
+    - Will keep the no "min" needed
+
+I was also thinking about making things percentages, but that'd still use a `max` of some sort so yeah one way or another, `max` is back.
+
+**Update1**
+Alright I'm back & luckily it was a simple fix, just use the max as the viewbox's height or width depending on where the bars are placed.
+
+This also makes me think that I should separate width & height from the element & the viewbox, maybe just as an override. But I want to field test things more before I do that.
+
+## Docs
+
+Aside from that the docs site is going well! It's a bit overkill feature-wise but fumadocs makes for a very slick experience just like I wanted. It's also fine because I don't need to use every single feature offered. 
+
+Probably a few more days to finish up the first version of that as I want to include loads of examples.
+
+## ssr, react, & more 
+
+Initially I had planned for this lib to be client-sided, but the usage of `@b-fuze/deno-dom` allows for this lib to server-side as well.
+
+There's a couple issues with it though.
+
+### no `createElementNS`
+
+Right now I'm just using `createElement` because `createElementNS` doesn't exist. While this hasn't resulted in any major pitfalls I'm imagining at some point I'll run into some sort of issue due to that.
+
+The lib `deno-dom` is still alive though, with the most recent release being 2 weeks ago at time of writing. Perhaps I'll contribute as well?
+
+I have noticed one issue though, that being that for whatever reason, when doing `setAttribute("viewBox","0 0 300 300")` the resulting HTML has `viewbox` instead of `viewBox`, it ignores the uppercase `B`. Luckily modern browsers don't care too much about that, and render it anyway but it does cause some warnings.
+
+So that leaves a couple options.
+
+a. abandon `ssr` for now, focus on client side only like originally intended.
+b. roll with it, there's still no actual issues with things now, and switch libs later or hope for `deno-dom` to get Updated
+ - (or help move the update along myself)
+c. find a different way of creating elements for `ssr`
+
+I'm leaning towards either `c` or `b`. Deno is awesome, and iirc one of the things it enables is a way of using languages outside of js/ts in projects.
+
+
+#### `c`
+
+So if I could find a library compatible, in any language I could potentially use it. What I'm worried about that though is **bundle-size.** Since I really want to keep this lib lightweight. I'll have to research that more, but it sounds both intersting, and potentially very viable as languages apart from js/ts could be significantly faster.
+
+#### `b`
+
+Option `b` is probably the more realistic option though, and for the time being I'm going to stick with what I have. Again, there aren't any huge issues as of now, and it works pretty seamlessly.
+
+### environment detection
+
+One thing I encountered when I was using the lib myself for the docs site was the fact than in react, the `class` attribute is `className`. That's pretty annoying. I've now got to figure out how to account for that. In the short-term a param for it would work just fine, but I want to be able to auto-detect this.
+
+With `vite` you can do `import.meta.env` and read the dir contents, perhaps something like this would work & I can look for `.jsx or .tsx` file extensions.
+
+Though if the function is used inline, I wonder if it would even be an issue, I was only seeing that get flagged as an error because I was pasting the SVG in directly instead of calling the function inline, since it was for including an example of the output.
+
+For now I'll add a param that allows you to have the output react-friendly and later maybe auto-detect env if it's an issue.
+- `className` instead of `class`
+- `xmlnsXlink` instead of `xmlns:xlink`
+
+I wonder if it should also detect if it's client side automatically to use `document.createElementNS` instead of `deno-dom`. That's a good idea I think.
+
+**Update1**
+I just looked through the `deno-dom` repo a bit and found a doc describing some of the goals for the lib. There's a section called SVG and right now it's described as "???" 🤣 funny though since it still is working alright for SVG elements!
+
+
+**Update2**
+Wait I just realized, the usual convention for this (I think) is to have framework-specific imports I think. Something like:
+```ts
+import { barchart } from 'nanocharts/svelte';
+// or
+import { barchart } from 'nanocharts/react';
+```
+
+I think this is better than what I was thinking with auto-detection of stuff, though it is an interesting idea. But I'll get to that later anyway, there's still much to be done for the core itself.
+

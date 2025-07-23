@@ -22,7 +22,8 @@
         - [ ] Spacing
         - [ ] Labels
         - [ ] Colors
-- Ongoing
+- Ongoing / Misc
+    - [ ] Re-require labels for accessibility & instead add a `showLabels` that skips adding text elements if false
     - [ ] Setup some tests for additional frameworks
         - [ ] React
         - [ ] Vanilla

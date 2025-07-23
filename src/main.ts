@@ -14,7 +14,7 @@ import {
 	isStackedOptions,
 } from "./types.ts";
 import { BarChartDefaults } from "./utils/defaults.ts";
-import { autoBarWidth, autoGap } from "./utils/maths.ts";
+import { autoBarWidth, autoGap, autoMaxNumerical } from "./utils/maths.ts";
 import { fillEmptyArray, fillStrings, fillZeros } from "./utils/misc.ts";
 
 Deno.env.set("MODE", "DEV");
@@ -25,6 +25,7 @@ function barchartNumerical({
 	height,
 	width,
 	gap,
+	max,
 	placement,
 	barWidth,
 	groupClass,
@@ -38,7 +39,7 @@ function barchartNumerical({
 	gradientMode,
 	gradientDirection,
 }: BarChartNumericalOpts) {
-	// if (!max) max = autoMaxNumerical(data);
+	if (!max) max = autoMaxNumerical(data);
 	// if (!min) min = BarChartDefaults.min;
 	if (!height) height = BarChartDefaults.size;
 	if (!width) width = BarChartDefaults.size;
@@ -84,6 +85,11 @@ function barchartNumerical({
 
 	// Chart creation begin
 	const parent = makeSVGParent(height, width);
+	if (placement === "top" || placement === "bottom") {
+		parent.setAttribute("viewBox", `0 0 ${width} ${max}`);
+	} else {
+		parent.setAttribute("viewBox", `0 0 ${max} ${height}`);
+	}
 	let isGradient = false;
 	let gradientId: string | null = null;
 	let gradientDef: SVGElement | null = null;

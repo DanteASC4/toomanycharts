@@ -8,10 +8,8 @@ export type Prettify<T> = {
 
 export type ChartOptions = {
 	// min: number;
-	// max: number;
 	height: number;
 	width: number;
-	gap: number;
 };
 
 export type LinearGradientDirection =
@@ -37,6 +35,8 @@ export type BarChartOptionsBase = {
 	placement: "top" | "right" | "bottom" | "left";
 	responsive: boolean;
 	barWidth: number;
+	max: number;
+	gap: number;
 	// groupClass: string;
 	// parentClass: string;
 	// barClass: string;
