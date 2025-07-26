@@ -31,7 +31,7 @@ export type BarChartClasses = {
 };
 
 export type BarChartOptionsBase = {
-	type: "numerical" | "stacked";
+	// type: "numerical" | "stacked";
 	placement: "top" | "right" | "bottom" | "left";
 	responsive: boolean;
 	barWidth: number;
@@ -54,21 +54,33 @@ export type BarChartOptionsBase = {
 
 export type BarChartLabels = string[];
 
-export type BarChartNumericalOpts = Optional<
-	Omit<BarChartOptionsBase, "type">
-> & {
-	type?: "numerical";
+export type BarChartNumericalOpts = Optional<BarChartOptionsBase> & {
+	// type?: "numerical";
 	readonly data: number[];
 	readonly labels?: BarChartLabels;
 };
 
-export type BarChartStackedOpts = Optional<
-	Omit<BarChartOptionsBase, "type">
-> & {
-	type?: "stacked";
+export type BarChartStackedOpts = Optional<BarChartOptionsBase> & {
+	// type?: "stacked";
 	readonly data: number[][];
 	readonly labels?: BarChartLabels;
 };
+
+// export type BarChartNumericalOpts = Optional<
+// 	Omit<BarChartOptionsBase, "type">
+// > & {
+// 	type?: "numerical";
+// 	readonly data: number[];
+// 	readonly labels?: BarChartLabels;
+// };
+//
+// export type BarChartStackedOpts = Optional<
+// 	Omit<BarChartOptionsBase, "type">
+// > & {
+// 	type?: "stacked";
+// 	readonly data: number[][];
+// 	readonly labels?: BarChartLabels;
+// };
 
 export type BarChartOptions = BarChartNumericalOpts | BarChartStackedOpts;
 

@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { barchart } from "../src/main.ts";
+import { barchart } from "../src/index.ts";
 
 const saveIfReal = (result: SVGElement | null, name: string) => {
 	if (result) {
@@ -129,7 +129,22 @@ Deno.test(function barChartsColored() {
 	assertEquals(tbc3?.getAttribute("width"), "300");
 	assertEquals(tbc3?.getAttribute("height"), "300");
 
+	const tbc4 = barchart({
+		data: [250, 50, 100, 150, 100],
+		placement: "top",
+		gradientColors: [
+			"oklch(0.7017 0.3225 328.36)",
+			"oklch(0.9054 0.15455 194.769)",
+		],
+		gradientDirection: "top-to-bottom",
+		gradientMode: "continuous",
+	});
+
+	assertEquals(tbc3?.getAttribute("width"), "300");
+	assertEquals(tbc3?.getAttribute("height"), "300");
+
 	saveIfReal(tbc1, "tbc1_gradient");
 	saveIfReal(tbc2, "tbc2_colors_lessthandata");
 	saveIfReal(tbc3, "tbc3_gradient_oklch");
+	saveIfReal(tbc4, "tbc4_gradient_continuous");
 });

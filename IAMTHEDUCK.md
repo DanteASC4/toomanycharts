@@ -367,3 +367,40 @@ import { barchart } from 'nanocharts/react';
 
 I think this is better than what I was thinking with auto-detection of stuff, though it is an interesting idea. But I'll get to that later anyway, there's still much to be done for the core itself.
 
+
+# 7/24/2025
+
+The lib internals itself are a bit unorganized, as I've been doing a bunch of 'figuring out as I go' but that doesn't mean I can't stay organized. I also want to always keep that core philosophy in mind of being simple to get value from, but with the ability to take things further if you wanted something a bit more.
+
+## Naming
+
+I did a bit of thinking on this, and while I like the idea of having everything under one function, similar to `SPARKLINE` I think keeping exports divided based on the chart type would benefit the end bundle size, if my understanding of how that works is correct that is.
+
+```bash
+ └─ tests # unit tests
+ └─ e2e # framework specific & other usage tests
+ └─ src
+    ├─ utils
+    │  └─ maths.ts
+    ├─ creating # element creation relating to chart of filename
+    │  └─ barchart.ts
+    └─ main.ts
+    └─ barchart.ts
+    └─ etc... # more charttypes.ts
+```
+
+# 7/25/2025
+
+For now going to just commit to `deno-dom` to make it less janky internally, and I think I've settled on wanting this to work in non-browser contexts as well.
+
+Still need to do a bit more before 0.1.0, that being:
+
+- Cleanup
+    - Match the above organizational goal
+    - Do less "checks" for the user, with proper docs & error messages I shouldn't need to check things for the user really. This isn't referring to the default creation. I know that you can have default params but some of them are based on the presence or absence of other params so I'll leave that stuff for now.
+- Docs site
+    - So far so good, fumadocs is awesome.
+    - Main docs remaining:
+        - Barchart page
+        - Loads of examples
+

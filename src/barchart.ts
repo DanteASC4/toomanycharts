@@ -1,25 +1,23 @@
 import { createBarAndText } from "./creating/barchart.ts";
-import { createSVGElement, makeSVGParent } from "./creating/common.ts";
+import { makeSVGParent, createSVGElement } from "./creating/common.ts";
 import {
-	createBarChartMask,
 	createLinearGradient,
+	createBarChartMask,
 } from "./creating/gradients.ts";
 import {
-	type BarChartNumericalOpts,
-	type BarChartOptions,
-	type BarChartStackedOpts,
-	is2DNumericalArray,
+	BarChartNumericalOpts,
+	BarChartOptions,
 	isNumericalArray,
 	isNumericalOptions,
+	is2DNumericalArray,
 	isStackedOptions,
+	BarChartStackedOpts,
 } from "./types.ts";
 import { BarChartDefaults } from "./utils/defaults.ts";
-import { autoBarWidth, autoGap, autoMaxNumerical } from "./utils/maths.ts";
+import { autoMaxNumerical, autoBarWidth, autoGap } from "./utils/maths.ts";
 import { fillEmptyArray, fillStrings, fillZeros } from "./utils/misc.ts";
 
-Deno.env.set("MODE", "DEV");
-
-function barchartNumerical({
+export function barchart({
 	data,
 	labels = [],
 	height,
@@ -116,8 +114,7 @@ function barchartNumerical({
 		gradientBg = gradBg;
 	}
 
-	if (gradientDef && gradientMode === "individual")
-		parent.appendChild(gradientDef);
+	if (gradientDef) parent.appendChild(gradientDef);
 	// if (gradientBg) parent.appendChild(gradientBg);
 
 	const barGroup = createSVGElement("g");
@@ -198,95 +195,66 @@ function barchartNumerical({
 	return parent;
 }
 
-function barchartStacked({
-	data,
-	labels = [],
-	height,
-	width,
-	gap,
-	placement,
-}: BarChartStackedOpts) {
-	// if (!max) max = autoMaxStacked(data);
-	// if (!min) min = BarChartDefaults.min;
-	if (!height) height = BarChartDefaults.size;
-	if (!width) width = BarChartDefaults.size;
-	if (!gap) gap = BarChartDefaults.gap;
-	if (!placement) placement = BarChartDefaults.placement;
+// export function barchart(options: BarChartOptions): SVGElement | null {
+// 	let { data, labels = [], type } = options;
+// 	if (data.length !== labels.length) {
+// 		console.warn("nanocharts: Not all datapoints have labels");
+// 	}
 
-	const padLabels = labels.length < data.length;
-	if (padLabels) {
-		const diff = Math.abs(labels.length - data.length);
-		fillStrings(labels, diff);
-	}
-	const padData = data.length < labels.length;
-	if (padData) {
-		const diff = Math.abs(labels.length - data.length);
-		fillEmptyArray(data, diff);
-	}
+// 	if (type === "numerical") {
+// 		const goodNumericalData = isNumericalArray(data);
+// 		if (!goodNumericalData) {
+// 			console.error(
+// 				'Data for "numerical" charts should be an array of numbers!',
+// 			);
+// 			return null;
+// 		}
 
-	console.log("TODO");
-	return null;
-}
+// 		const goodOpts = isNumericalOptions(options);
+// 		if (!goodOpts) {
+// 			// this shouldn't be possible, more just to satify ts
+// 			return null;
+// 		}
 
-export function barchart(options: BarChartOptions): SVGElement | null {
-	let { data, labels = [], type } = options;
-	if (data.length !== labels.length) {
-		console.warn("nanocharts: Not all datapoints have labels");
-	}
+// 		return barchartNumerical(options);
+// 	}
+// 	if (type === "stacked") {
+// 		const goodNumericalData = is2DNumericalArray(data);
+// 		if (!goodNumericalData) {
+// 			console.error(
+// 				'Data for "stacked" charts should be a 2D-array of numbers!',
+// 			);
+// 			return null;
+// 		}
 
-	if (type === "numerical") {
-		const goodNumericalData = isNumericalArray(data);
-		if (!goodNumericalData) {
-			console.error(
-				'Data for "numerical" charts should be an array of numbers!',
-			);
-			return null;
-		}
+// 		const goodOpts = isStackedOptions(options);
+// 		if (!goodOpts) {
+// 			// this shouldn't be possible, more just to satify ts
+// 			return null;
+// 		}
 
-		const goodOpts = isNumericalOptions(options);
-		if (!goodOpts) {
-			// this shouldn't be possible, more just to satify ts
-			return null;
-		}
+// 		return barchartStacked(options);
+// 	}
 
-		return barchartNumerical(options);
-	}
-	if (type === "stacked") {
-		const goodNumericalData = is2DNumericalArray(data);
-		if (!goodNumericalData) {
-			console.error(
-				'Data for "stacked" charts should be a 2D-array of numbers!',
-			);
-			return null;
-		}
+// 	if (!type && typeof data[0] === "number") {
+// 		// type = "numerical";
+// 		options.type = "numerical";
+// 		if (!isNumericalOptions(options)) {
+// 			console.warn("Bad options for numerical auto-type! Exiting...");
+// 			return null;
+// 		}
+// 		return barchartNumerical(options);
+// 	} else if (!type && Array.isArray(data[0])) {
+// 		// type = "stacked";
+// 		options.type = "numerical";
+// 		if (!isStackedOptions(options)) {
+// 			console.warn("Bad options for stacked auto-type! Exiting...");
+// 			return null;
+// 		}
+// 		return barchartStacked(options);
+// 	} else {
+// 		console.log("nanocharts: Cannot determine data type, exiting...");
+// 		return null;
+// 	}
+// }
 
-		const goodOpts = isStackedOptions(options);
-		if (!goodOpts) {
-			// this shouldn't be possible, more just to satify ts
-			return null;
-		}
-
-		return barchartStacked(options);
-	}
-
-	if (!type && typeof data[0] === "number") {
-		// type = "numerical";
-		options.type = "numerical";
-		if (!isNumericalOptions(options)) {
-			console.warn("Bad options for numerical auto-type! Exiting...");
-			return null;
-		}
-		return barchartNumerical(options);
-	} else if (!type && Array.isArray(data[0])) {
-		// type = "stacked";
-		options.type = "numerical";
-		if (!isStackedOptions(options)) {
-			console.warn("Bad options for stacked auto-type! Exiting...");
-			return null;
-		}
-		return barchartStacked(options);
-	} else {
-		console.log("nanocharts: Cannot determine data type, exiting...");
-		return null;
-	}
-}
