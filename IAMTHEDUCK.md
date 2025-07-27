@@ -455,3 +455,8 @@ Alright then I'll go "minicharts" nope, also taken, same idea as well! Haha the 
 I even partially committed to "toomanycharts" before realizing, I thought for sure that one would be available, 😆 you know what, I'm thinking I'll go with "toomanycharts". In the spirit of things, this one isn't taken either.
 
 If I get a message saying someone has "too-manycharts" when I try to publish under that I'll explode.
+
+**Update**
+
+Phew, that one was available as I thought! Version `0.1.0` is out! I'll be doing the stacked barcharts next I think.
+
