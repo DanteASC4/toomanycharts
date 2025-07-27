@@ -1,21 +1,13 @@
 import { createBarAndText } from "./creating/barchart.ts";
-import { makeSVGParent, createSVGElement } from "./creating/common.ts";
+import { createSVGElement, makeSVGParent } from "./creating/common.ts";
 import {
-	createLinearGradient,
 	createBarChartMask,
+	createLinearGradient,
 } from "./creating/gradients.ts";
-import {
-	BarChartNumericalOpts,
-	BarChartOptions,
-	isNumericalArray,
-	isNumericalOptions,
-	is2DNumericalArray,
-	isStackedOptions,
-	BarChartStackedOpts,
-} from "./types.ts";
+import type { BarChartNumericalOpts } from "./types.ts";
 import { BarChartDefaults } from "./utils/defaults.ts";
-import { autoMaxNumerical, autoBarWidth, autoGap } from "./utils/maths.ts";
-import { fillEmptyArray, fillStrings, fillZeros } from "./utils/misc.ts";
+import { autoBarWidth, autoGap, autoMaxNumerical } from "./utils/maths.ts";
+import { fillStrings, fillZeros } from "./utils/misc.ts";
 
 export function barchart({
 	data,
@@ -83,10 +75,14 @@ export function barchart({
 
 	// Chart creation begin
 	const parent = makeSVGParent(height, width);
-	if (placement === "top" || placement === "bottom") {
+	if (
+		(placement === "top" || placement === "bottom") &&
+		data.some((v) => v > width)
+	) {
 		parent.setAttribute("viewBox", `0 0 ${width} ${max}`);
 	} else {
-		parent.setAttribute("viewBox", `0 0 ${max} ${height}`);
+		if (data.some((v) => v > height))
+			parent.setAttribute("viewBox", `0 0 ${max} ${height}`);
 	}
 	let isGradient = false;
 	let gradientId: string | null = null;
@@ -257,4 +253,3 @@ export function barchart({
 // 		return null;
 // 	}
 // }
-

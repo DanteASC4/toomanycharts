@@ -1,10 +1,30 @@
-import { DOMParser } from "@b-fuze/deno-dom";
+import { parseHTML } from "linkedom";
 
-const doc = new DOMParser().parseFromString("", "text/html");
-
+// Allows for seamless client or ssr usage. Might split later though.
 export const createSVGElement = (ele: string) => {
-	return doc.createElement(ele) as unknown as SVGElement;
+	if (typeof document !== "undefined" && document instanceof Document) {
+		return document.createElementNS("http://www.w3.org/2000/svg", ele);
+	} else {
+		const { document } = parseHTML(
+			`<!doctype html><html><head></head><body></body></html>`,
+		);
+		return document.createElementNS("http://www.w3.org/2000/svg", ele);
+	}
 };
+
+// const { document } = parseHTML(
+// 	`<!doctype html><html><head></head><body></body></html>`,
+// );
+//
+// export const createSVGElement = (ele: string) => {
+// 	return document.createElementNS("http://www.w3.org/2000/svg", ele);
+// };
+
+// const doc = new DOMParser().parseFromString("", "text/html");
+//
+// export const createSVGElement = (ele: string) => {
+// 	return doc.createElement(ele) as unknown as SVGElement;
+// };
 
 // export const createSVGElement = (ele: string) => {
 // 	const cenv = Deno.env.get("MODE");

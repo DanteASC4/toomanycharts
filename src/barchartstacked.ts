@@ -1,6 +1,6 @@
-import { BarChartStackedOpts } from "./types.ts";
+import type { BarChartStackedOpts } from "./types.ts";
 import { BarChartDefaults } from "./utils/defaults.ts";
-import { fillStrings, fillEmptyArray } from "./utils/misc.ts";
+import { fillEmptyArray, fillStrings } from "./utils/misc.ts";
 
 export function barchartStacked({
 	data,

@@ -404,3 +404,31 @@ Still need to do a bit more before 0.1.0, that being:
         - Barchart page
         - Loads of examples
 
+# 7/26/2025
+
+It's the weekend now, didn't get much done yesterday so I was eager to wrap up the 0.1.0 todos. I go to test things out by building things, and I'm met with:
+
+```
+error: Uncaught (in promise) "Not implemented support for Wasm modules: https://jsr.io/@b-fuze/deno-dom/0.1.52/build/deno-wasm/deno-wasm_bg.wasm"
+```
+
+...
+
+![](https://media1.tenor.com/m/2U_hdX_TSCMAAAAd/patrick-bateman-stare.gif)
+
+Welp, no more `deno-dom`. Did a bit of research and looks like `linkedom` is what I'm looking for! This should also resolve that issue I was having with casing of attributes, where `viewBox` was being output as `viewbox`. 
+
+I realized it was more problematic than I initially thought because it was also affecting the `gradienttransform` attribute which is needed for rotating gradients.
+
+Maybe I can use the esm shim import? But I don't know if that's better than just installing it 🤔 lemme do a bit of research on that. **Update** is that it's pretty much the same thing as far as I can tell, I didn't dig too deep as `linkedom` is actually quite lightweight which is nice. I installed it just to keep consistent with having already installed things.
+
+So no more `@b-fuze/deno-dom`! Unfortunate as WASM is pretty cool & should be faster - but `linkedom` looks to be also focused on performance so it shouldn't be a noticeable difference really, I'll switch back as the WASM side of things matures. 
+
+
+Did a bit more looking into it and `linkedom` mentions deno in a recent update which is cool! That update also mentions workers being added, which I'm not sure if that refers to creating workers like in browsers or that the lib itself can now leverage workers. Either way the more I think about it the more my dismay about switching lessens.
+
+Couple nice things with `linkedom`:
+- Can now create in the SVG namespace like in browsers! No more asserting the output type!
+- No more casing issues!
+
+Ok I'm repeating myself at this point but what seemed like a major setback turned out to be an absolute win! Ok back to adding examples!

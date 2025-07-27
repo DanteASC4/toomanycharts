@@ -20,10 +20,6 @@ export const createBarAndText = (
 ) => {
 	// const group = createSVGElement("g");
 
-	// So these type assertions aren't ideal - but the alternative as far as I can tell is to use a type predicate / guard fn again, which would mean every bar & label created has an additional if-statement.
-	// While that might not really amount to much in the grand scheme of things, until I know that for sure I'll just assert it here
-	// Also I'm not sure why exactly, but if I assert the type to be just "SVGRect" typescript complains below about "setAttribute" not being defined for "DOMRect"
-	// So for now, SILENCE TYPESCRIPT!
 	const text = createSVGElement("text");
 	const bar = createSVGElement("rect");
 
@@ -92,7 +88,7 @@ export const createBarAndText = (
 	bar.setAttribute("y", `${barY}`);
 	bar.setAttribute("width", `${trueBarWidth}`);
 	bar.setAttribute("height", `${trueBarHeight}`);
-	bar.setAttribute("title", `Bar value of ${trueBarWidth}`);
+	bar.setAttribute("title", `Bar value of ${dataPoint}`);
 	if (barClass) bar.classList.add(barClass);
 
 	text.setAttribute("fill", color);

@@ -1,5 +1,3 @@
-import type { BarChartOptionsBase } from "../types.ts";
-
 export const sum2DArrayInPlace = (arr: number[][]) => {
 	return arr.slice().map((a) => a.flat().reduce((c, p) => c + p, 0));
 };
