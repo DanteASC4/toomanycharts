@@ -43,7 +43,7 @@ Ok so I've done some more thinking on both calculating bar placement & testing.
 
 ## Bar Placement
 
-I think I can make the calculations more consistent, because regardless of which side the bars should be anchored to, the spacing should be the same. 
+I think I can make the calculations more consistent, because regardless of which side the bars should be anchored to, the spacing should be the same.
 
 I will draw out a diagram and do some figuring out of the math related!
 
@@ -52,7 +52,7 @@ I will draw out a diagram and do some figuring out of the math related!
 So I like the way that testing is done now, but for development - it's a bit tedious. Each time I want to see the output I have to:
 1. Rebuild the module
   - `deno run -A scripts/build_npm.ts 0.0.1`
-2. `cd` into `e2e/test-svelte-ts` 
+2. `cd` into `e2e/test-svelte-ts`
 3. Run `pnpm install ../../npm`
 4. Stop any current tests, and close any stranded chromium windows
 5. Re-run `pnpm test:chromium`
@@ -61,7 +61,7 @@ This slows me down more than I'd like. I think later on this will be great for h
 
 I'm thinking I might use `deno-dom` so I can create elements without needing browser APIs. But I don't want that to be bundled with the resulting library.
 
-So I think I should be able to use a CLI flag when building to not use that, something like `deno run -A scripts/build_npm.ts 0.0.1 prod` or `--mode=prod` which is easy to pick up with Deno. 
+So I think I should be able to use a CLI flag when building to not use that, something like `deno run -A scripts/build_npm.ts 0.0.1 prod` or `--mode=prod` which is easy to pick up with Deno.
 
 ### Update1
 
@@ -303,11 +303,11 @@ This also makes me think that I should separate width & height from the element 
 
 ## Docs
 
-Aside from that the docs site is going well! It's a bit overkill feature-wise but fumadocs makes for a very slick experience just like I wanted. It's also fine because I don't need to use every single feature offered. 
+Aside from that the docs site is going well! It's a bit overkill feature-wise but fumadocs makes for a very slick experience just like I wanted. It's also fine because I don't need to use every single feature offered.
 
 Probably a few more days to finish up the first version of that as I want to include loads of examples.
 
-## ssr, react, & more 
+## ssr, react, & more
 
 Initially I had planned for this lib to be client-sided, but the usage of `@b-fuze/deno-dom` allows for this lib to server-side as well.
 
@@ -416,13 +416,13 @@ error: Uncaught (in promise) "Not implemented support for Wasm modules: https://
 
 ![](https://media1.tenor.com/m/2U_hdX_TSCMAAAAd/patrick-bateman-stare.gif)
 
-Welp, no more `deno-dom`. Did a bit of research and looks like `linkedom` is what I'm looking for! This should also resolve that issue I was having with casing of attributes, where `viewBox` was being output as `viewbox`. 
+Welp, no more `deno-dom`. Did a bit of research and looks like `linkedom` is what I'm looking for! This should also resolve that issue I was having with casing of attributes, where `viewBox` was being output as `viewbox`.
 
 I realized it was more problematic than I initially thought because it was also affecting the `gradienttransform` attribute which is needed for rotating gradients.
 
 Maybe I can use the esm shim import? But I don't know if that's better than just installing it 🤔 lemme do a bit of research on that. **Update** is that it's pretty much the same thing as far as I can tell, I didn't dig too deep as `linkedom` is actually quite lightweight which is nice. I installed it just to keep consistent with having already installed things.
 
-So no more `@b-fuze/deno-dom`! Unfortunate as WASM is pretty cool & should be faster - but `linkedom` looks to be also focused on performance so it shouldn't be a noticeable difference really, I'll switch back as the WASM side of things matures. 
+So no more `@b-fuze/deno-dom`! Unfortunate as WASM is pretty cool & should be faster - but `linkedom` looks to be also focused on performance so it shouldn't be a noticeable difference really, I'll switch back as the WASM side of things matures.
 
 
 Did a bit more looking into it and `linkedom` mentions deno in a recent update which is cool! That update also mentions workers being added, which I'm not sure if that refers to creating workers like in browsers or that the lib itself can now leverage workers. Either way the more I think about it the more my dismay about switching lessens.
@@ -450,8 +450,8 @@ So I go to run `npm publish`, I login, all of that, and then at the last moment 
 
 I go check it out, lo' and behold - someone with quite a similar idea to me! Though this package had not been updated in about 7 years.
 
-Alright then I'll go "minicharts" nope, also taken, same idea as well! Haha the odds! This time though it's 8 years ago. Ok surely "justcharts" will be available... Nope! Also taken, this time 8 months ago, though this one has no README or repo linked which is interesting.
+Alright then I'll go "minicharts" nope, also taken, same idea as well! Haha the odds! This time though it's 8 years ago. Ok surely "toomanycharts" will be available... Nope! Also taken, this time 8 months ago, though this one has no README or repo linked which is interesting.
 
-I even partially committed to "justcharts" before realizing, I thought for sure that one would be available, 😆 you know what, I'm thinking I'll go with "toomanycharts". In the spirit of things, this one isn't taken either.
+I even partially committed to "toomanycharts" before realizing, I thought for sure that one would be available, 😆 you know what, I'm thinking I'll go with "toomanycharts". In the spirit of things, this one isn't taken either.
 
 If I get a message saying someone has "too-manycharts" when I try to publish under that I'll explode.

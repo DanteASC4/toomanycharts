@@ -10,7 +10,7 @@ importers:
       animejs:
         specifier: ^4.1.1
         version: 4.1.1
-      justcharts:
+      toomanycharts:
         specifier: link:..\..\npm
         version: link:../../npm
     devDependencies:

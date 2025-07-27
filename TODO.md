@@ -37,9 +37,9 @@
   - ssr
 - Future Things
 - Make it modular?
-  - @justcharts/barchart
-  - @justcharts/histogram
-  - @justcharts/line
+  - @toomanycharts/barchart
+  - @toomanycharts/histogram
+  - @toomanycharts/line
   - Etc...
 - Smaller things to fix
   - Remove extra space or whole title when label is empty?

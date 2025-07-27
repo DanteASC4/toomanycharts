@@ -24,6 +24,6 @@
 		"vitest-browser-svelte": "^1.0.0"
 	},
 	"dependencies": {
-		"justcharts": "link:..\\..\\npm"
+		"toomanycharts": "link:..\\..\\npm"
 	}
 }

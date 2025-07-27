@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { barchart } from 'justcharts';
+  import { barchart } from 'toomanycharts';
   import { onMount } from 'svelte';
   import '../app.css';
 

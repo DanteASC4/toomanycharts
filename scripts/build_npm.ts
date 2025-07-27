@@ -8,17 +8,17 @@ await build({
 		deno: true,
 	},
 	package: {
-		name: "justcharts",
+		name: "toomanycharts",
 		version: Deno.args[0],
 		description:
 			"A small, client-side, 0-dependency package for quickly generating simple SVG-based charts.",
 		license: "MIT",
 		repository: {
 			type: "git",
-			url: "git+https://github.com/danteasc4/justcharts.git",
+			url: "git+https://github.com/danteasc4/toomanycharts.git",
 		},
 		bugs: {
-			url: "https://github.com/danteasc4/justcharts/issues",
+			url: "https://github.com/danteasc4/toomanycharts/issues",
 		},
 	},
 	compilerOptions: {

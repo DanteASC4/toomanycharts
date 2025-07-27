@@ -1,5 +1,5 @@
 import { animate, utils } from 'animejs';
-import { barchart } from 'justcharts';
+import { barchart } from 'toomanycharts';
 import '../app.css';
 
 const growBars = () => {

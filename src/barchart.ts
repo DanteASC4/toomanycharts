@@ -69,9 +69,9 @@ export function barchart({
 	const estTotalSize = barWidth * dataPointsAmt + (gap * dataPointsAmt - 1);
 	const isVertical = placement === "top" || placement === "bottom";
 	if (isVertical && estTotalSize > width)
-		console.warn("justchart might exceed given size bounds");
+		console.warn("toomanychart might exceed given size bounds");
 	else if (!isVertical && estTotalSize > height)
-		console.warn("justchart might exceed given size bounds");
+		console.warn("toomanychart might exceed given size bounds");
 
 	// Chart creation begin
 	const parent = makeSVGParent(height, width);
@@ -194,7 +194,7 @@ export function barchart({
 // export function barchart(options: BarChartOptions): SVGElement | null {
 // 	let { data, labels = [], type } = options;
 // 	if (data.length !== labels.length) {
-// 		console.warn("justcharts: Not all datapoints have labels");
+// 		console.warn("toomanycharts: Not all datapoints have labels");
 // 	}
 
 // 	if (type === "numerical") {
@@ -249,7 +249,7 @@ export function barchart({
 // 		}
 // 		return barchartStacked(options);
 // 	} else {
-// 		console.log("justcharts: Cannot determine data type, exiting...");
+// 		console.log("toomanycharts: Cannot determine data type, exiting...");
 // 		return null;
 // 	}
 // }

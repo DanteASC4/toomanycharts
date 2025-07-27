@@ -7,7 +7,7 @@ settings:
 importers:
   .:
     dependencies:
-      justcharts:
+      toomanycharts:
         specifier: link:..\..\npm
         version: link:../../npm
     devDependencies:
