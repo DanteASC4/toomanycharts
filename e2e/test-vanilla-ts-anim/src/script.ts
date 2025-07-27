@@ -1,5 +1,5 @@
 import { animate, utils } from 'animejs';
-import { barchart } from 'nanocharts';
+import { barchart } from 'justcharts';
 
 const growBars = () => {
   utils.set('.el-bar', {

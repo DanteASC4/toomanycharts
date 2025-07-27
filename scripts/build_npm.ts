@@ -8,17 +8,17 @@ await build({
 		deno: true,
 	},
 	package: {
-		name: "nanocharts",
+		name: "justcharts",
 		version: Deno.args[0],
 		description:
 			"A small, client-side, 0-dependency package for quickly generating simple SVG-based charts.",
 		license: "MIT",
 		repository: {
 			type: "git",
-			url: "git+https://github.com/danteasc4/nanocharts.git",
+			url: "git+https://github.com/danteasc4/justcharts.git",
 		},
 		bugs: {
-			url: "https://github.com/danteasc4/nanocharts/issues",
+			url: "https://github.com/danteasc4/justcharts/issues",
 		},
 	},
 	compilerOptions: {

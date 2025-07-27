@@ -1,4 +1,4 @@
-import { barchart } from 'nanocharts';
+import { barchart } from 'justcharts';
 import '../app.css';
 
 export default function BasicChartTest(): HTMLDivElement {

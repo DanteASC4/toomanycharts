@@ -17,6 +17,6 @@
   },
   "dependencies": {
     "animejs": "^4.1.1",
-    "nanocharts": "link:..\\..\\npm"
+    "justcharts": "link:..\\..\\npm"
   }
 }

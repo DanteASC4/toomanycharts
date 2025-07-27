@@ -1,4 +1,4 @@
-// const prefix = 'nanochartS:'
+// const prefix = 'justchartS:'
 
 // export const labels = {
 //   warns: `${prefix}`
