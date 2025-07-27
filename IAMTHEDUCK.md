@@ -432,3 +432,26 @@ Couple nice things with `linkedom`:
 - No more casing issues!
 
 Ok I'm repeating myself at this point but what seemed like a major setback turned out to be an absolute win! Ok back to adding examples!
+
+# 7/27/2025
+
+Interesting start to the day!
+
+After much fiddling with things, I finally got pretty much all the `0.1.0` todos wrapped up.
+- Basic logo
+- Basic Docs site
+    - Up and running on github pages after a bunch of wrestling with some auto-generated things
+- Exports and everything in place
+
+
+Then I went to publish the npm package, now prior to this I *had* checked that the npm package with the name "NanoCharts" wasn't taken - it wasn't!
+
+So I go to run `npm publish`, I login, all of that, and then at the last moment get hit with a message saying "NanoCharts" is too similar to existing package "nano-charts"!
+
+I go check it out, lo' and behold - someone with quite a similar idea to me! Though this package had not been updated in about 7 years.
+
+Alright then I'll go "minicharts" nope, also taken, same idea as well! Haha the odds! This time though it's 8 years ago. Ok surely "justcharts" will be available... Nope! Also taken, this time 8 months ago, though this one has no README or repo linked which is interesting.
+
+I even partially committed to "justcharts" before realizing, I thought for sure that one would be available, 😆 you know what, I'm thinking I'll go with "toomanycharts". In the spirit of things, this one isn't taken either.
+
+If I get a message saying someone has "too-manycharts" when I try to publish under that I'll explode.
