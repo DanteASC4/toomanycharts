@@ -2,8 +2,9 @@
 	"tasks": {
 		"dev": "deno run --watch src/main.ts",
     "test": "deno test --allow-env tests/",
-    "test:main": "deno test --allow-env --allow-write tests/main_test.ts",
-    "test:mainex": "deno test --allow-env --allow-write tests/main_extras_test.ts",
+    "test:barc": "deno test --allow-env --allow-write tests/barchart_test.ts",
+    "test:barcst": "deno test --allow-env --allow-write tests/barchartstacked_test.ts",
+    "test:barcex": "deno test --allow-env --allow-write tests/barchart_extras_test.ts",
 		"test:utils": "deno test --allow-env --allow-write tests/utils_test.ts",
 		"format": "deno run -A npm:@biomejs/biome format --write",
 		"lint": "deno run -A npm:@biomejs/biome lint --write",

@@ -25,6 +25,7 @@ export function barchart({
 	barGroupClass,
 	textGroupClass,
 	colors,
+	labelColors,
 	gradientColors,
 	gradientMode,
 	gradientDirection,
@@ -66,12 +67,12 @@ export function barchart({
 
 	// if (!gap) gap = autoGap(placement, width, height, dataPointsAmt, barWidth);
 
-	const estTotalSize = barWidth * dataPointsAmt + (gap * dataPointsAmt - 1);
-	const isVertical = placement === "top" || placement === "bottom";
-	if (isVertical && estTotalSize > width)
-		console.warn("toomanychart might exceed given size bounds");
-	else if (!isVertical && estTotalSize > height)
-		console.warn("toomanychart might exceed given size bounds");
+	// const estTotalSize = barWidth * dataPointsAmt + (gap * dataPointsAmt - 1);
+	// const isVertical = placement === "top" || placement === "bottom";
+	// if (isVertical && estTotalSize > width)
+	// 	console.warn("toomanychart might exceed given size bounds");
+	// else if (!isVertical && estTotalSize > height)
+	// 	console.warn("toomanychart might exceed given size bounds");
 
 	// Chart creation begin
 	const parent = makeSVGParent(height, width);
@@ -149,6 +150,11 @@ export function barchart({
 				: colors && colors.length > 0
 					? colors[i % colors.length]
 					: "#ffffff";
+
+		const labelColor =
+			labelColors && labelColors.length > 0
+				? labelColors[i % labelColors.length]
+				: "#ffffff";
 		const [bar, text] = createBarAndText(
 			i,
 			placement,
@@ -158,6 +164,7 @@ export function barchart({
 			barWidth,
 			evenWidth,
 			color,
+			labelColor,
 			{ width, height },
 			{ textClass, barClass },
 		);

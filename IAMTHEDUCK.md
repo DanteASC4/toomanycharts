@@ -460,3 +460,15 @@ If I get a message saying someone has "too-manycharts" when I try to publish und
 
 Phew, that one was available as I thought! Version `0.1.0` is out! I'll be doing the stacked barcharts next I think.
 
+# 7/28/2025
+
+Ok so I've done the basic implementation for stacked barcharts, and it felt almost too simple. One thing I've realized is that I didn't think about how the labels for stacked bar charts would be colored. It made me think that labels should have their own color parameter, which could be just one color, but I could also let it have multiple colors to also allow for alternating colors.
+
+
+Writing this down here, but I think allowing for **images** somehow would be really nice. I'll think it through later, but would ideally introduce much more overhead on the page, don't want to block anything. Hmmm. I know JS has the `Image` constructor but not sure if that'd be the best option. Couple ideas:
+- Image
+- Actual `<img...` eles
+- SVGs
+    - This would be easy to do I think so I'll likely allow this anyway
+
+But that's for later.

@@ -42,6 +42,7 @@ export type BarChartOptionsBase = {
 	// barClass: string;
 	// textClass: string;
 	colors: string[];
+	labelColors: string[];
 	gradientColors: string[];
 	gradientMode: LinearGradientType;
 	gradientDirection: LinearGradientDirection;

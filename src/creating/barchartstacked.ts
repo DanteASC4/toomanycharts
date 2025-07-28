@@ -1,44 +1,39 @@
-import type { BarChartNumericalOpts } from "../types.ts";
+import type { BarChartStackedOpts } from "../types.ts";
 import { createSVGElement } from "./common.ts";
 
 const textOffset = 15;
 
-export const createBarAndText = (
+export const createStackedBarAndText = (
 	gIdx: number,
-	placement: BarChartNumericalOpts["placement"],
-	dataPoint: number,
+	placement: BarChartStackedOpts["placement"],
+	dataPoint: number[],
+	numericalDataPoint: number,
 	label: string,
 	gap: number,
 	barWidth: number,
 	evenWidth: number,
-	color: string,
+	color: string | string[],
 	labelColor: string,
 	{ width, height }: { width: number; height: number },
 	{
 		barClass,
 		textClass,
-	}: Pick<BarChartNumericalOpts, "groupClass" | "barClass" | "textClass">,
+	}: Pick<BarChartStackedOpts, "groupClass" | "barClass" | "textClass">,
 ) => {
 	// const group = createSVGElement("g");
 
-	const text = createSVGElement("text");
-	const bar = createSVGElement("rect");
-
 	let barX = 0;
 	let barY = 0;
-	let trueBarHeight = dataPoint;
+	let trueBarHeight = numericalDataPoint;
 	let trueBarWidth = evenWidth;
 
 	let textX = 0;
 	let textY = 0;
-	// let trueBarHeight = barWidth;
-	// let trueBarWidth = dataPoint;
 
 	const initial = evenWidth * 2 * gIdx;
 	barX = initial + gap;
 
 	if (placement === "left") {
-		// ...
 		const tempS = trueBarWidth;
 		trueBarWidth = trueBarHeight;
 		trueBarHeight = tempS;
@@ -84,15 +79,48 @@ export const createBarAndText = (
 		}
 	}
 
-	bar.setAttribute("fill", color);
-	bar.setAttribute("x", `${barX}`);
-	bar.setAttribute("y", `${barY}`);
-	bar.setAttribute("width", `${trueBarWidth}`);
-	bar.setAttribute("height", `${trueBarHeight}`);
-	bar.setAttribute("title", `Bar value of ${dataPoint}`);
-	if (barClass) bar.classList.add(barClass);
+	const bars: SVGElement[] = [];
+	for (let i = 0; i < dataPoint.length; i++) {
+		const current = dataPoint[i];
+		const offset = dataPoint.slice(0, i).reduce((c, p) => c + p, 0);
 
+		const bar = createSVGElement("rect");
+		if (typeof color === "string") {
+			bar.setAttribute("fill", color);
+		} else {
+			const chosen = color[i % color.length];
+			bar.setAttribute("fill", chosen);
+		}
+		// bar.setAttribute("x", `${barX}`);
+		// bar.setAttribute("y", `${barY+offset}`);
+		// bar.setAttribute("width", `${trueBarWidth}`);
+		// bar.setAttribute("height", `${trueBarHeight}`);
+
+		if (placement === "top" || placement === "bottom") {
+			bar.setAttribute("x", `${barX}`);
+			bar.setAttribute("y", `${barY + offset}`);
+			bar.setAttribute("width", `${trueBarWidth}`);
+			bar.setAttribute("height", `${current}`);
+		} else {
+			bar.setAttribute("x", `${barX + offset}`);
+			bar.setAttribute("y", `${barY}`);
+			bar.setAttribute("width", `${current}`);
+			bar.setAttribute("height", `${trueBarHeight}`);
+		}
+
+		// bar.setAttribute("title", `Bar value of ${dataPoint}`);
+		if (barClass) bar.classList.add(barClass);
+
+		bars.push(bar);
+	}
+
+	const text = createSVGElement("text");
 	text.setAttribute("fill", labelColor);
+	// if (typeof color === "string") {
+	// 	text.setAttribute("fill", color);
+	// } else {
+	// 	text.setAttribute("fill", color[0]);
+	// }
 	text.setAttribute("x", `${textX}`);
 	text.setAttribute("y", `${textY}`);
 	text.setAttribute("title", `Bar label ${label}`);
@@ -103,5 +131,5 @@ export const createBarAndText = (
 	// group.appendChild(text);
 	// if (groupClass) group.classList.add(groupClass);
 
-	return [bar, text] as const;
+	return [bars, text] as const;
 };

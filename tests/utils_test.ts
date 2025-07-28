@@ -1,5 +1,9 @@
 import { assertEquals } from "@std/assert";
-import { lgDistTest, sum2DArrayInPlace } from "../src/utils/maths.ts";
+import {
+	lgDistTest,
+	stackedToNumerical,
+	sum2DArrayInPlace,
+} from "../src/utils/maths.ts";
 import { fillEmptyArray, fillStrings, fillZeros } from "../src/utils/misc.ts";
 
 Deno.test(function sum2DTest() {
@@ -40,4 +44,14 @@ Deno.test(function fillZeroHelper() {
 Deno.test(function linearGradientStops() {
 	const test1 = 3;
 	assertEquals(lgDistTest(test1), [0, 50, 100]);
+});
+
+Deno.test(function stackedArrToNumericalArr() {
+	const testA1 = [
+		[1, 2, 3],
+		[3, 2, 1],
+		[1, 2, 3],
+	];
+	const toNum1 = stackedToNumerical(testA1);
+	assertEquals(toNum1, [6, 6, 6]);
 });

@@ -7,23 +7,26 @@
     - [x] Spacing
     - [x] Labels
     - [x] Colors
-  - [ ] Basic docs site
+  - [x] Basic docs site
   - [ ] README sections filled out!
-    - [ ] Logo (made of chart outputs) + tagline
+    - [x] Logo (made of chart outputs) + secret (not the tagline)
     - [ ] Those neat little badges you see everywhere
     - [ ] Table of contents (should link to docs)
     - [ ] License (mit)
     - [ ] Contributing?
     - [ ] keywords
 - Pre-0.2.0 Todos
-  - [ ] Stacked Bar Charts Implemented
-    - [ ] Placement
-    - [ ] Sizing
-    - [ ] Spacing
-    - [ ] Labels
+  - [x] Stacked Bar Charts Implementation
+    - [x] Placement
+    - [x] Sizing
+    - [x] Spacing
+    - [x] Labels
     - [ ] Colors
+        - [x] Alternating
+        - [ ] Gradients
 - Ongoing / Misc
   - [ ] Re-require labels for accessibility & instead add a `showLabels` that skips adding text elements if false
+  - [ ] Add a `labelColors` option for coloring labels separately
   - [ ] Setup some tests for additional frameworks
     - [ ] React
     - [ ] Vanilla
@@ -34,7 +37,8 @@
   - Histogram
   - Image labels
   - Pie/Donut/Torus chart
-  - ssr
+  - ~~ssr~~
+    - Added!
 - Future Things
 - Make it modular?
   - @toomanycharts/barchart

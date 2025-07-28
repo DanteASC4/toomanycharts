@@ -6,7 +6,7 @@ const saveIfReal = (result: SVGElement | null, name: string) => {
 	if (result) {
 		console.log(`%c${name}`, "color:magenta;");
 		Deno.writeTextFileSync(
-			`./temp/out/${name}.svg`,
+			`./temp/out/barchart/${name}.svg`,
 			result.outerHTML.toString(),
 		);
 	}
