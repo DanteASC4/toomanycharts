@@ -472,3 +472,56 @@ Writing this down here, but I think allowing for **images** somehow would be rea
     - This would be easy to do I think so I'll likely allow this anyway
 
 But that's for later.
+
+# 7/29/205
+
+Continuing work on the stacked bar chart, & test coverage - I noticed some bad parameter naming. I had named the paramter for adding a class to the labels elements `textClass`... The "label" class param is called "textClass" which felt wrong so!
+- `textClass` -> `labelClass`
+
+Then while I was doing a bit of work on test coverage - I realized I forgot about `textGroupClass`. So!
+- `textGroupClass` -> `labelGroupClass`
+
+Since this whole lib is in the early stages I won't just mark it as "deprecated" or anything, just going to fully rename it now while I can.
+
+Which got me thinking if a "CHANGELOG.md" would be good, but I've got a nice doc site already, so I think that would be better there!
+Changelog page on the way!
+
+**Update1**
+While working on coverage I saw that the coverage wasn't picking up a certain part of that nested ternary used for the color picking.
+
+```ts
+const color =
+  isGradient && gradientId
+    ? gradientMode === 'continuous'
+      ? 'transparent'
+      : `url('#${gradientId}')`
+    : colors && colors.length > 0
+    ? colors[i % colors.length]
+    : ['#ffffff', '#aaaaaa'];
+```
+particularly the "url" bit which is when it's a non-continuous gradient. Though I checked the output & see that that is being used for non-continuous gradients, but honestly it's a bit of an abomination so I don't blame the coverage check.
+
+I think that's a sign that it's time to split this up into a good ol' if/else if/else block!
+
+**Update2**
+Turns out it wasn't the url part that wasn't being used, it was the normal colors part - I guess I misread the little indicator in the html output. It's fine though as that ternary shouldn't exist anyway.
+
+**Update3**
+In the coverage it shows that this is uncovered:
+```ts
+if (typeof document !== "undefined" && document instanceof Document) {
+    return document.createElementNS("http://www.w3.org/2000/svg", ele);
+} else {
+    const { document } = parseHTML(
+        `<!doctype html><html><head></head><body></body></html>`,
+    );
+    return document.createElementNS("http://www.w3.org/2000/svg", ele);
+}
+```
+Which makes sense, because I don't have a test with a global faux-document anyway. I'm not sure if this check is even needed, since linkedom is imported it will be bundled regardless if my understanding is correct, so I may remove this later but for now I'll ignore that.
+
+**Update4**
+
+Ok just about everything is at or above 90% for coverage. Going to stop now. Only oddity is the `barWidth` param, that was reported as not being covered for the cases where it's not equal to the automatic `evenWidth`. But I remember trying that out & visually it looked correct so I'll leave it as-is for now.
+
+Need to update docs as I think barchart stacked is pretty much good to go!

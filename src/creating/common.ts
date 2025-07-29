@@ -2,6 +2,7 @@ import { parseHTML } from "linkedom";
 
 // Allows for seamless client or ssr usage. Might split later though.
 export const createSVGElement = (ele: string) => {
+	// deno-coverage-ignore-start
 	if (typeof document !== "undefined" && document instanceof Document) {
 		return document.createElementNS("http://www.w3.org/2000/svg", ele);
 	} else {
@@ -10,6 +11,7 @@ export const createSVGElement = (ele: string) => {
 		);
 		return document.createElementNS("http://www.w3.org/2000/svg", ele);
 	}
+	// deno-coverage-ignore-stop
 };
 
 // const { document } = parseHTML(

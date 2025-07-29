@@ -21,9 +21,9 @@ export function barchart({
 	groupClass,
 	parentClass,
 	barClass,
-	textClass,
+	labelClass,
 	barGroupClass,
-	textGroupClass,
+	labelGroupClass,
 	colors,
 	labelColors,
 	gradientColors,
@@ -122,7 +122,7 @@ export function barchart({
 		textGroup.classList.add(groupClass);
 	}
 	if (barGroupClass) barGroup.classList.add(barGroupClass);
-	if (textGroupClass) textGroup.classList.add(textGroupClass);
+	if (labelGroupClass) textGroup.classList.add(labelGroupClass);
 
 	barGroup.classList.add("nc-bargroup");
 	textGroup.classList.add("nc-textgroup");
@@ -142,14 +142,22 @@ export function barchart({
 		 *  Grab the color at the current modulated (is that the right word?) index
 		 *  Else fill with white
 		 */
-		const color =
-			isGradient && gradientId
-				? gradientMode === "continuous"
-					? "transparent"
-					: `url('#${gradientId}')`
-				: colors && colors.length > 0
-					? colors[i % colors.length]
-					: "#ffffff";
+		let color: string = "#ffffff";
+		if (isGradient && gradientId) {
+			if (gradientMode === "continuous") color = "transparent";
+			else `url('#${gradientId}')`;
+		} else if (colors && colors.length > 0) {
+			color = colors[i % colors.length];
+		}
+
+		// const color =
+		//   isGradient && gradientId
+		//     ? gradientMode === 'continuous'
+		//       ? 'transparent'
+		//       : `url('#${gradientId}')`
+		//     : colors && colors.length > 0
+		//     ? colors[i % colors.length]
+		//     : '#ffffff';
 
 		const labelColor =
 			labelColors && labelColors.length > 0
@@ -166,7 +174,7 @@ export function barchart({
 			color,
 			labelColor,
 			{ width, height },
-			{ textClass, barClass },
+			{ labelClass, barClass },
 		);
 		barGroup.appendChild(bar);
 		textGroup.appendChild(text);

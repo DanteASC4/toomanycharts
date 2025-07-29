@@ -16,8 +16,8 @@ export const createBarAndText = (
 	{ width, height }: { width: number; height: number },
 	{
 		barClass,
-		textClass,
-	}: Pick<BarChartNumericalOpts, "groupClass" | "barClass" | "textClass">,
+		labelClass,
+	}: Pick<BarChartNumericalOpts, "groupClass" | "barClass" | "labelClass">,
 ) => {
 	// const group = createSVGElement("g");
 
@@ -97,7 +97,7 @@ export const createBarAndText = (
 	text.setAttribute("y", `${textY}`);
 	text.setAttribute("title", `Bar label ${label}`);
 	text.textContent = label;
-	if (textClass) text.classList.add(textClass);
+	if (labelClass) text.classList.add(labelClass);
 
 	// group.appendChild(bar);
 	// group.appendChild(text);

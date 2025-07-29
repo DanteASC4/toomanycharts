@@ -25,9 +25,9 @@ export type BarChartClasses = {
 	groupClass: string;
 	parentClass: string;
 	barClass: string;
-	textClass: string;
+	labelClass: string;
 	barGroupClass: string;
-	textGroupClass: string;
+	labelGroupClass: string;
 };
 
 export type BarChartOptionsBase = {
@@ -40,7 +40,7 @@ export type BarChartOptionsBase = {
 	// groupClass: string;
 	// parentClass: string;
 	// barClass: string;
-	// textClass: string;
+	// labelClass: string;
 	colors: string[];
 	labelColors: string[];
 	gradientColors: string[];

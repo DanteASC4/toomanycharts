@@ -21,12 +21,12 @@
     - [x] Sizing
     - [x] Spacing
     - [x] Labels
-    - [ ] Colors
+    - [x] Colors
         - [x] Alternating
-        - [ ] Gradients
+        - [x] Gradients
 - Ongoing / Misc
   - [ ] Re-require labels for accessibility & instead add a `showLabels` that skips adding text elements if false
-  - [ ] Add a `labelColors` option for coloring labels separately
+  - [x] Add a `labelColors` option for coloring labels separately
   - [ ] Setup some tests for additional frameworks
     - [ ] React
     - [ ] Vanilla

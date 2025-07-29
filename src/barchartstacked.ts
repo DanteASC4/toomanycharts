@@ -26,9 +26,9 @@ export function barchartStacked({
 	groupClass,
 	parentClass,
 	barClass,
-	textClass,
+	labelClass,
 	barGroupClass,
-	textGroupClass,
+	labelGroupClass,
 	colors,
 	labelColors,
 	gradientColors,
@@ -40,7 +40,7 @@ export function barchartStacked({
 	// if (!min) min = BarChartDefaults.min;
 	if (!height) height = BarChartDefaults.size;
 	if (!width) width = BarChartDefaults.size;
-	if (!gap) gap = BarChartDefaults.gap;
+	// if (!gap) gap = BarChartDefaults.gap;
 	if (!placement) placement = BarChartDefaults.placement;
 
 	const padLabels = labels.length < data.length;
@@ -48,6 +48,7 @@ export function barchartStacked({
 		const diff = Math.abs(labels.length - data.length);
 		fillStrings(labels, diff);
 	}
+	// this might need to be adjusted, as the logic behind this for stacked feels a bit different
 	const padData = data.length < labels.length;
 	if (padData) {
 		const diff = Math.abs(labels.length - data.length);
@@ -112,7 +113,7 @@ export function barchartStacked({
 		textGroup.classList.add(groupClass);
 	}
 	if (barGroupClass) barGroup.classList.add(barGroupClass);
-	if (textGroupClass) textGroup.classList.add(textGroupClass);
+	if (labelGroupClass) textGroup.classList.add(labelGroupClass);
 
 	barGroup.classList.add("nc-bargroup");
 	textGroup.classList.add("nc-textgroup");
@@ -123,14 +124,24 @@ export function barchartStacked({
 		const label = labels[i];
 		const datap = data[i];
 		const datapNumerical = asNumerical[i];
-		const color =
-			isGradient && gradientId
-				? gradientMode === "continuous"
-					? "transparent"
-					: `url('#${gradientId}')`
-				: colors && colors.length > 0
-					? colors[i % colors.length]
-					: ["#ffffff", "#aaaaaa"];
+
+		let color: string | string[] = ["#ffffff", "#aaaaaa"];
+
+		if (isGradient && gradientId) {
+			if (gradientMode === "continuous") color = "transparent";
+			else `url('#${gradientId}')`;
+		} else if (colors && colors.length > 0) {
+			color = colors[i % colors.length];
+		}
+
+		// const color =
+		// 	isGradient && gradientId
+		// 		? gradientMode === "continuous"
+		// 			? "transparent"
+		// 			: `url('#${gradientId}')`
+		// 		: colors && colors.length > 0
+		// 			? colors[i % colors.length]
+		// 			: ["#ffffff", "#aaaaaa"];
 
 		const labelColor =
 			labelColors && labelColors.length > 0
@@ -148,7 +159,7 @@ export function barchartStacked({
 			color,
 			labelColor,
 			{ width, height },
-			{ textClass, barClass },
+			{ labelClass, barClass },
 		);
 
 		stackedbars.map((bar) => barGroup.appendChild(bar));

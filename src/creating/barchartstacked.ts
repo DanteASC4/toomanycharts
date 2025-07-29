@@ -17,8 +17,8 @@ export const createStackedBarAndText = (
 	{ width, height }: { width: number; height: number },
 	{
 		barClass,
-		textClass,
-	}: Pick<BarChartStackedOpts, "groupClass" | "barClass" | "textClass">,
+		labelClass,
+	}: Pick<BarChartStackedOpts, "groupClass" | "barClass" | "labelClass">,
 ) => {
 	// const group = createSVGElement("g");
 
@@ -125,7 +125,7 @@ export const createStackedBarAndText = (
 	text.setAttribute("y", `${textY}`);
 	text.setAttribute("title", `Bar label ${label}`);
 	text.textContent = label;
-	if (textClass) text.classList.add(textClass);
+	if (labelClass) text.classList.add(labelClass);
 
 	// group.appendChild(bar);
 	// group.appendChild(text);
