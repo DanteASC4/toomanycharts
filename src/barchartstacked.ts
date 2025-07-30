@@ -129,9 +129,10 @@ export function barchartStacked({
 
 		if (isGradient && gradientId) {
 			if (gradientMode === "continuous") color = "transparent";
-			else `url('#${gradientId}')`;
+			else color = `url('#${gradientId}')`;
 		} else if (colors && colors.length > 0) {
-			color = colors[i % colors.length];
+			color = colors;
+			// color = colors[asNumerical.indexOf(dat) % colors.length];
 		}
 
 		// const color =
