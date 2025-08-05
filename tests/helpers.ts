@@ -1,5 +1,24 @@
+import { ensureDirSync } from "jsr:@std/fs";
 import { randomIntegerBetween } from "@std/random";
 
+const toOutP = (group: string, name: string) =>
+	`./temp/out/${group}/${name}.svg`;
+const toOutDir = (group: string) => `./temp/out/${group}/`;
+
+// Directory needs to exist.
+export const saveIfReal = (
+	result: SVGElement | null,
+	group: string,
+	name: string,
+) => {
+	if (Deno.env.get("BUILD")) return;
+	if (result) {
+		const out = toOutP(group, name);
+		ensureDirSync(toOutDir(group));
+		console.log(`%c${name}`, "color:magenta;");
+		Deno.writeTextFileSync(out, result.outerHTML.toString());
+	}
+};
 const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 /*

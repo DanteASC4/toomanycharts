@@ -1,18 +1,10 @@
 import { assertEquals } from "@std/assert";
 import { barchartStacked } from "../src/barchartstacked.ts";
-import { randomStackedDataArray, randShortString } from "./helpers.ts";
-
-// Directory needs to exist.
-const saveIfReal = (result: SVGElement | null, name: string) => {
-	if (Deno.env.get("BUILD")) return;
-	if (result) {
-		console.log(`%c${name}`, "color:magenta;");
-		Deno.writeTextFileSync(
-			`./temp/out/barchartstacked/${name}.svg`,
-			result.outerHTML.toString(),
-		);
-	}
-};
+import {
+	randomStackedDataArray,
+	randShortString,
+	saveIfReal,
+} from "./helpers.ts";
 
 /*
  * rsd = random stacked data
@@ -171,13 +163,17 @@ Deno.test(function barchartStackedTests() {
 	assertEquals(tbcs10?.getAttribute("height"), "300");
 
 	// Saving output for visual inspection, only when running in non-build mode.
-	saveIfReal(tbcs0, "tbcs0");
-	saveIfReal(tbcs1, "tbcs1_labeled");
-	saveIfReal(tbcs2, "tbcs2_labeled_place_top");
-	saveIfReal(tbcs3, "tbcs3_labeled_place_left");
-	saveIfReal(tbcs4, "tbcs4_labeled_place_right");
-	saveIfReal(tbcs5, "tbcs5_data_padding");
-	saveIfReal(tbcs6, "tbcs6_gap");
-	saveIfReal(tbcs7, "tbcs7_gradient_nonsquare_size");
-	saveIfReal(tbcs8, "tbcs8_gradient_contiuous_nonsquare_size");
+	saveIfReal(tbcs0, "barchartstacked", "tbcs0");
+	saveIfReal(tbcs1, "barchartstacked", "tbcs1_labeled");
+	saveIfReal(tbcs2, "barchartstacked", "tbcs2_labeled_place_top");
+	saveIfReal(tbcs3, "barchartstacked", "tbcs3_labeled_place_left");
+	saveIfReal(tbcs4, "barchartstacked", "tbcs4_labeled_place_right");
+	saveIfReal(tbcs5, "barchartstacked", "tbcs5_data_padding");
+	saveIfReal(tbcs6, "barchartstacked", "tbcs6_gap");
+	saveIfReal(tbcs7, "barchartstacked", "tbcs7_gradient_nonsquare_size");
+	saveIfReal(
+		tbcs8,
+		"barchartstacked",
+		"tbcs8_gradient_contiuous_nonsquare_size",
+	);
 });

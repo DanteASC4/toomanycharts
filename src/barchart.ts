@@ -4,9 +4,11 @@ import {
 	createBarChartMask,
 	createLinearGradient,
 } from "./creating/gradients.ts";
+import { autoBarWidth } from "./math/barcharts.ts";
+import { autoGap } from "./math/common.ts";
 import type { BarChartNumericalOpts } from "./types.ts";
 import { BarChartDefaults } from "./utils/defaults.ts";
-import { autoBarWidth, autoGap, autoMaxNumerical } from "./utils/maths.ts";
+import { autoMaxNumerical } from "./utils/general-operations.ts";
 import { fillStrings, fillZeros } from "./utils/misc.ts";
 
 export function barchart({
@@ -205,66 +207,3 @@ export function barchart({
 
 	return parent;
 }
-
-// export function barchart(options: BarChartOptions): SVGElement | null {
-// 	let { data, labels = [], type } = options;
-// 	if (data.length !== labels.length) {
-// 		console.warn("toomanycharts: Not all datapoints have labels");
-// 	}
-
-// 	if (type === "numerical") {
-// 		const goodNumericalData = isNumericalArray(data);
-// 		if (!goodNumericalData) {
-// 			console.error(
-// 				'Data for "numerical" charts should be an array of numbers!',
-// 			);
-// 			return null;
-// 		}
-
-// 		const goodOpts = isNumericalOptions(options);
-// 		if (!goodOpts) {
-// 			// this shouldn't be possible, more just to satify ts
-// 			return null;
-// 		}
-
-// 		return barchartNumerical(options);
-// 	}
-// 	if (type === "stacked") {
-// 		const goodNumericalData = is2DNumericalArray(data);
-// 		if (!goodNumericalData) {
-// 			console.error(
-// 				'Data for "stacked" charts should be a 2D-array of numbers!',
-// 			);
-// 			return null;
-// 		}
-
-// 		const goodOpts = isStackedOptions(options);
-// 		if (!goodOpts) {
-// 			// this shouldn't be possible, more just to satify ts
-// 			return null;
-// 		}
-
-// 		return barchartStacked(options);
-// 	}
-
-// 	if (!type && typeof data[0] === "number") {
-// 		// type = "numerical";
-// 		options.type = "numerical";
-// 		if (!isNumericalOptions(options)) {
-// 			console.warn("Bad options for numerical auto-type! Exiting...");
-// 			return null;
-// 		}
-// 		return barchartNumerical(options);
-// 	} else if (!type && Array.isArray(data[0])) {
-// 		// type = "stacked";
-// 		options.type = "numerical";
-// 		if (!isStackedOptions(options)) {
-// 			console.warn("Bad options for stacked auto-type! Exiting...");
-// 			return null;
-// 		}
-// 		return barchartStacked(options);
-// 	} else {
-// 		console.log("toomanycharts: Cannot determine data type, exiting...");
-// 		return null;
-// 	}
-// }

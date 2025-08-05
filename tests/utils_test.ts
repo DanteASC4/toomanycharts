@@ -3,7 +3,7 @@ import {
 	lgDistTest,
 	stackedToNumerical,
 	sum2DArrayInPlace,
-} from "../src/utils/maths.ts";
+} from "../src/utils/general-operations.ts";
 import { fillEmptyArray, fillStrings, fillZeros } from "../src/utils/misc.ts";
 
 Deno.test(function sum2DTest() {

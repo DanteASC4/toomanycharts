@@ -473,7 +473,7 @@ Writing this down here, but I think allowing for **images** somehow would be rea
 
 But that's for later.
 
-# 7/29/205
+# 7/29/2025
 
 Continuing work on the stacked bar chart, & test coverage - I noticed some bad parameter naming. I had named the paramter for adding a class to the labels elements `textClass`... The "label" class param is called "textClass" which felt wrong so!
 - `textClass` -> `labelClass`
@@ -525,3 +525,107 @@ Which makes sense, because I don't have a test with a global faux-document anywa
 Ok just about everything is at or above 90% for coverage. Going to stop now. Only oddity is the `barWidth` param, that was reported as not being covered for the cases where it's not equal to the automatic `evenWidth`. But I remember trying that out & visually it looked correct so I'll leave it as-is for now.
 
 Need to update docs as I think barchart stacked is pretty much good to go!
+
+# 8/1/2025
+
+So I've begun work on the linechart, and I've already got a bunch of thoughts / things to figure out. Gonna write them here to not  forget.
+
+
+## Multiple Lines
+
+Was thinking I'd do a `linechartMulti` for drawing multiple lines. But then I thought I might just allow the `data` to be `number[]` or `number[][]` instead of two separate functions.
+
+Except that would go against how it was done for bar chart stacked. I think I'll make a separate function to keep things consistent, and beccause it would be better for bundling to split things up.
+
+## Scales?
+
+With bars it was easy to not really need scales / a grid. But I'd been thinking about it & I feel like something scales related could be really helpful for linecharts.
+
+Considering this as the output:
+![](./extras/line_ex0.png)
+
+That doesn't really need scales or anything. And that's plenty in terms of gleaning information. But what if you wanted this:
+![](./extras/line_ex1.png)
+
+That's different. It conveys different information. But how much? I think enough to warrant having that functionality. Except now that I'm thinking about it, I don't think it needs scales.
+
+That's the midpoint basically. So I think in using this space as a rubber duck I've landed on a good solution, allowing a midpoint to be specified. Otherwise we'll start from `0,0`
+
+## Labels Overhaul
+
+After doing some late night / random thinking about things I've come to a point where I'm thinking labels could be quite important in some use cases.
+
+That being said they've kind of taken a backseat to the actual visuals thus far, and rightfully so I might add - but I think I can see how they could be extraordinarily useful.
+
+The tricky thing is that their implementation will depend on the type of chart. So I'm going to finish the 4 basic chart functions:
+- `barchart`
+- `barchartStacked`
+- `linechart`
+- `linechartMulti`
+    - Name likely to change for this, sounds bad??
+
+Then I'm going to do some framework specific packaging, and then I think overhaul how labels work. Rough intended feature list:
+- Image labels
+- Truncation
+- Perfect-Placing mode?
+    - So it can be tricky, but I know it's possible to truly perfectly place text by calculating how big the resulting box would be based on the font used, and font-size.
+    - This would definitely be optional, because I'd imagine that this would be a non-trivial calculation which could add up depending on the # of times run.
+- for barcharts > centered on bars
+    - right now labels are only placed on the ends
+    - I think it'd be fantastic to do something like:
+    ```
+    =------=
+    |  #   |
+    =------=
+    ```
+Maybe some more things too. We'll see!
+**Note to self** add this to the roadmap page.
+
+
+**Update1**
+`linechartMulti` -> `linechartMany` sounds better I think!
+
+**Update2**
+
+The `linechart` won't have a `placement` parameter for now since it's read strictly from left to right, and if you want to rotate it you can just use `transform` on it. 
+
+...Also just realizing I could have just done `place` instead of `placement`... wdjaiojwdiowoijqowj
+I'll make that change with the linechart update, less to write and more in-line with CSS naming.
+
+I'm also thinking I'll move some mathematical functions out of `maths.ts` and into the relevant `creating/chart-type` files to keep things more organized.
+
+Or maybe a `maths/` folder with corresponding names? Or would that be excessive, hmmmm... I think that sounds better, then the folder structure would be something like:
+
+```
+├─ src
+│  ├─ ...
+│  ├─ utils
+│  │  └─ ...
+│  ├─ creating
+│  │  ├─ common.ts
+│  │  ├─ chart-type.ts
+│  ├─ math
+│  │  ├─ common.ts
+│  │  ├─ chart-type.ts
+```
+
+Which feels sensible to me I think. And I think this would also benefit bundling. But I think I will have one per type, instead of 1-to-1.
+
+So instead of:
+```
+├─ src
+│  ├─ math
+│  │  ├─ common.ts
+│  │  ├─ barchart.ts
+│  │  ├─ barchartstacked.ts
+```
+
+I'll do:
+```
+├─ src
+│  ├─ math
+│  │  ├─ common.ts
+│  │  ├─ barcharts.ts
+```
+
+Since the variations of similar types usually share the underlying bits. It would also mean this won't be doubling overall files.

@@ -1,16 +1,6 @@
 import { assertEquals } from "@std/assert";
 import { barchart } from "../src/index.ts";
-
-const saveIfReal = (result: SVGElement | null, name: string) => {
-	if (Deno.env.get("BUILD")) return;
-	if (result) {
-		console.log(`%c${name}`, "color:magenta;");
-		Deno.writeTextFileSync(
-			`./temp/out/barchart/${name}.svg`,
-			result.outerHTML.toString(),
-		);
-	}
-};
+import { saveIfReal } from "./helpers.ts";
 
 Deno.test(function barchartTests() {
 	// Only the data
@@ -125,13 +115,13 @@ Deno.test(function barchartTests() {
 	assertEquals(tbc9?.querySelectorAll(".mygroups").length, 2);
 	assertEquals(tbc9?.outerHTML.includes('class="myparent"'), true);
 
-	saveIfReal(tbc0, "tbc0");
-	saveIfReal(tbc1, "tbc1");
-	saveIfReal(tbc2, "tbc2");
-	saveIfReal(tbc3, "tbc3");
-	saveIfReal(tbc4, "tbc4");
-	saveIfReal(tbc5, "tbc5");
-	saveIfReal(tbc6, "tbc6");
-	saveIfReal(tbc7, "tbc7");
-	saveIfReal(tbc8, "tbc8");
+	saveIfReal(tbc0, "barchart", "tbc0");
+	saveIfReal(tbc1, "barchart", "tbc1");
+	saveIfReal(tbc2, "barchart", "tbc2");
+	saveIfReal(tbc3, "barchart", "tbc3");
+	saveIfReal(tbc4, "barchart", "tbc4");
+	saveIfReal(tbc5, "barchart", "tbc5");
+	saveIfReal(tbc6, "barchart", "tbc6");
+	saveIfReal(tbc7, "barchart", "tbc7");
+	saveIfReal(tbc8, "barchart", "tbc8");
 });

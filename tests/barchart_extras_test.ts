@@ -1,16 +1,6 @@
 import { assertEquals } from "@std/assert";
 import { barchart } from "../src/index.ts";
-
-const saveIfReal = (result: SVGElement | null, name: string) => {
-	if (Deno.env.get("BUILD")) return;
-	if (result) {
-		console.log(`%c${name}`, "color:magenta;");
-		Deno.writeTextFileSync(
-			`./temp/out/barchart/${name}.svg`,
-			result.outerHTML.toString(),
-		);
-	}
-};
+import { saveIfReal } from "./helpers.ts";
 
 Deno.test(function barChartsBiggerData() {
 	const tbc1 = barchart({
@@ -29,8 +19,8 @@ Deno.test(function barChartsBiggerData() {
 	assertEquals(tbc2?.getAttribute("width"), "300");
 	assertEquals(tbc2?.getAttribute("height"), "300");
 
-	saveIfReal(tbc1, "tbc1_1k");
-	saveIfReal(tbc2, "tbc2_1k");
+	saveIfReal(tbc1, "barchart_extras", "tbc1_1k");
+	saveIfReal(tbc2, "barchart_extras", "tbc2_1k");
 });
 
 Deno.test(function barChartsColored() {
@@ -103,10 +93,10 @@ Deno.test(function barChartsColored() {
 	assertEquals(tbc6?.getAttribute("width"), "300");
 	assertEquals(tbc6?.getAttribute("height"), "125");
 
-	saveIfReal(tbc1, "tbc1_gradient");
-	saveIfReal(tbc2, "tbc2_colors_lessthandata");
-	saveIfReal(tbc3, "tbc3_gradient_oklch");
-	saveIfReal(tbc4, "tbc4_gradient_continuous");
-	saveIfReal(tbc5, "tbc5_gradient_logobase");
-	saveIfReal(tbc6, "tbc6_logobase");
+	saveIfReal(tbc1, "barchart_extras", "tbc1_gradient");
+	saveIfReal(tbc2, "barchart_extras", "tbc2_colors_lessthandata");
+	saveIfReal(tbc3, "barchart_extras", "tbc3_gradient_oklch");
+	saveIfReal(tbc4, "barchart_extras", "tbc4_gradient_continuous");
+	saveIfReal(tbc5, "barchart_extras", "tbc5_gradient_logobase");
+	saveIfReal(tbc6, "barchart_extras", "tbc6_logobase");
 });

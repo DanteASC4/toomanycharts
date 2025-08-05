@@ -1,18 +1,6 @@
 import { assertEquals } from "@std/assert";
 import { barchartStacked } from "../src/barchartstacked.ts";
-import { randomStackedDataArray, randShortString } from "./helpers.ts";
-
-// Directory needs to exist.
-const saveIfReal = (result: SVGElement | null, name: string) => {
-	if (Deno.env.get("BUILD")) return;
-	if (result) {
-		console.log(`%c${name}`, "color:magenta;");
-		Deno.writeTextFileSync(
-			`./temp/out/barchartstacked/${name}.svg`,
-			result.outerHTML.toString(),
-		);
-	}
-};
+import { saveIfReal } from "./helpers.ts";
 
 /*
  * Mostly just for examples & tinkering
@@ -82,10 +70,10 @@ Deno.test(function barchartStackedExtraTests() {
 	assertEquals(tbcs5?.getAttribute("width"), "300");
 	assertEquals(tbcs5?.getAttribute("height"), "300");
 
-	saveIfReal(tbcs0, "ex_tbcs0");
-	saveIfReal(tbcs1, "ex_tbcs1_different_groupsizes");
-	saveIfReal(tbcs2, "ex_tbcs2_withlabels");
-	saveIfReal(tbcs3, "ex_tbcs3_withcolors");
-	saveIfReal(tbcs4, "ex_tbcs4_gradient");
-	saveIfReal(tbcs5, "ex_tbcs5_continuousgradient");
+	saveIfReal(tbcs0, "barchartstacked_extras", "ex_tbcs0");
+	saveIfReal(tbcs1, "barchartstacked_extras", "ex_tbcs1_different_groupsizes");
+	saveIfReal(tbcs2, "barchartstacked_extras", "ex_tbcs2_withlabels");
+	saveIfReal(tbcs3, "barchartstacked_extras", "ex_tbcs3_withcolors");
+	saveIfReal(tbcs4, "barchartstacked_extras", "ex_tbcs4_gradient");
+	saveIfReal(tbcs5, "barchartstacked_extras", "ex_tbcs5_continuousgradient");
 });

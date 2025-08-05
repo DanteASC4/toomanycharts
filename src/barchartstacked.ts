@@ -4,14 +4,14 @@ import {
 	createBarChartMask,
 	createLinearGradient,
 } from "./creating/gradients.ts";
+import { autoBarWidth } from "./math/barcharts.ts";
+import { autoGap } from "./math/common.ts";
 import type { BarChartStackedOpts } from "./types.ts";
 import { BarChartDefaults } from "./utils/defaults.ts";
 import {
-	autoBarWidth,
-	autoGap,
 	autoMaxNumerical,
 	stackedToNumerical,
-} from "./utils/maths.ts";
+} from "./utils/general-operations.ts";
 import { fillEmptyArray, fillStrings } from "./utils/misc.ts";
 
 export function barchartStacked({
