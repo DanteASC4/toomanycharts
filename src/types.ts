@@ -131,19 +131,24 @@ export type LineChartClasses = {
 	labelGroupClass: string;
 };
 
+/*
+	/
+	 Defaults to `#ffffff`
+	 /
+	colors: string[];
+	/
+	  Defaults to `#ffffff`
+	 /
+	labelColors: string[];
+*/
+
 export type LineChartOptionsBase = {
 	/**
 	 * When not supplied, defaults to `10` greater than the largest datapoint in the supplied `data` array.
 	 */
 	max: number;
-	/**
-	 * Defaults to `#ffffff`
-	 */
-	colors: string[];
-	/**
-	 * Defaults to `#ffffff`
-	 */
-	labelColors: string[];
+	thickness: number;
+	cap: "round" | "butt" | "square";
 	gradientColors: string[];
 	/**
 	 * Defaults to `"individual"` when `gradientColors` is supplied but no `gradientMode` is given.
@@ -157,15 +162,32 @@ export type LineChartOptionsBase = {
 	 * Defaults to `"straight"`
 	 */
 	lineType: "straight" | "cubic" | "quadratic";
+	fullWidthLine: boolean;
 } & ChartOptions &
 	LineChartClasses;
 
-export type LineChartOptions = Optional<LineChartOptionsBase> & {
+export type LineChartColors = {
+	color: string;
+	labelColor: string;
+};
+
+export type LineChartManyColors = {
+	colors: string[];
+	labels: string[];
+};
+
+// A single line chart doesn't need groups since it's just one <path> and <text>
+export type LineChartOptions = Optional<
+	Omit<LineChartOptionsBase, "labelGroupClass" | "lineGroupClass"> &
+		LineChartColors
+> & {
 	readonly data: number[];
 	readonly labels?: string[];
 };
 
-export type MultiLineChartOptions = Optional<LineChartOptionsBase> & {
+export type LineChartManyOptions = Optional<
+	LineChartOptionsBase & LineChartManyColors
+> & {
 	readonly data: number[][];
 	readonly labels?: string[];
 };

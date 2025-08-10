@@ -1,0 +1,12 @@
+{
+  "name": "@scope/test",
+  "tasks": {
+    "dev": "deno run --allow-read --allow-net main.ts"
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@1",
+    "hono": "npm:hono@^4.8.12"
+  },
+  "exports": "./main.ts",
+  "exclude": ["out/"]
+}

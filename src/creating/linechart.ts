@@ -1,9 +1,16 @@
 import { createSVGElement } from "./common.ts";
 
-export const drawLineStraight = (coords: [number, number][]) => {
+export const drawLineStraight = (
+	coords: [number, number][],
+	color: string,
+	thickness: number,
+	linecap: string,
+) => {
 	const path = createSVGElement("path");
 
-	let drawString = "M 0,0";
+	let drawString = `M 0,${coords[0][1]}`;
+	// let drawString = "M 0,0";
+	// let drawString = `M 0, ${fullWidth ? coords[0][1] : 0}`;
 	drawString += "\n  L";
 
 	for (let i = 0; i < coords.length; i++) {
@@ -14,6 +21,9 @@ export const drawLineStraight = (coords: [number, number][]) => {
 
 	path.setAttribute("d", drawString);
 	path.setAttribute("fill", "none");
-	path.setAttribute("stroke", "white");
+	path.setAttribute("stroke", color);
+	// NOTE React doesn't like two-word attributes
+	path.setAttribute("stroke-width", `${thickness}`);
+	path.setAttribute("stroke-linecap", linecap);
 	return path;
 };

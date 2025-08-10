@@ -1,11 +1,53 @@
-import { ensureDirSync } from "jsr:@std/fs";
+import { format } from "@std/fmt/bytes";
+import { cyan } from "@std/fmt/colors";
 import { randomIntegerBetween } from "@std/random";
+import { ensureDirSync } from "jsr:@std/fs";
+import { join, resolve } from "jsr:@std/path";
+
+export type SaveablePairs = ([SVGElement] | [SVGElement, string])[];
+
+const galleryP = (name: string) =>
+	resolve(
+		join(Deno.cwd(), "e2e", "gallery", "out", `${name}.html`),
+	);
+const galleryDir = () =>
+	resolve(join(Deno.cwd(), "e2e", "gallery", "out"));
+const byteSize = (s: string) => new Blob([s]).size;
+
+export const buildGalleryPage = (gname: string, data: SaveablePairs) => {
+	const viewable = data.map((maybepair) => {
+		return `<div class="svg-view">
+<span>${maybepair[1] ?? ""}</span>
+${maybepair[0].outerHTML}
+</div>`;
+	});
+	const page = `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>${gname}</title>
+    <link rel="stylesheet" href="./app.css" />
+  </head>
+  <body>
+    ${viewable.join("\n")}
+  </body>
+</html>`;
+
+	const out = galleryP(gname.replaceAll(" ", "").toLowerCase());
+	ensureDirSync(galleryDir());
+	Deno.writeTextFileSync(out, page);
+
+	console.log(`Created Gallery: ${cyan(gname)} (${format(byteSize(page))})`);
+};
 
 const toOutP = (group: string, name: string) =>
 	`./temp/out/${group}/${name}.svg`;
 const toOutDir = (group: string) => `./temp/out/${group}/`;
 
-// Directory needs to exist.
+/**
+ * @deprecated NO LONGER USED!
+ */
 export const saveIfReal = (
 	result: SVGElement | null,
 	group: string,
@@ -19,8 +61,8 @@ export const saveIfReal = (
 		Deno.writeTextFileSync(out, result.outerHTML.toString());
 	}
 };
-const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
+const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 /*
  * Returns an array of 2-5 positive numbers with each valuing anywhere from 10-300
  * With optional params to change both of those ranges

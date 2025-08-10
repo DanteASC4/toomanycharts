@@ -1,6 +1,6 @@
 import { parseHTML } from "linkedom";
 
-// Allows for seamless client or ssr usage. Might split later though.
+// Allows for seamless client or ssr usage. Might split or just default to linkedom later though.
 export const createSVGElement = (ele: string) => {
 	// deno-coverage-ignore-start
 	if (typeof document !== "undefined" && document instanceof Document) {

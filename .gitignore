@@ -1,3 +1,5 @@
 temp/
 npm/
 coverage/
+tests/**/*.html
+e2e/gallery/**/*.html

@@ -14,19 +14,21 @@ export function linechart({
 	width,
 	max,
 	lineType,
+	fullWidthLine = false,
+	cap = "round",
 	lineClass,
-	lineGroupClass,
 	parentClass,
+	thickness,
 	labelClass,
-	labelGroupClass,
-	colors,
+	color,
+	labelColor,
 	gradientColors,
 	gradientMode,
 	gradientDirection,
 }: LineChartOptions) {
 	if (!max) max = autoMaxNumerical(data);
-	if (!width) width = roundUpTo100(max) + 100;
-	if (!height) height = LineChartDefaults.height;
+	if (!height) height = max + 10;
+	if (!width) width = roundUpTo100(max > height ? max : height) + 100;
 	if (!lineType) lineType = LineChartDefaults.lineType;
 
 	// Line chart data won't be padded, labels will be for consistency mainly.
@@ -37,17 +39,23 @@ export function linechart({
 	}
 
 	const dataPointsAmt = data.length;
-	// const _evenWidth =
-	// 	placement === "top" || placement === "bottom"
-	// 		? autoBarWidth(width, dataPointsAmt)
-	// 		: autoBarWidth(height, dataPointsAmt);
-
 	const parent = makeSVGParent(height, width);
-	const offset = autoOffset(dataPointsAmt);
-	const coords = genCoordsStraight(data, offset, height, width);
+	const offset = autoOffset(width, dataPointsAmt - (fullWidthLine ? 1 : 0));
+	// const offset = autoOffset(dataPointsAmt);
+	const coords = genCoordsStraight(data, offset, height);
 
-	const line = drawLineStraight(coords);
+	const lineColor = color ?? "#ffffff";
+	const thick = thickness ?? 3;
+	const line = drawLineStraight(coords, lineColor, thick, cap);
 	parent.appendChild(line);
+
+	// Logging
+	console.log("---Linechart---");
+	console.log("WxH", width, height);
+	console.log("max", max);
+	console.log("offset", offset);
+	console.log("coords");
+	console.log(coords);
 
 	return parent;
 }
