@@ -629,3 +629,23 @@ I'll do:
 ```
 
 Since the variations of similar types usually share the underlying bits. It would also mean this won't be doubling overall files.
+
+# 8/10/2025
+
+So it's been a bit since I've written here, but I've been making steady progress nonetheless! I re-did the whole deno testing setup to allow for rapid prototyping, as before I had a half baked workflow of running tests with that now-unused `saveIfReal` function, and then opening up the resulting SVG in the browser.
+
+Now that whole process is automated! The `deno` ecosystem is awesome, it was pretty easy to figure out how to get sub-workspaces to run at the same time. The only thing I couldn't figure out is how to "watch" when running more than one task at once, since when I called it with `--watch` the first task would just sit on "watching" and the sub-tasks wouldn't get run. That's why I setup a version using the `watch-exec` external tool which I know isn't best practice, but it's also entirely optional, and not a huge deal as  of now.
+
+## Gradients
+
+So from the start I knew I wasn't tapping into the *full* potential of gradients. For one, I've only incorporated a single `linear` gradient. There's also `radialGradients` and normally you can use multiple gradients at once. 
+
+This decision to go for more of a rudimentary level of gradients was made after thinking things through!
+- Radial gradients I think in the context of charts wouldn't even look to great (from what I can imagine using them)
+- Multiple gradients while powerful isn't super common, and since charts are mainly for conveying information, having super complex multi-gradient backgrounds could detract from that.
+
+BUT I do plan to add those things at some point, it just doesn't feel worth it any time soon. That being said I realized one feature of gradients that I think *should* be added, and that's custom stops.
+
+Currently the stops for linear gradients are placed automatically distributed evenly, meaning if you give two colors you will always get a gradient of 50% one color and 50% the other. While this is mostly fine, since you can supply more of the same colors to pseudo-place the color stops, I forgot about  hard-stops! 
+
+Like a barbershop swirl or candy cane stripes, the current setup means stripes of that kind are impossible. So custom `stops` are on the way soon! They'll be optional of course!

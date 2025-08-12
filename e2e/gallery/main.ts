@@ -22,6 +22,7 @@ app.get('/', (c) => {
             background: #000;
             color: white;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             flex-wrap: wrap;
@@ -30,6 +31,9 @@ app.get('/', (c) => {
             padding: 0.15rem 0.25rem;
             font-size: 1.5rem;
           }
+          a:visited {
+            color: blue;
+          }
         </style>
       </head>
       <body>
@@ -37,6 +41,7 @@ app.get('/', (c) => {
         <a href="./out/barchartextras.html"> BarChart Extras </a>
         <a href="./out/barchartstacked.html"> BarChartStacked </a>
         <a href="./out/barchartstackedextras.html"> BarChartStacked Extras </a>
+        <a href="./out/linechartextras.html"> Line Chart </a>
         <a href="./out/linechartextras.html"> Line Chart Extras </a>
       </body>
     </html>`);

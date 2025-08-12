@@ -1,3 +1,6 @@
+import { midpoint } from "./common.ts";
+import { chunk } from "@std/collections/chunk";
+
 export const genCoordsStraight = (
 	vals: number[],
 	offset: number,
@@ -11,6 +14,31 @@ export const genCoordsStraight = (
 		coords.push([x, y]);
 	}
 	return coords;
+};
+
+export const genControlPoints = (coords: [number, number][]) => {
+	const controlPoints: [number, number][] = [];
+	const asPairs = chunk(coords, 2);
+	let i = 0;
+	let lastX = 0;
+	let lastY = 0;
+	const moveamt = 3;
+	for (const pairs of asPairs) {
+		const x1 = pairs[0][0];
+		const y1 = pairs[0][1];
+		const x2 = pairs[1] ? pairs[1][0] : lastX;
+		const y2 = pairs[1] ? pairs[1][1] : lastY;
+		lastX = x2;
+		lastY = y2;
+
+		const [xMP, yMP] = midpoint(x1, y1, x2, y2);
+
+		const controlO = i % 2 === 0 ? -moveamt : moveamt;
+		const controlP: [number, number] = [xMP + controlO, yMP + controlO];
+		controlPoints.push(controlP);
+		i++;
+	}
+	return controlPoints;
 };
 
 export const autoOffset = (width: number, numPoints: number) => {

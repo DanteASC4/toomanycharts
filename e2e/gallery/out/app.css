@@ -24,7 +24,7 @@ body {
 
 svg,
 img {
-  box-shadow: 0px 0px 0px 5px rgba(255, 255, 255, 1);
+  box-shadow: 0px 0px 0px 5px rgba(255, 255, 255, 0.2);
 }
 .gray {
   fill: rgba(255, 255, 255, 0.4);

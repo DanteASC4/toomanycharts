@@ -27,6 +27,21 @@ export type LinearGradientDirection =
 
 export type LinearGradientType = "individual" | "continuous";
 
+export type LinearGradientOptions = {
+	/**
+	 * Array of CSS color values
+	 */
+	gradientColors: string[];
+	/**
+	 * Defaults to `"individual"` when `gradientColors` is supplied but no `gradientMode` is given.
+	 */
+	gradientMode: LinearGradientType;
+	/**
+	 * Defaults to `"left-to-right"` when `gradientColors` is supplied but no `gradientDirection` is given.
+	 */
+	gradientDirection: LinearGradientDirection;
+};
+
 export type BarChartClasses = {
 	/**
 	 * Name is ambiguous, but attached to parent group of both label & bar groups
@@ -91,16 +106,8 @@ export type BarChartOptionsBase = {
 	 * Defaults to `#ffffff`
 	 */
 	labelColors: string[];
-	gradientColors: string[];
-	/**
-	 * Defaults to `"individual"` when `gradientColors` is supplied but no `gradientMode` is given.
-	 */
-	gradientMode: LinearGradientType;
-	/**
-	 * Defaults to `"left-to-right"` when `gradientColors` is supplied but no `gradientDirection` is given.
-	 */
-	gradientDirection: LinearGradientDirection;
 } & BarChartClasses &
+	LinearGradientOptions &
 	ChartOptions;
 
 export type Labels = string[];
@@ -149,21 +156,13 @@ export type LineChartOptionsBase = {
 	max: number;
 	thickness: number;
 	cap: "round" | "butt" | "square";
-	gradientColors: string[];
-	/**
-	 * Defaults to `"individual"` when `gradientColors` is supplied but no `gradientMode` is given.
-	 */
-	gradientMode: LinearGradientType;
-	/**
-	 * Defaults to `"left-to-right"` when `gradientColors` is supplied but no `gradientDirection` is given.
-	 */
-	gradientDirection: LinearGradientDirection;
 	/**
 	 * Defaults to `"straight"`
 	 */
-	lineType: "straight" | "cubic" | "quadratic";
+	lineType: "straight" | "smooth";
 	fullWidthLine: boolean;
 } & ChartOptions &
+	LinearGradientOptions &
 	LineChartClasses;
 
 export type LineChartColors = {
@@ -178,8 +177,7 @@ export type LineChartManyColors = {
 
 // A single line chart doesn't need groups since it's just one <path> and <text>
 export type LineChartOptions = Optional<
-	Omit<LineChartOptionsBase, "labelGroupClass" | "lineGroupClass"> &
-		LineChartColors
+	Omit<LineChartOptionsBase, "lineGroupClass"> & LineChartColors
 > & {
 	readonly data: number[];
 	readonly labels?: string[];
