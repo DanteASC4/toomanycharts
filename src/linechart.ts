@@ -1,5 +1,5 @@
-import { makeSVGParent } from "./creating/common.ts";
-import { createLinearGradient } from "./creating/gradients.ts";
+import { createSVGElement, makeSVGParent } from "./creating/common.ts";
+import { createLinearGradient, createLinesMask } from "./creating/gradients.ts";
 import {
 	createLineLabels,
 	drawLineSmooth,
@@ -8,8 +8,8 @@ import {
 import { roundUpTo100 } from "./math/common.ts";
 import {
 	autoOffset,
-	genControlPoints,
 	genCoordsStraight,
+	genSingleControlPoint,
 } from "./math/linecharts.ts";
 import type { LineChartOptions } from "./types.ts";
 import { LineChartDefaults } from "./utils/defaults.ts";
@@ -22,39 +22,50 @@ export function linechart({
 	height,
 	width,
 	max,
-	lineType = "straight",
+	lineType = ["straight"],
 	fullWidthLine = false,
-	cap = "round",
+	cap = ["round"],
 	thickness,
 	lineClass,
+	lineGroupClass,
 	parentClass,
 	labelClass,
 	labelGroupClass,
-	color,
-	labelColor,
+	colors,
+	labelColors,
 	gradientColors,
 	gradientMode,
 	gradientDirection,
 }: LineChartOptions) {
-	if (!max) max = autoMaxNumerical(data);
+	// Arrays, arrays everywhere!
+	if (data.every((item) => typeof item === "number")) data = [data];
+	if (labels.every((l) => typeof l === "string")) labels = [labels];
+	if (typeof colors === "string") colors = [colors];
+	if (typeof labelColors === "string") labelColors = [labelColors];
+	if (typeof thickness === "number") thickness = [thickness];
+	if (typeof lineType === "string") lineType = [lineType];
+	if (typeof cap === "string") cap = [cap];
+	const asNumerical = data.flat();
+	if (!max) max = autoMaxNumerical(asNumerical);
 	if (!height) height = max + 10;
 	if (!width) width = roundUpTo100(max > height ? max : height) + 100;
-	if (!lineType) lineType = LineChartDefaults.lineType;
 
-	// Line chart data won't be padded, labels will be for consistency mainly.
-	const padLabels = labels.length < data.length;
+	// Might skip padding entirely here, significantly more overhead in padding here.
+	const toPad: number[] = [];
+	const padLabels = labels.some((labelset, i) => {
+		// I think this will need some addtl logic to make sure we're not checking against undefined or something
+		const needsPadding = labelset.length < data[i].length;
+		if (needsPadding) toPad.push(i);
+		return needsPadding;
+	});
 	if (padLabels) {
-		const diff = Math.abs(labels.length - data.length);
-		fillStrings(labels, diff);
+		for (const padTarget of toPad) {
+			const diff = Math.abs(labels[padTarget].length - data[padTarget].length);
+			fillStrings(labels[padTarget], diff);
+		}
 	}
-	const hasLabels = labels.filter((l) => l !== "").length > 0;
-
-	const dataPointsAmt = data.length;
+	const hasLabels = labels.flat().filter((l) => l !== "").length > 0;
 	const parent = makeSVGParent(height, width);
-
-	const offset = autoOffset(width, dataPointsAmt - (fullWidthLine ? 1 : 0));
-	// const lineColor = color ?? "#ffffff";
-	const thick = thickness ?? 3;
 
 	let isGradient = false;
 	let gradientId: string | null = null;
@@ -79,45 +90,91 @@ export function linechart({
 	let lineColor: string = "#ffffff";
 	if (isGradient && gradientId) {
 		if (gradientMode === "continuous") lineColor = "transparent";
-		else `url('#${gradientId}')`;
-	} else if (color) {
-		lineColor = color;
+		else lineColor = `url('#${gradientId}')`;
+	}
+	//  else if (color) {
+	// 	lineColor = color;
+	// }
+
+	const lineGroup = createSVGElement("g");
+	const lines = [];
+
+	const labelGroups = [];
+
+	for (let i = 0; i < data.length; i++) {
+		const lineData = data[i];
+		const thick = thickness ? thickness[i % thickness.length] : 3;
+		const dataPointsAmt = lineData.length;
+		const offset = autoOffset(width, dataPointsAmt - (fullWidthLine ? 1 : 0));
+		const nonGradientLineColor =
+			colors && !isGradient ? colors[i % colors.length] : "#ffffff";
+		const lineCap = cap[i % cap.length];
+
+		// Straight line coordinates
+		const coords = genCoordsStraight(lineData, offset, height);
+		// Ended up only needing a first control point thanks to reflection
+		// const controls = genControlPoints(coords);
+		const controlPoint = genSingleControlPoint(coords[0], coords[1]);
+		const currentLineType = lineType[i % lineType.length];
+		let line: SVGPathElement;
+		if (currentLineType === "straight") {
+			line = drawLineStraight(
+				coords,
+				isGradient ? lineColor : nonGradientLineColor,
+				thick,
+				lineCap,
+			);
+		} else {
+			line = drawLineSmooth(
+				coords,
+				controlPoint,
+				isGradient ? lineColor : nonGradientLineColor,
+				thick,
+				lineCap,
+			);
+		}
+
+		let linelabelGroup: SVGElement | null = null;
+		if (hasLabels) {
+			const theLabelColor = labelColors
+				? labelColors[i % labelColors.length]
+				: "#ffffff";
+			// const theLabelColor = labelColors ?? "#ffffff";
+			linelabelGroup = createLineLabels(
+				coords,
+				labels[i],
+				theLabelColor,
+				labelClass,
+			);
+		}
+		if (linelabelGroup) {
+			labelGroups.push(linelabelGroup);
+			if (labelGroupClass) linelabelGroup.classList.add(labelGroupClass);
+		}
+		if (lineClass) line.classList.add(lineClass);
+		lineGroup.appendChild(line);
+		lines.push(line);
 	}
 
-	// Straight line coordinates
-	const coords = genCoordsStraight(data, offset, height);
-	const controls = genControlPoints(coords);
-	const line =
-		lineType === "straight"
-			? drawLineStraight(coords, lineColor, thick, cap)
-			: drawLineSmooth(coords, controls, lineColor, thick, cap);
-
-	let linelabelGroup: SVGElement | null = null;
-	if (hasLabels) {
-		const theLabelColor = labelColor ?? "#ffffff";
-		linelabelGroup = createLineLabels(
-			coords,
-			labels,
-			theLabelColor,
-			labelClass,
-		);
-	}
-
-	if (labelGroupClass && linelabelGroup)
-		linelabelGroup.classList.add(labelGroupClass);
 	if (parentClass) parent.classList.add(parentClass);
-	if (lineClass) line.classList.add(lineClass);
+	if (lineGroupClass) lineGroup.classList.add(lineGroupClass);
 
-	if (hasLabels && linelabelGroup) parent.appendChild(linelabelGroup);
-	parent.appendChild(line);
+	if (
+		isGradient &&
+		gradientDef &&
+		gradientBg &&
+		gradientMode === "continuous"
+	) {
+		const [maskId, theMask] = createLinesMask(lines);
+		gradientDef.appendChild(theMask);
 
-	// Logging
-	// console.log("---Linechart---");
-	// console.log("WxH", width, height);
-	// console.log("max", max);
-	// console.log("offset", offset);
-	// console.log("coords");
-	// console.log(coords);
+		gradientBg.setAttribute("mask", `url('#${maskId}')`);
+		parent.appendChild(gradientBg);
+	}
+
+	if (hasLabels && labelGroups.length > 0)
+		labelGroups.forEach((lg) => parent.appendChild(lg));
+	parent.appendChild(lineGroup);
 
 	return parent;
 }

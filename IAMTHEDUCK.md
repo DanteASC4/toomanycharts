@@ -649,3 +649,89 @@ BUT I do plan to add those things at some point, it just doesn't feel worth it a
 Currently the stops for linear gradients are placed automatically distributed evenly, meaning if you give two colors you will always get a gradient of 50% one color and 50% the other. While this is mostly fine, since you can supply more of the same colors to pseudo-place the color stops, I forgot about  hard-stops! 
 
 Like a barbershop swirl or candy cane stripes, the current setup means stripes of that kind are impossible. So custom `stops` are on the way soon! They'll be optional of course!
+
+
+# 8/13/2025
+
+After thinking about it, I am thinking that maybe there shouldn't be a `linechartMany` and instead it should be just `linechart` and you can make one or many lines depending on the `data` parameter. Hmmm... 🤔 But that would also mean doing a bunch of annoying typescript assertions for parameters.
+
+Oh wait I just realized the solution, it should *always* assume many. `data` should just always be `number[][]` and not `number[]`. The function can make one or however many lines!
+
+Time to go delete the singular `linechart` and make the `linechartMany` into `linechart`. I don't know why I didn't think of this initially.
+
+Maybe I can allow `number[]` and just check if the Array is one-dimensional and if so just throw it in array internally. I also realized that the `linechart` is a bit more involved since I think ultimately I want to allow styling of each line, which would mean multiple gradients. But the current setup doesn't allow for that.
+
+Though perhaps that's a bit excessive? I think to me it also sounds fine because I really enjoy thinking of things in terms of arrays, but I hope it would still be intuitive to others.
+
+Right now it's something like:
+```js
+{
+    gradientColors: ['red', 'blue'] 
+}
+```
+Which would produce a `red-to-blue` gradient.
+
+But I think it wouldn't be too hard to allow:
+```js
+{
+    gradientColors: [
+        ['red','blue']  // -> a red-to-blue gradient
+        ['green', 'yellow'] // -> a green-to-yellow gradient
+    ]
+}
+```
+
+Which I feel like is pretty intuitive. This is also how colors work, and this same kind of "as many as wanted of said style" works because of the alternating nature of them, where even if you supply two colors for 10 data points, we just go loop the choices. So I think this does feel intuitive!
+
+But what about color stops... Hmmmmm I don't want another argument for just those, I think that would be too hard to match to the numbers.
+
+In CSS, there is no color type that uses `:` so what if it went something like `<color>:<stop-percentage>`. According to the [spec](https://svgwg.org/svg2-draft/pservers.html#StopElementOffsetAttribute) the `stop-offset` is either `0-1` or `0%-100%`. I think the  percentages are a lot easier for most people so we'll roll with that. It means things could look like:
+```js
+{
+    gradientColors: [
+        ['rgb(255, 0, 0):30%','rgb(0, 0, 255):60%']
+    ]
+}
+```
+Which feels pretty fine to me. Except that would mean additional checks for `:`. Which I don't think would be super costly. Otherwise it would be assuming the next value in the array is a stop:
+```js
+{
+    gradientColors: [
+        ['rgb(255, 0, 0)', '30%', 'rgb(0, 0, 255)', '60%']
+    ]
+}
+```
+Which seems a bit more 'normal' but I want stops to be optional, like maybe only the `30%` is there and not the `60%`. We can't check for `%` because there are color formats that use `%`. So yeah I think that decides it! It'll be `<color>:<stop-percentage>`!
+
+Now I wonder if I can make this into a typescript mapped type...
+
+**update**
+Common TypeScript W
+```ts
+type MakeRange<
+  N extends number,
+  Result extends Array<unknown> = [],
+> =
+  (Result['length'] extends N
+    ? Result
+    : MakeRange<N, [...Result, Result['length']]>
+  );
+
+type MaxP = MakeRange<101>;
+type Percentage = `${MaxP[number]}%`;
+```
+![An image showing how when you hover over the "Percentage" type in the typescript playground you can see the allowed literal types are evaluated to be 0% to 100%](./extras/ts_percent_type.png)
+
+
+**update2**
+Ok I've consolidated them! The beginning of the function is a bit verbose as I'm turning a bunch of stuff into arrays if it's the singular version, but it feels much better than having two versions for a singular line or multiple lines.
+
+Cool!
+
+I think a bit more testing and it'll basically be usable!
+
+# 8/14/2025
+
+So I had a terrifying thought, what if I should have combined `barchart` and `barchartstacked`!?!? But then I remembered that was how I started and it was cumbersome, and increased the import size because one function had both implementations. Bar Charts are a different type of chart compared to a Stacked Bar Chart, whereas the linechart ordeal was just more of the same thing - lines. So the import size isn't increasing nor is the implementation different, it's just looping over inputs. 
+
+Ok so time to implement gradient color stops!

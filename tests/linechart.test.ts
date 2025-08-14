@@ -2,8 +2,21 @@ import { assertEquals } from "@std/assert";
 import { afterAll } from "@std/testing/bdd";
 import { linechart } from "../src/linechart.ts";
 import { buildGalleryPage, type SaveablePairs } from "./helpers.ts";
+import { genControlPoints } from "../src/math/linecharts.ts";
 
 const pairs: SaveablePairs = [];
+
+Deno.test(function miscTest() {
+	const getControlPoints = genControlPoints([
+		[5, 5],
+		[10, 10],
+		[12, 12],
+	]);
+	assertEquals(getControlPoints, [
+		[4.5, 4.5],
+		[14, 14],
+	]);
+});
 
 Deno.test(function lineChartBasics() {
 	const tlc0 = linechart({
@@ -27,14 +40,14 @@ Deno.test(function lineChartBasics() {
 
 	const tlc3 = linechart({
 		data: [50, 100, 30],
-		color: "red",
+		colors: "red",
 	});
 	assertEquals(tlc3.getAttribute("width"), "300");
 	assertEquals(tlc3.getAttribute("height"), "110");
 
 	const tlc4 = linechart({
 		data: [50, 100, 30],
-		color: "red",
+		colors: "red",
 		thickness: 5,
 	});
 	assertEquals(tlc4.getAttribute("width"), "300");
@@ -43,7 +56,7 @@ Deno.test(function lineChartBasics() {
 	const tlc5 = linechart({
 		data: [50, 100, 30],
 		labels: ["50", "100", "30"],
-		color: "red",
+		colors: "red",
 		thickness: 5,
 	});
 	assertEquals(tlc5.getAttribute("width"), "300");
@@ -52,7 +65,7 @@ Deno.test(function lineChartBasics() {
 	const tlc6 = linechart({
 		data: [50, 100, 30],
 		labels: ["50", "100", "30"],
-		color: "red",
+		colors: "red",
 		thickness: 5,
 		lineType: "smooth",
 	});
@@ -71,5 +84,5 @@ Deno.test(function lineChartBasics() {
 });
 
 afterAll(() => {
-	buildGalleryPage("Line Chart Extras", pairs);
+	buildGalleryPage("Line Chart", pairs);
 });

@@ -1,5 +1,4 @@
 import { createSVGElement } from "./common.ts";
-import { chunk } from "@std/collections/chunk";
 
 export const drawLineStraight = (
 	coords: [number, number][],
@@ -26,12 +25,12 @@ export const drawLineStraight = (
 	// NOTE React doesn't like two-word attributes
 	path.setAttribute("stroke-width", `${thickness}`);
 	path.setAttribute("stroke-linecap", linecap);
-	return path;
+	return path as SVGPathElement;
 };
 
 export const drawLineSmooth = (
 	coords: [number, number][],
-	controls: [number, number][],
+	control: [number, number],
 	color: string,
 	thickness: number,
 	linecap: string,
@@ -40,7 +39,7 @@ export const drawLineSmooth = (
 
 	let drawString = ``;
 
-	const pairs = chunk(coords, 2);
+	// const pairs = chunk(coords, 2);
 	drawString += `M 0,${coords[0][1]} `;
 
 	let hasQ = false;
@@ -48,7 +47,7 @@ export const drawLineSmooth = (
 	for (let i = 0; i < coords.length; i++) {
 		const [x, y] = coords[i];
 		if (!hasQ) {
-			drawString += `Q ${x},${y} ${controls[0][0]},${controls[0][1]} \nt `;
+			drawString += `Q ${x},${y} ${control[0]},${control[1]} \nt `;
 			hasQ = true;
 		} else {
 			drawString += `${x},${y} `;
@@ -68,7 +67,7 @@ export const drawLineSmooth = (
 	// NOTE React doesn't like two-word attributes
 	path.setAttribute("stroke-width", `${thickness}`);
 	path.setAttribute("stroke-linecap", linecap);
-	return path;
+	return path as SVGPathElement;
 };
 
 export const createLineLabels = (
@@ -79,7 +78,7 @@ export const createLineLabels = (
 ) => {
 	const lg = createSVGElement("g");
 
-	console.log(labels);
+	// console.log(labels);
 
 	for (let i = 0; i < labels.length; i++) {
 		const coord = coords[i];
@@ -87,8 +86,8 @@ export const createLineLabels = (
 		const text = createSVGElement("text");
 		const [x, y] = coord;
 
-		console.log("label", label);
-		console.log("x", x, "y", y);
+		// console.log("label", label);
+		// console.log("x", x, "y", y);
 
 		text.setAttribute("fill", labelColor);
 		text.setAttribute("x", `${x - label.length}`);

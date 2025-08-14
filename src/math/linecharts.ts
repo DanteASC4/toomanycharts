@@ -1,5 +1,5 @@
-import { midpoint } from "./common.ts";
 import { chunk } from "@std/collections/chunk";
+import { midpoint } from "./common.ts";
 
 export const genCoordsStraight = (
 	vals: number[],
@@ -39,6 +39,23 @@ export const genControlPoints = (coords: [number, number][]) => {
 		i++;
 	}
 	return controlPoints;
+};
+
+export const genSingleControlPoint = (
+	coord1: [number, number],
+	coord2: [number, number],
+) => {
+	const x1 = coord1[0];
+	const y1 = coord1[1];
+	const x2 = coord2[0];
+	const y2 = coord2[1];
+
+	const moveamt = 3;
+	const [xMP, yMP] = midpoint(x1, y1, x2, y2);
+
+	const controlP: [number, number] = [xMP + moveamt, yMP + moveamt];
+
+	return controlP;
 };
 
 export const autoOffset = (width: number, numPoints: number) => {

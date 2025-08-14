@@ -3,10 +3,14 @@
     "go": "deno task --recursive dev",
     "godev": {
       "command": "watchexec --restart --exts ts -- deno task go",
-      "description": "Uses watchexec to restart the dev recursive dev command running both the root-level 'dev' which runs all tests but also the gallery server for output visual inspection "
+      "description": "Uses watchexec to restart the recursive dev command running both the root-level 'dev' which runs all tests but also the gallery server for output visual inspection "
     },
     "dev": "deno test --allow-write --allow-read tests",
     "cov": "deno test tests/ --allow-write --allow-read --coverage=coverage",
+    "covdev": {
+      "command":"watchexec --restart --exts ts -- deno task cov",
+      "description": "Uses watchexec to restart coverage testing on change"
+    },
     "format": "deno run -A npm:@biomejs/biome format --write",
     "lint": "deno run -A npm:@biomejs/biome lint --write",
     "check": "deno run -A npm:@biomejs/biome check --write",

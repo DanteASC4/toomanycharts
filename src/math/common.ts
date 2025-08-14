@@ -24,8 +24,9 @@ export const midpoint = (x1: number, y1: number, x2: number, y2: number) => [
 	(y1 + y2) / 2,
 ];
 
-export const lawcosFora = (b: number, c: number, C: number) =>
-	Math.sqrt(b ** 2 + c ** 2 - 2 * b * c * Math.cos(C));
-
-export const lawsinForA = (a: number, b: number, A: number) =>
-	Math.asin((Math.sin(A) * b) / a);
+// ssa
+// export const lawcosForA = (b: number, c: number, C: number) =>
+// 	Math.sqrt(b ** 2 + c ** 2 - 2 * b * c * Math.cos(C));
+//
+// export const lawsinForA = (a: number, b: number, A: number) =>
+// 	Math.asin((Math.sin(A) * b) / a);

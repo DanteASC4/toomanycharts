@@ -6,6 +6,17 @@ export type Prettify<T> = {
 	[K in keyof T]: T[K];
 } & {};
 
+type MakeRange<
+	N extends number,
+	Result extends Array<unknown> = [],
+> = Result["length"] extends N
+	? Result
+	: MakeRange<N, [...Result, Result["length"]]>;
+
+type MaxP = MakeRange<101>;
+
+type Percentage = `${MaxP[number]}%`;
+
 export type ChartOptions = {
 	// min: number;
 	/**
@@ -17,6 +28,8 @@ export type ChartOptions = {
 	 */
 	width: number;
 };
+
+export type GradientColor = string | `${string}:${Percentage}`;
 
 export type LinearGradientDirection =
 	| "left-to-right"
@@ -31,7 +44,7 @@ export type LinearGradientOptions = {
 	/**
 	 * Array of CSS color values
 	 */
-	gradientColors: string[];
+	gradientColors: GradientColor[];
 	/**
 	 * Defaults to `"individual"` when `gradientColors` is supplied but no `gradientMode` is given.
 	 */
@@ -39,6 +52,13 @@ export type LinearGradientOptions = {
 	/**
 	 * Defaults to `"left-to-right"` when `gradientColors` is supplied but no `gradientDirection` is given.
 	 */
+	gradientDirection: LinearGradientDirection;
+};
+
+// TODO use this to allow multiple gradients
+export type ManyLinearGradientOptions = {
+	gradientColors: GradientColor[][];
+	gradientMode: Extract<LinearGradientType, "individual">;
 	gradientDirection: LinearGradientDirection;
 };
 
@@ -149,48 +169,43 @@ export type LineChartClasses = {
 	labelColors: string[];
 */
 
+type LineCaps = "round" | "butt" | "square";
+type LineTypes = "straight" | "smooth";
+
 export type LineChartOptionsBase = {
 	/**
 	 * When not supplied, defaults to `10` greater than the largest datapoint in the supplied `data` array.
 	 */
 	max: number;
 	thickness: number;
-	cap: "round" | "butt" | "square";
+	cap: LineCaps;
 	/**
 	 * Defaults to `"straight"`
 	 */
-	lineType: "straight" | "smooth";
+	lineType: LineTypes;
 	fullWidthLine: boolean;
 } & ChartOptions &
 	LinearGradientOptions &
 	LineChartClasses;
 
 export type LineChartColors = {
-	color: string;
-	labelColor: string;
+	colors: string | string[];
+	labelColors: string | string[];
 };
 
-export type LineChartManyColors = {
-	colors: string[];
-	labels: string[];
-};
-
-// A single line chart doesn't need groups since it's just one <path> and <text>
 export type LineChartOptions = Optional<
-	Omit<LineChartOptionsBase, "lineGroupClass"> & LineChartColors
+	Omit<LineChartOptionsBase, "thickness" | "cap" | "lineType"> &
+		LineChartColors & {
+			thickness: number | number[];
+			cap: LineCaps | LineCaps[];
+			lineType: LineTypes | LineTypes[];
+		}
 > & {
-	readonly data: number[];
-	readonly labels?: string[];
+	readonly data: number[][] | number[];
+	readonly labels?: string[][] | string[];
 };
 
-export type LineChartManyOptions = Optional<
-	LineChartOptionsBase & LineChartManyColors
-> & {
-	readonly data: number[][];
-	readonly labels?: string[];
-};
-
-// Currently mostly unused, to be deleted
+// Currently unused, to be deleted
 export const isNumericalArray = (
 	arr: number[] | number[][],
 ): arr is number[] => {

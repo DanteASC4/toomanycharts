@@ -1,4 +1,8 @@
-import type { LinearGradientDirection, LinearGradientType } from "../types.ts";
+import type {
+	GradientColor,
+	LinearGradientDirection,
+	LinearGradientType,
+} from "../types.ts";
 import { randId } from "../utils/misc.ts";
 import { createSVGElement } from "./common.ts";
 
@@ -10,7 +14,7 @@ import { createSVGElement } from "./common.ts";
 //  }
 
 export const createLinearGradient = (
-	colors: string[],
+	colors: GradientColor[],
 	gDir: LinearGradientDirection = "left-to-right",
 	gMode: LinearGradientType,
 ) => {
@@ -19,13 +23,29 @@ export const createLinearGradient = (
 	const gid = randId();
 	lg.id = gid;
 
-	const dist = 1 / (colors.length - 1);
+	let dist = 1 / (colors.length - 1);
 
 	for (let i = 0; i < colors.length; i++) {
 		const stop = createSVGElement("stop");
 		const cdist = i * dist * 100;
-		stop.setAttribute("offset", `${cdist}%`);
-		stop.setAttribute("stop-color", colors[i % colors.length]);
+
+		let color: string;
+		let stopOff: number = cdist;
+
+		const hasStop = colors[i].includes(":");
+		if (hasStop) {
+			// This is kind of cursed but I think it should be quite performant.
+			const [c, o] = colors[i].split(":");
+			const [digits] = o.split("%");
+			color = c;
+			stopOff = Number(digits);
+			dist -= stopOff / 100;
+		} else {
+			color = colors[i];
+		}
+
+		stop.setAttribute("offset", `${stopOff}%`);
+		stop.setAttribute("stop-color", color);
 		lg.appendChild(stop);
 	}
 
@@ -76,6 +96,33 @@ export const createBarChartMask = (bars: SVGElement[]) => {
 
 		// Cuts down on end payload size
 		if (maskBar.getAttribute("title")) maskBar.removeAttribute("title");
+	}
+
+	return [maskId, mask] as const;
+};
+
+export const createLinesMask = (lines: SVGPathElement[]) => {
+	const maskId = randId();
+	const mask = createSVGElement("mask");
+	mask.id = maskId;
+
+	const bg = createSVGElement("rect");
+	bg.setAttribute("x", "0");
+	bg.setAttribute("y", "0");
+	bg.setAttribute("width", "100%");
+	bg.setAttribute("height", "100%");
+	bg.setAttribute("fill", "#000000");
+
+	mask.appendChild(bg);
+
+	for (const line of lines) {
+		// Shouldn't have children, and asserting since it should only ever be rects
+		const maskLine = line.cloneNode() as unknown as (typeof lines)[number];
+		maskLine.setAttribute("stroke", "#ffffff");
+		mask.appendChild(maskLine);
+
+		// Cuts down on end payload size
+		// if (maskLine.getAttribute("title")) maskLine.removeAttribute("title");
 	}
 
 	return [maskId, mask] as const;

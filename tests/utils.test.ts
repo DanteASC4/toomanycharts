@@ -1,5 +1,6 @@
 import { assertEquals } from "@std/assert";
 import {
+	autoMaxStacked,
 	lgDistTest,
 	stackedToNumerical,
 	sum2DArrayInPlace,
@@ -54,4 +55,14 @@ Deno.test(function stackedArrToNumericalArr() {
 	];
 	const toNum1 = stackedToNumerical(testA1);
 	assertEquals(toNum1, [6, 6, 6]);
+});
+
+Deno.test(function autoMaxStackedTest() {
+	const t = [
+		[1, 2, 3],
+		[4, 5, 6],
+		[7, 8, 9],
+	];
+	const autoMax = autoMaxStacked(t);
+	assertEquals(autoMax, 20);
 });

@@ -1,3 +1,4 @@
+// deno-coverage-ignore-file
 import { ensureDirSync } from "jsr:@std/fs";
 import { join, resolve } from "jsr:@std/path";
 import { format } from "@std/fmt/bytes";
