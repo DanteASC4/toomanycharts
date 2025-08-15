@@ -151,25 +151,35 @@ export type BarChartStackedOpts = Optional<BarChartOptionsBase> & {
 export type BarChartOptions = BarChartNumericalOpts | BarChartStackedOpts;
 
 export type LineChartClasses = {
+	/**
+	 * Added to resulting `<path>` elements
+	 */
 	lineClass: string;
+	/**
+	 * Added to resulting `<g>` tag containing line `<path>` elements
+	 */
 	lineGroupClass: string;
+	/**
+	 * Added to resulting parent `<svg>` element
+	 */
 	parentClass: string;
+	/**
+	 * Added to resulting `<text>` elements
+	 */
 	labelClass: string;
+	/**
+	 * Added to resulting `<g>` tag containing line `<text>` elements
+	 */
 	labelGroupClass: string;
 };
 
-/*
-	/
-	 Defaults to `#ffffff`
-	 /
-	colors: string[];
-	/
-	  Defaults to `#ffffff`
-	 /
-	labelColors: string[];
-*/
-
+/**
+ * Used for resulting path's [`stroke-linecap`](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/stroke-linecap) attribute
+ */
 type LineCaps = "round" | "butt" | "square";
+/**
+ * Controls whether resulting lines are drawn straight or smooth
+ */
 type LineTypes = "straight" | "smooth";
 
 export type LineChartOptionsBase = {
@@ -177,29 +187,47 @@ export type LineChartOptionsBase = {
 	 * When not supplied, defaults to `10` greater than the largest datapoint in the supplied `data` array.
 	 */
 	max: number;
-	thickness: number;
-	cap: LineCaps;
 	/**
+	 * Used for resulting path's `stroke-width`
+	 */
+	thickness: number | number[];
+	/**
+	 * Used for resulting path's [`stroke-linecap`](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/stroke-linecap) attribute
+	 */
+	cap: LineCaps | LineCaps[];
+	/**
+	 * Controls whether resulting lines are drawn straight or smooth
 	 * Defaults to `"straight"`
 	 */
-	lineType: LineTypes;
+	lineType: LineTypes | LineTypes[];
+	/**
+	 * Decides whether the drawn line reaches the end of it's containing SVG box,
+	 * Defaults to false
+	 */
 	fullWidthLine: boolean;
-} & ChartOptions &
-	LinearGradientOptions &
-	LineChartClasses;
+};
 
 export type LineChartColors = {
+	/**
+	 * Used for the resulting path's `stroke` attribute, effectively coloring the line
+	 * Defaults to `#ffffff`
+	 * Will alternate between colors if there are less colors than the number of drawn lines.
+	 */
 	colors: string | string[];
+	/**
+	 * Used for the resulting label text color
+	 * Defaults to `#ffffff`
+	 * Will alternate between colors if there are less colors than labels.
+	 */
 	labelColors: string | string[];
 };
 
 export type LineChartOptions = Optional<
-	Omit<LineChartOptionsBase, "thickness" | "cap" | "lineType"> &
-		LineChartColors & {
-			thickness: number | number[];
-			cap: LineCaps | LineCaps[];
-			lineType: LineTypes | LineTypes[];
-		}
+	LineChartOptionsBase &
+		LineChartColors &
+		ChartOptions &
+		LinearGradientOptions &
+		LineChartClasses
 > & {
 	readonly data: number[][] | number[];
 	readonly labels?: string[][] | string[];

@@ -12,7 +12,6 @@ import {
 	genSingleControlPoint,
 } from "./math/linecharts.ts";
 import type { LineChartOptions } from "./types.ts";
-import { LineChartDefaults } from "./utils/defaults.ts";
 import { autoMaxNumerical } from "./utils/general-operations.ts";
 import { fillStrings } from "./utils/misc.ts";
 
