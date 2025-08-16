@@ -83,6 +83,43 @@ Deno.test(function lineChartBasics() {
 	);
 });
 
+Deno.test(function lineChartExamples() {
+	const ex1 = linechart({
+		data: [50, 100, 30],
+		colors: "red",
+		thickness: 10,
+		// lineType: "smooth",
+	});
+	assertEquals(ex1.getAttribute("width"), "300");
+
+	const ex2 = linechart({
+		data: [50, 100, 30],
+		colors: "red",
+		thickness: 10,
+		lineType: "smooth",
+	});
+	assertEquals(ex2.getAttribute("width"), "300");
+
+	const ex3 = linechart({
+		data: [50, 100, 30],
+		thickness: 10,
+		lineType: "smooth",
+		gradientColors: ["#ff00ff", "#00ffff"],
+	});
+	assertEquals(ex3.getAttribute("width"), "300");
+
+	const ex4 = linechart({
+		data: [50, 100, 30],
+		thickness: 10,
+		lineType: "smooth",
+		gradientColors: ["#ff00ff", "#00ffff"],
+		gradientDirection: "top-to-bottom",
+	});
+	assertEquals(ex4.getAttribute("width"), "300");
+
+	pairs.push([ex1], [ex2], [ex3], [ex4]);
+});
+
 afterAll(() => {
 	buildGalleryPage("Line Chart", pairs);
 });
