@@ -24,7 +24,7 @@ await build({
 	compilerOptions: {
 		lib: ["ESNext", "DOM"],
 	},
-	rootTestDir: "./tests",
+	rootTestDir: "./test",
 	postBuild() {
 		Deno.copyFileSync("LICENSE", "npm/LICENSE");
 		Deno.copyFileSync("README.md", "npm/README.md");
