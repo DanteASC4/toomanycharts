@@ -117,7 +117,29 @@ Deno.test(function lineChartExamples() {
 	});
 	assertEquals(ex4.getAttribute("width"), "300");
 
-	pairs.push([ex1], [ex2], [ex3], [ex4]);
+	const ex5 = linechart({
+		data: [
+			[50, 100, 30],
+			[3, 15, 110],
+		],
+		thickness: 3,
+		gradientColors: ["#ff00ff", "#00ffff"],
+		gradientDirection: "top-to-bottom",
+	});
+	assertEquals(ex5.getAttribute("width"), "300");
+
+	const ex6 = linechart({
+		data: [
+			[50, 100, 30],
+			[3, 15, 110],
+		],
+		thickness: [3, 10],
+		gradientColors: ["#ff00ff", "#00ffff"],
+		gradientDirection: "top-to-bottom",
+	});
+	assertEquals(ex6.getAttribute("width"), "300");
+
+	pairs.push([ex1], [ex2], [ex3], [ex4], [ex5], [ex6]);
 });
 
 afterAll(() => {

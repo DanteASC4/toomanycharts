@@ -1,9 +1,9 @@
 // deno-coverage-ignore-file
-import { ensureDirSync } from "jsr:@std/fs";
-import { join, resolve } from "jsr:@std/path";
 import { format } from "@std/fmt/bytes";
 import { cyan } from "@std/fmt/colors";
 import { randomIntegerBetween } from "@std/random";
+import { ensureDirSync } from "jsr:@std/fs";
+import { join, resolve } from "jsr:@std/path";
 
 export type SaveablePairs = ([SVGElement] | [SVGElement, string])[];
 
@@ -13,6 +13,7 @@ const galleryDir = () => resolve(join(Deno.cwd(), "e2e", "gallery", "out"));
 const byteSize = (s: string) => new Blob([s]).size;
 
 export const buildGalleryPage = (gname: string, data: SaveablePairs) => {
+	if (Deno.env.get("BUILD")) return;
 	const viewable = data.map((maybepair) => {
 		return `<div class="svg-view">
 <span>${maybepair[1] ?? ""}</span>

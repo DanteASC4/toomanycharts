@@ -2,10 +2,7 @@ import { animate, utils } from 'animejs';
 import { barchart } from 'toomanycharts';
 
 const growBars = () => {
-  utils.set('.el-bar', {
-    transformOrigin: 'left center',
-    scaleX: 0,
-  });
+
   animate('.el-bar', {
     scaleX: [0, 1],
     duration: 2000,
@@ -13,7 +10,7 @@ const growBars = () => {
   });
 };
 
-export default function BasicChart() {
+export default function basicChart() {
   const basic = barchart({
     data: [50, 100, 30],
     barClass: 'el-bar',
