@@ -735,3 +735,12 @@ I think a bit more testing and it'll basically be usable!
 So I had a terrifying thought, what if I should have combined `barchart` and `barchartstacked`!?!? But then I remembered that was how I started and it was cumbersome, and increased the import size because one function had both implementations. Bar Charts are a different type of chart compared to a Stacked Bar Chart, whereas the linechart ordeal was just more of the same thing - lines. So the import size isn't increasing nor is the implementation different, it's just looping over inputs. 
 
 Ok so time to implement gradient color stops!
+
+# 8/17/2025
+
+So I added the gradient stops, revamped testing, got coverage to 100% with some more tests. Everything looked well & good so I pushed an update! Then I tried making the test with a bunch of datapoints smooth, and it looked wrong. It just happened that my test with three datapoints looked "ok". 
+
+A bunch of research later I had a basic understanding of the math for drawing bezier curves, but I couldn't wrap my head around implementing that into the `<path>` element.
+
+After a bunch of manual math with paper & pen, a temporary test setup with manual writing `<path>` elements & each coordinate + set of control points, trying 1000 things, I figured it out! It was actually thanks to the example usage of the `<path>` element on `mdn`.
+ TLDR is that the formula for ideal smoothness is to use the x of the midpoint between each set of points & the first point's Y / second point's Y for the control points. It only took like almost 5 hours to figure out.

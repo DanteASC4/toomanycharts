@@ -2,20 +2,20 @@ import { assertEquals } from "@std/assert";
 import { afterAll } from "@std/testing/bdd";
 import { linechart } from "../src/linechart.ts";
 import { buildGalleryPage, type SaveablePairs } from "./helpers.ts";
-import { genControlPoints } from "../src/math/linecharts.ts";
+// import { genControlPoints } from "../src/math/linecharts.ts";
 
 const pairs: SaveablePairs = [];
 
 Deno.test(function miscTest() {
-	const getControlPoints = genControlPoints([
-		[5, 5],
-		[10, 10],
-		[12, 12],
-	]);
-	assertEquals(getControlPoints, [
-		[4.5, 4.5],
-		[14, 14],
-	]);
+	// const getControlPoints = genControlPoints([
+	// 	[5, 5],
+	// 	[10, 10],
+	// 	[12, 12],
+	// ]);
+	// assertEquals(getControlPoints, [
+	// 	[6.5, 6.5],
+	// 	[12, 12],
+	// ]);
 });
 
 Deno.test(function lineChartBasics() {

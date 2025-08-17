@@ -43,7 +43,6 @@ app.get('/', (c) => {
         <a href="./out/barchartstackedextras.html"> BarChartStacked Extras </a>
         <a href="./out/linechart.html"> Line Chart </a>
         <a href="./out/linechartextras.html"> Line Chart Extras </a>
-        <a href="./out/linechartmany.html"> Line Chart Many </a>
       </body>
     </html>`);
 });

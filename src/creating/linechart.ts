@@ -15,7 +15,7 @@ export const drawLineStraight = (
 
 	for (let i = 0; i < coords.length; i++) {
 		const coord = coords[i];
-		drawString += `  ${coord[0]},${coord[1]}`;
+		drawString += ` ${coord[0]},${coord[1]}`;
 		if (i !== coords.length - 1) drawString += "\n";
 	}
 
@@ -30,7 +30,6 @@ export const drawLineStraight = (
 
 export const drawLineSmooth = (
 	coords: [number, number][],
-	control: [number, number],
 	color: string,
 	thickness: number,
 	linecap: string,
@@ -40,25 +39,60 @@ export const drawLineSmooth = (
 	let drawString = ``;
 
 	// const pairs = chunk(coords, 2);
-	drawString += `M 0,${coords[0][1]} `;
+	drawString += `M ${coords[0][0]},${coords[0][1]}\n`;
 
-	let hasQ = false;
+	console.log("---s---");
+	console.log(coords);
+	for (let i = 0; i < coords.length - 1; i++) {
+		const [fx, fy] = coords[i];
+		const [tx, ty] = coords[i + 1];
+		console.log("i", i);
+		console.log("fx", fx, "fy", fy);
+		console.log("tx", tx, "ty", ty);
 
-	for (let i = 0; i < coords.length; i++) {
-		const [x, y] = coords[i];
-		if (!hasQ) {
-			drawString += `Q ${x},${y} ${control[0]},${control[1]} \nt `;
-			hasQ = true;
-		} else {
-			drawString += `${x},${y} `;
-		}
+		const mx = (tx + fx) / 2;
+		console.log();
+		const c1x = mx;
+		const c1y = fy;
+		const c2x = mx;
+		const c2y = ty;
+
+		if (i === 0) drawString += `C ${c1x},${c1y} ${c2x},${c2y} ${tx},${ty}\n`;
+		else drawString += ` ${c1x},${c1y} ${c2x},${c2y} ${tx},${ty}\n`;
 	}
-	// let i =0;
-	// for(const pair of pairs){
-	//   const control = controls[i];
+
+	// for (let i = 0; i < coords.length - 1; i++) {
+	// 	const p0 = i - 1 >= 0 ? coords[i - 1] : coords[i];
+	// 	const p1 = coords[i];
+	// 	const p2 = coords[i + 1];
+	// 	const p3 = i + 2 < coords.length ? coords[i + 2] : coords[i + 1];
 	//
+	// 	const [ctrl1, ctrl2] = calcControlPoint(p0, p1, p2, p3);
 	//
-	//   i++;
+	// 	drawString += `C ${ctrl1[0]},${ctrl1[1]} ${ctrl2[0]},${ctrl2[1]} ${p2[0]},${p2[1]}\n`;
+	//
+	// 	// drawString += `Q ${catRomCtrl[0]},${catRomCtrl[1]} ${pNext[0]},${pNext[1]}\n`;
+	// }
+
+	// Quadratic version, not c1
+	//  for (let i = 1; i < coords.length; i++) {
+	// 	const pPrev = i - 2 >= 0 ? coords[i - 2] : coords[i - 1];
+	// 	const c = coords[i - 1];
+	// 	const pNext = coords[i];
+	//
+	// 	const catRomCtrl = calcCatmullRomPoint(pPrev, c, pNext);
+	//
+	// 	drawString += `Q ${catRomCtrl[0]},${catRomCtrl[1]} ${pNext[0]},${pNext[1]}\n`;
+	// }
+
+	// for (let i = 0; i < coords.length; i++) {
+	// 	const [x, y] = coords[i];
+	// 	if (!hasQ) {
+	// 		drawString += `Q ${x},${y} ${control[0]},${control[1]} \nt `;
+	// 		hasQ = true;
+	// 	} else {
+	// 		drawString += `${x},${y} `;
+	// 	}
 	// }
 
 	path.setAttribute("d", drawString);
@@ -67,6 +101,7 @@ export const drawLineSmooth = (
 	// NOTE React doesn't like two-word attributes
 	path.setAttribute("stroke-width", `${thickness}`);
 	path.setAttribute("stroke-linecap", linecap);
+	path.setAttribute("stroke-linejoin", "round");
 	return path as SVGPathElement;
 };
 

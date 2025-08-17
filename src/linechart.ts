@@ -8,6 +8,7 @@ import {
 import { roundUpTo100 } from "./math/common.ts";
 import {
 	autoOffset,
+	genControlPoints,
 	genCoordsStraight,
 	genSingleControlPoint,
 } from "./math/linecharts.ts";
@@ -111,9 +112,10 @@ export function linechart({
 
 		// Straight line coordinates
 		const coords = genCoordsStraight(lineData, offset, height);
+		// Future me, ended up not needing any control point calculation here
 		// Ended up only needing a first control point thanks to reflection
 		// const controls = genControlPoints(coords);
-		const controlPoint = genSingleControlPoint(coords[0], coords[1]);
+		// const controlPoint = genSingleControlPoint(coords[0], coords[1]);
 		const currentLineType = lineType[i % lineType.length];
 		let line: SVGPathElement;
 		if (currentLineType === "straight") {
@@ -126,7 +128,6 @@ export function linechart({
 		} else {
 			line = drawLineSmooth(
 				coords,
-				controlPoint,
 				isGradient ? lineColor : nonGradientLineColor,
 				thick,
 				lineCap,

@@ -10,7 +10,9 @@ export const genCoordsStraight = (
 	for (let i = 0; i < vals.length; i++) {
 		const x = offset * i;
 		const v = vals[i];
-		const y = max - (v / max) * 100;
+		const y = max - v;
+		// const y = max - (v / max) * 100;
+		// const y = Math.abs(max - (v / max) * 100);
 		coords.push([x, y]);
 	}
 	return coords;
