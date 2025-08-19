@@ -11,16 +11,16 @@ Deno.test(function barChartsBiggerData() {
 		placement: "left",
 	});
 
-	assertEquals(tbc0?.getAttribute("width"), "300");
-	assertEquals(tbc0?.getAttribute("height"), "300");
+	assertEquals(tbc0.getAttribute("width"), "300");
+	assertEquals(tbc0.getAttribute("height"), "300");
 
 	const tbc1 = barchart({
 		data: [50, 1000, 100],
 		placement: "top",
 	});
 
-	assertEquals(tbc1?.getAttribute("width"), "300");
-	assertEquals(tbc1?.getAttribute("height"), "300");
+	assertEquals(tbc1.getAttribute("width"), "300");
+	assertEquals(tbc1.getAttribute("height"), "300");
 
 	pairs.push(
 		[tbc0, "middle value 1000 place left"],
@@ -38,8 +38,8 @@ Deno.test(function barChartsColored() {
 		height: 110,
 	});
 
-	assertEquals(tbc0?.getAttribute("width"), "110");
-	assertEquals(tbc0?.getAttribute("height"), "110");
+	assertEquals(tbc0.getAttribute("width"), "110");
+	assertEquals(tbc0.getAttribute("height"), "110");
 
 	const tbc1 = barchart({
 		data: [100, 50, 100],
@@ -47,8 +47,8 @@ Deno.test(function barChartsColored() {
 		colors: ["#ff00ff", "#00ffff"],
 	});
 
-	assertEquals(tbc1?.getAttribute("width"), "300");
-	assertEquals(tbc1?.getAttribute("height"), "300");
+	assertEquals(tbc1.getAttribute("width"), "300");
+	assertEquals(tbc1.getAttribute("height"), "300");
 
 	const tbc2 = barchart({
 		data: [100, 50, 100],
@@ -60,8 +60,8 @@ Deno.test(function barChartsColored() {
 		gradientDirection: "top-to-bottom",
 	});
 
-	assertEquals(tbc2?.getAttribute("width"), "300");
-	assertEquals(tbc2?.getAttribute("height"), "300");
+	assertEquals(tbc2.getAttribute("width"), "300");
+	assertEquals(tbc2.getAttribute("height"), "300");
 
 	const tbc3 = barchart({
 		data: [250, 50, 100, 150, 100],
@@ -74,8 +74,8 @@ Deno.test(function barChartsColored() {
 		gradientMode: "continuous",
 	});
 
-	assertEquals(tbc3?.getAttribute("width"), "300");
-	assertEquals(tbc3?.getAttribute("height"), "300");
+	assertEquals(tbc3.getAttribute("width"), "300");
+	assertEquals(tbc3.getAttribute("height"), "300");
 
 	const tbc4 = barchart({
 		data: [100, 97, 110, 116, 101], // There's a secret in here...
@@ -86,8 +86,8 @@ Deno.test(function barChartsColored() {
 		gradientMode: "continuous",
 	});
 
-	assertEquals(tbc4?.getAttribute("width"), "300");
-	assertEquals(tbc4?.getAttribute("height"), "125");
+	assertEquals(tbc4.getAttribute("width"), "300");
+	assertEquals(tbc4.getAttribute("height"), "125");
 
 	const tbc5 = barchart({
 		data: [100, 97, 110, 116, 101], // There's a secret in here...
@@ -95,8 +95,8 @@ Deno.test(function barChartsColored() {
 		placement: "top",
 	});
 
-	assertEquals(tbc5?.getAttribute("width"), "300");
-	assertEquals(tbc5?.getAttribute("height"), "125");
+	assertEquals(tbc5.getAttribute("width"), "300");
+	assertEquals(tbc5.getAttribute("height"), "125");
 
 	// saveIfReal(tbc1, "barchart_extras", "tbc1_gradient");
 	// saveIfReal(tbc2, "barchart_extras", "tbc2_colors_lessthandata");
@@ -112,6 +112,20 @@ Deno.test(function barChartsColored() {
 		[tbc4, "gradient logobase"],
 		[tbc5, "logobase"],
 	);
+});
+
+Deno.test(function devBarChartTests() {
+	const t0 = barchart({
+		data: [50, 100, 30],
+	});
+	assertEquals(typeof t0.outerHTML, "string");
+
+	const t1 = barchart({
+		data: [50, 100, 30],
+	});
+	assertEquals(typeof t1.outerHTML, "string");
+
+	pairs.push([t0], [t1]);
 });
 
 afterAll(() => {

@@ -130,8 +130,6 @@ export type BarChartOptionsBase = {
 	LinearGradientOptions &
 	ChartOptions;
 
-export type Labels = string[];
-
 export type BarChartNumericalOpts = Optional<BarChartOptionsBase> & {
 	readonly data: number[];
 	/**
@@ -231,26 +229,4 @@ export type LineChartOptions = Optional<
 > & {
 	readonly data: number[][] | number[];
 	readonly labels?: string[][] | string[];
-};
-
-// Currently unused, to be deleted
-export const isNumericalArray = (
-	arr: number[] | number[][],
-): arr is number[] => {
-	return typeof arr[0] === "number";
-};
-export const is2DNumericalArray = (
-	arr: number[] | number[][],
-): arr is number[][] => {
-	return Array.isArray(arr[0]);
-};
-export const isNumericalOptions = (
-	opts: BarChartOptions,
-): opts is BarChartNumericalOpts => {
-	return "type" in opts && opts.type === "numerical";
-};
-export const isStackedOptions = (
-	opts: BarChartOptions,
-): opts is BarChartStackedOpts => {
-	return "type" in opts && opts.type === "stacked";
 };

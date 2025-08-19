@@ -41,17 +41,16 @@ export const drawLineSmooth = (
 	// const pairs = chunk(coords, 2);
 	drawString += `M ${coords[0][0]},${coords[0][1]}\n`;
 
-	console.log("---s---");
-	console.log(coords);
+	// console.log("---s---");
+	// console.log(coords);
 	for (let i = 0; i < coords.length - 1; i++) {
 		const [fx, fy] = coords[i];
 		const [tx, ty] = coords[i + 1];
-		console.log("i", i);
-		console.log("fx", fx, "fy", fy);
-		console.log("tx", tx, "ty", ty);
+		// console.log("i", i);
+		// console.log("fx", fx, "fy", fy);
+		// console.log("tx", tx, "ty", ty);
 
 		const mx = (tx + fx) / 2;
-		console.log();
 		const c1x = mx;
 		const c1y = fy;
 		const c2x = mx;

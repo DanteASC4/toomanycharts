@@ -743,4 +743,25 @@ So I added the gradient stops, revamped testing, got coverage to 100% with some 
 A bunch of research later I had a basic understanding of the math for drawing bezier curves, but I couldn't wrap my head around implementing that into the `<path>` element.
 
 After a bunch of manual math with paper & pen, a temporary test setup with manual writing `<path>` elements & each coordinate + set of control points, trying 1000 things, I figured it out! It was actually thanks to the example usage of the `<path>` element on `mdn`.
- TLDR is that the formula for ideal smoothness is to use the x of the midpoint between each set of points & the first point's Y / second point's Y for the control points. It only took like almost 5 hours to figure out.
+
+TLDR is that the formula for ideal smoothness is to use the x of the midpoint between each set of points & the first point's Y / second point's Y for the control points. It only took like almost 5 hours to figure out.
+
+# 8/18/2025
+
+I just remembered about the existence of grouped bar charts...
+```
+#----------
+#
+#=====
+#===
+#==
+#
+#=====
+#===
+#==
+#
+#----------
+```
+Do I make this last chart type before overhauling labels and doing a bunch of standardizing of things? Hmmm... I think this chart type is quite useful, and while not super straightforward I think it's also not super complicated. Hmmmm 🤔
+
+Initially my gut said "yes" but I actually think standardizing things is the way, it will be easier before adding a whole new chart & will lead to a smoother + more consistent and overall better future implementations. So that's up next!
