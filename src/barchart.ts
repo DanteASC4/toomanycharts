@@ -14,11 +14,13 @@ import { fillStrings, fillZeros } from "./utils/misc.ts";
 export function barchart({
 	data,
 	labels = [],
-	height,
-	width,
+	height = BarChartDefaults.size,
+	width = BarChartDefaults.size,
+	vWidth,
+	vHeight,
 	gap,
 	max,
-	placement,
+	placement = BarChartDefaults.placement,
 	barWidth,
 	groupClass,
 	parentClass,
@@ -32,11 +34,16 @@ export function barchart({
 	gradientMode,
 	gradientDirection,
 }: BarChartNumericalOpts) {
-	if (!max) max = autoMaxNumerical(data);
+	let userMax = false;
+	if (max) userMax = true;
+	const largest = autoMaxNumerical(data);
+
+	if (!vWidth) vWidth = width;
+	if (!vHeight) vHeight = height;
+	// if (!max) max = autoMaxNumerical(data);
+
 	// if (!min) min = BarChartDefaults.min;
-	if (!height) height = BarChartDefaults.size;
-	if (!width) width = BarChartDefaults.size;
-	if (!placement) placement = BarChartDefaults.placement;
+	// if (!placement) placement = BarChartDefaults.placement;
 	// if (!labels) labels = []
 
 	const padLabels = labels.length < data.length;
@@ -67,25 +74,44 @@ export function barchart({
 				: autoGap(height, dataPointsAmt);
 	}
 
-	// if (!gap) gap = autoGap(placement, width, height, dataPointsAmt, barWidth);
+	// Ensure nothing is cut off, and use max if given.
+	// If the `max` is not manually set, the following will ensure that any given bar is not able to exceed the axis that it stretches across.
+	const topOrBot = placement === "top" || placement === "bottom";
+	const parent = topOrBot
+		? makeSVGParent(
+				vWidth,
+				userMax && typeof max === "number" ? max : vHeight,
+				width,
+				height,
+			)
+		: makeSVGParent(
+				userMax && typeof max === "number" ? max : vWidth,
+				vHeight,
+				width,
+				height,
+			);
 
-	// const estTotalSize = barWidth * dataPointsAmt + (gap * dataPointsAmt - 1);
-	// const isVertical = placement === "top" || placement === "bottom";
-	// if (isVertical && estTotalSize > width)
-	// 	console.warn("toomanychart might exceed given size bounds");
-	// else if (!isVertical && estTotalSize > height)
-	// 	console.warn("toomanychart might exceed given size bounds");
+	const exceedsWidth = data.some((v) => v > vWidth);
+	const exceedsHeight = data.some((v) => v > vHeight);
 
-	// Chart creation begin
-	const parent = makeSVGParent(height, width);
-	if (
-		(placement === "top" || placement === "bottom") &&
-		data.some((v) => v > width)
-	) {
-		parent.setAttribute("viewBox", `0 0 ${width} ${max}`);
+	if (topOrBot) {
+		if (exceedsHeight) {
+			parent.setAttribute(
+				"viewBox",
+				`0 0 ${vWidth} ${userMax ? max : largest}`,
+			);
+		} else {
+			parent.setAttribute("viewBox", `0 0 ${vWidth} ${vHeight}`);
+		}
 	} else {
-		if (data.some((v) => v > height))
-			parent.setAttribute("viewBox", `0 0 ${max} ${height}`);
+		if (exceedsWidth) {
+			parent.setAttribute(
+				"viewBox",
+				`0 0 ${userMax ? max : largest} ${vHeight}`,
+			);
+		} else {
+			parent.setAttribute("viewBox", `0 0 ${vWidth} ${vHeight}`);
+		}
 	}
 	let isGradient = false;
 	let gradientId: string | null = null;
@@ -147,19 +173,10 @@ export function barchart({
 		let color: string = "#ffffff";
 		if (isGradient && gradientId) {
 			if (gradientMode === "continuous") color = "transparent";
-			else `url('#${gradientId}')`;
+			else color = `url('#${gradientId}')`;
 		} else if (colors && colors.length > 0) {
 			color = colors[i % colors.length];
 		}
-
-		// const color =
-		//   isGradient && gradientId
-		//     ? gradientMode === 'continuous'
-		//       ? 'transparent'
-		//       : `url('#${gradientId}')`
-		//     : colors && colors.length > 0
-		//     ? colors[i % colors.length]
-		//     : '#ffffff';
 
 		const labelColor =
 			labelColors && labelColors.length > 0
@@ -175,7 +192,7 @@ export function barchart({
 			evenWidth,
 			color,
 			labelColor,
-			{ width, height },
+			{ width: vWidth, height: vHeight },
 			{ labelClass, barClass },
 		);
 		barGroup.appendChild(bar);

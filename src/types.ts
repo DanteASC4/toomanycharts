@@ -27,6 +27,14 @@ export type ChartOptions = {
 	 * Defaults to `300`
 	 */
 	width: number;
+	/**
+	 * Defaults to `300`
+	 */
+	vWidth: number;
+	/**
+	 * Defaults to `300`
+	 */
+	vHeight: number;
 };
 
 export type GradientColor = string | `${string}:${Percentage}`;
@@ -182,7 +190,11 @@ type LineTypes = "straight" | "smooth";
 
 export type LineChartOptionsBase = {
 	/**
-	 * When not supplied, defaults to `10` greater than the largest datapoint in the supplied `data` array.
+	 * When not supplied defaults to `0`
+	 */
+	min: number;
+	/**
+	 * When not supplied defaults to `10` greater than the largest datapoint in the supplied `data` array.
 	 */
 	max: number;
 	/**

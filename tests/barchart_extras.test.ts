@@ -116,12 +116,12 @@ Deno.test(function barChartsColored() {
 
 Deno.test(function devBarChartTests() {
 	const t0 = barchart({
-		data: [50, 100, 30],
+		data: [50, 100, 30, 10],
 	});
 	assertEquals(typeof t0.outerHTML, "string");
 
 	const t1 = barchart({
-		data: [50, 100, 30],
+		data: [301, 100, 30, 10],
 	});
 	assertEquals(typeof t1.outerHTML, "string");
 

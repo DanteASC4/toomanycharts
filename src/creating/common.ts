@@ -40,11 +40,18 @@ export const createSVGElement = (ele: string) => {
 // export const createSVGElement = (ele: string) =>
 // 	document.createElementNS("http://www.w3.org/2000/svg", ele);
 
-export const makeSVGParent = (height: number, width: number) => {
+export const makeSVGParent = (
+	vWidth: number,
+	vHeight: number,
+	width: number,
+	height: number,
+	minX = 0,
+	minY = 0,
+) => {
 	const svg = createSVGElement("svg");
 	svg.setAttribute("width", `${width}`);
 	svg.setAttribute("height", `${height}`);
-	svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+	svg.setAttribute("viewBox", `${minX} ${minY} ${vWidth} ${vHeight}`);
 	svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 	svg.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
 	return svg;

@@ -2,7 +2,7 @@ import { assertEquals } from "@std/assert";
 import {
 	autoMaxStacked,
 	lgDistTest,
-	stackedToNumerical,
+	stackedToSummed,
 	sum2DArrayInPlace,
 } from "../src/utils/general-operations.ts";
 import { fillEmptyArray, fillStrings, fillZeros } from "../src/utils/misc.ts";
@@ -53,7 +53,7 @@ Deno.test(function stackedArrToNumericalArr() {
 		[3, 2, 1],
 		[1, 2, 3],
 	];
-	const toNum1 = stackedToNumerical(testA1);
+	const toNum1 = stackedToSummed(testA1);
 	assertEquals(toNum1, [6, 6, 6]);
 });
 

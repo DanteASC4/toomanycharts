@@ -6,14 +6,12 @@ import {
 	drawLineStraight,
 } from "./creating/linechart.ts";
 import { roundUpTo100 } from "./math/common.ts";
-import {
-	autoOffset,
-	genControlPoints,
-	genCoordsStraight,
-	genSingleControlPoint,
-} from "./math/linecharts.ts";
+import { autoOffset, genCoordsStraight } from "./math/linecharts.ts";
 import type { LineChartOptions } from "./types.ts";
-import { autoMaxNumerical } from "./utils/general-operations.ts";
+import {
+	autoMaxNumerical,
+	autoMinNumerical,
+} from "./utils/general-operations.ts";
 import { fillStrings } from "./utils/misc.ts";
 
 export function linechart({
@@ -21,6 +19,9 @@ export function linechart({
 	labels = [],
 	height,
 	width,
+	vWidth,
+	vHeight,
+	min = 0,
 	max,
 	lineType = ["straight"],
 	fullWidthLine = false,
@@ -46,9 +47,17 @@ export function linechart({
 	if (typeof lineType === "string") lineType = [lineType];
 	if (typeof cap === "string") cap = [cap];
 	const asNumerical = data.flat();
+	if (!min)
+		min = asNumerical.some((v) => v < 0) ? autoMinNumerical(asNumerical) : 0;
 	if (!max) max = autoMaxNumerical(asNumerical);
 	if (!height) height = max + 10;
+	if (min < 0) height += min * -1;
 	if (!width) width = roundUpTo100(max > height ? max : height) + 100;
+
+	// TODO when making negative numbers work
+
+	if (!vWidth) vWidth = width;
+	if (!vHeight) vHeight = height;
 
 	// Might skip padding entirely here, significantly more overhead in padding here.
 	const toPad: number[] = [];
@@ -65,7 +74,7 @@ export function linechart({
 		}
 	}
 	const hasLabels = labels.flat().filter((l) => l !== "").length > 0;
-	const parent = makeSVGParent(height, width);
+	const parent = makeSVGParent(vWidth, vHeight, width, height, 0, min);
 
 	let isGradient = false;
 	let gradientId: string | null = null;
@@ -111,7 +120,7 @@ export function linechart({
 		const lineCap = cap[i % cap.length];
 
 		// Straight line coordinates
-		const coords = genCoordsStraight(lineData, offset, height);
+		const coords = genCoordsStraight(lineData, offset, vHeight, min);
 		// Future me, ended up not needing any control point calculation here
 		// Ended up only needing a first control point thanks to reflection
 		// const controls = genControlPoints(coords);

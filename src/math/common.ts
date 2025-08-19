@@ -14,6 +14,8 @@ export const roundTo = (n: number, t = 10, upDown?: "up" | "down") => {
 
 export const roundToTen = (n: number) => roundTo(n);
 
+export const roundUpToTen = (n: number) => roundTo(n, 10, "up");
+
 export const roundUpTo100 = (n: number) => roundTo(n, 100, "up");
 
 export const distP = (x1: number, y1: number, x2: number, y2: number) =>

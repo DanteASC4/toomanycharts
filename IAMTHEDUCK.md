@@ -587,7 +587,7 @@ Maybe some more things too. We'll see!
 
 **Update2**
 
-The `linechart` won't have a `placement` parameter for now since it's read strictly from left to right, and if you want to rotate it you can just use `transform` on it. 
+The `linechart` won't have a `placement` parameter for now since it's read strictly from left to right, and if you want to rotate it you can just use `transform` on it.
 
 ...Also just realizing I could have just done `place` instead of `placement`... wdjaiojwdiowoijqowj
 I'll make that change with the linechart update, less to write and more in-line with CSS naming.
@@ -638,7 +638,7 @@ Now that whole process is automated! The `deno` ecosystem is awesome, it was pre
 
 ## Gradients
 
-So from the start I knew I wasn't tapping into the *full* potential of gradients. For one, I've only incorporated a single `linear` gradient. There's also `radialGradients` and normally you can use multiple gradients at once. 
+So from the start I knew I wasn't tapping into the *full* potential of gradients. For one, I've only incorporated a single `linear` gradient. There's also `radialGradients` and normally you can use multiple gradients at once.
 
 This decision to go for more of a rudimentary level of gradients was made after thinking things through!
 - Radial gradients I think in the context of charts wouldn't even look to great (from what I can imagine using them)
@@ -646,7 +646,7 @@ This decision to go for more of a rudimentary level of gradients was made after 
 
 BUT I do plan to add those things at some point, it just doesn't feel worth it any time soon. That being said I realized one feature of gradients that I think *should* be added, and that's custom stops.
 
-Currently the stops for linear gradients are placed automatically distributed evenly, meaning if you give two colors you will always get a gradient of 50% one color and 50% the other. While this is mostly fine, since you can supply more of the same colors to pseudo-place the color stops, I forgot about  hard-stops! 
+Currently the stops for linear gradients are placed automatically distributed evenly, meaning if you give two colors you will always get a gradient of 50% one color and 50% the other. While this is mostly fine, since you can supply more of the same colors to pseudo-place the color stops, I forgot about  hard-stops!
 
 Like a barbershop swirl or candy cane stripes, the current setup means stripes of that kind are impossible. So custom `stops` are on the way soon! They'll be optional of course!
 
@@ -666,7 +666,7 @@ Though perhaps that's a bit excessive? I think to me it also sounds fine because
 Right now it's something like:
 ```js
 {
-    gradientColors: ['red', 'blue'] 
+    gradientColors: ['red', 'blue']
 }
 ```
 Which would produce a `red-to-blue` gradient.
@@ -732,13 +732,13 @@ I think a bit more testing and it'll basically be usable!
 
 # 8/14/2025
 
-So I had a terrifying thought, what if I should have combined `barchart` and `barchartstacked`!?!? But then I remembered that was how I started and it was cumbersome, and increased the import size because one function had both implementations. Bar Charts are a different type of chart compared to a Stacked Bar Chart, whereas the linechart ordeal was just more of the same thing - lines. So the import size isn't increasing nor is the implementation different, it's just looping over inputs. 
+So I had a terrifying thought, what if I should have combined `barchart` and `barchartstacked`!?!? But then I remembered that was how I started and it was cumbersome, and increased the import size because one function had both implementations. Bar Charts are a different type of chart compared to a Stacked Bar Chart, whereas the linechart ordeal was just more of the same thing - lines. So the import size isn't increasing nor is the implementation different, it's just looping over inputs.
 
 Ok so time to implement gradient color stops!
 
 # 8/17/2025
 
-So I added the gradient stops, revamped testing, got coverage to 100% with some more tests. Everything looked well & good so I pushed an update! Then I tried making the test with a bunch of datapoints smooth, and it looked wrong. It just happened that my test with three datapoints looked "ok". 
+So I added the gradient stops, revamped testing, got coverage to 100% with some more tests. Everything looked well & good so I pushed an update! Then I tried making the test with a bunch of datapoints smooth, and it looked wrong. It just happened that my test with three datapoints looked "ok".
 
 A bunch of research later I had a basic understanding of the math for drawing bezier curves, but I couldn't wrap my head around implementing that into the `<path>` element.
 
@@ -765,3 +765,41 @@ I just remembered about the existence of grouped bar charts...
 Do I make this last chart type before overhauling labels and doing a bunch of standardizing of things? Hmmm... I think this chart type is quite useful, and while not super straightforward I think it's also not super complicated. Hmmmm 🤔
 
 Initially my gut said "yes" but I actually think standardizing things is the way, it will be easier before adding a whole new chart & will lead to a smoother + more consistent and overall better future implementations. So that's up next!
+
+# 8/19/2025
+
+So my first step in standardization of things is making sure the parameter types are consistent in naming & influence on output, and I'm already at a bit of an impasse when it comes to a specific aspect, particularly, `max`, `height`, and `width`.
+
+## Dimensions
+
+Long ago I removed `min` for barcharts, since negative values aren't visible in a barchart, and I don't see how a min other than 0 would work anyway. I think that this is still the correct move.
+
+But upon rexamination of `barchart` I realize that `max` doesn't really do anything either 🫠, which is pretty simple to fix. I think I'll make it so that `max`, when set will override the viewBox's height or width (depending on placement).
+
+Which brings me to my next consideration. `height` and `width`. Right now this is used for both the `viewBox` *and* the actual `height/width` attributes. But those both do different things...
+
+My first thought was "I'll just separate the height & width into two - vHeight/vWidth for viewbox & height/width for attributes." But then I was wondering about how intuitive it would be in terms of influence on end result as I'm not sure many people are familiar with `viewBox` & how it works. Though I think it's actually not that big of a deal.
+
+What I think I'll do is:
+1. Split the params as mentioned.
+2. Put in the comment for the viewbox params a "if you're not sure about how to use this parameter, check the docs!"
+   1. Viewbox params will default to height/width if not supplied
+
+This brings me back to `linechart` though. Values below `0` make sense here for the `y-axis`. But there's no `min` as of now. I think for linecharts I will
+1. Re-add `min`, and allow it to override the `viewBox` height's min.
+2. Auto-calculate `min` based on the lowest found value in given data.
+
+Thanks for helping me think this through markdown 👍
+
+**Update**
+
+Of course that somehow broke everything...
+![](https://media1.tenor.com/m/2U_hdX_TSCMAAAAd/patrick-bateman-stare.gif)
+
+HOW DID CHANGING HEIGHT & WIDTH PARAMETERS BREAK GRADIENTS!?!?!? AHHHHHHHHHHHHsidjioqwdjiqwojiwq.
+
+**Update2**
+
+Turns out it wasn't the height/width change but rather an ultra simple oversight I fixed for `barchartStacked` but not normal `barchart` ages ago...
+
+That's what I get for not writing actual tests lol. I guess I'll also make the tests more robust soon too.

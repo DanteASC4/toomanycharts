@@ -10,15 +10,17 @@ import type { BarChartStackedOpts } from "./types.ts";
 import { BarChartDefaults } from "./utils/defaults.ts";
 import {
 	autoMaxNumerical,
-	stackedToNumerical,
+	stackedToSummed,
 } from "./utils/general-operations.ts";
 import { fillEmptyArray, fillStrings } from "./utils/misc.ts";
 
 export function barchartStacked({
 	data,
 	labels = [],
-	height,
-	width,
+	height = BarChartDefaults.size,
+	width = BarChartDefaults.size,
+	vWidth,
+	vHeight,
 	gap,
 	max,
 	placement,
@@ -35,12 +37,17 @@ export function barchartStacked({
 	gradientMode,
 	gradientDirection,
 }: BarChartStackedOpts) {
-	const asNumerical = stackedToNumerical(data);
-	if (!max) max = autoMaxNumerical(asNumerical);
+	const asNumerical = stackedToSummed(data);
+	let userMax = false;
+	if (max) userMax = true;
+	const largest = autoMaxNumerical(asNumerical);
+	// if (!max) max = autoMaxNumerical(asNumerical);
 	// if (!min) min = BarChartDefaults.min;
-	if (!height) height = BarChartDefaults.size;
-	if (!width) width = BarChartDefaults.size;
+	// if (!height) height = BarChartDefaults.size;
+	// if (!width) width = BarChartDefaults.size;
 	// if (!gap) gap = BarChartDefaults.gap;
+	if (!vWidth) vWidth = width;
+	if (!vHeight) vHeight = height;
 	if (!placement) placement = BarChartDefaults.placement;
 
 	const padLabels = labels.length < data.length;
@@ -72,17 +79,44 @@ export function barchartStacked({
 				: autoGap(height, dataPointsAmt);
 	}
 
-	// TODO better way then reducing each?
-	const parent = makeSVGParent(height, width);
-	if (
-		(placement === "top" || placement === "bottom") &&
-		asNumerical.some((v) => v > width)
-	) {
-		parent.setAttribute("viewBox", `0 0 ${width} ${max}`);
+	const topOrBot = placement === "top" || placement === "bottom";
+	const parent = topOrBot
+		? makeSVGParent(
+				vWidth,
+				userMax && typeof max === "number" ? max : vHeight,
+				width,
+				height,
+			)
+		: makeSVGParent(
+				userMax && typeof max === "number" ? max : vWidth,
+				vHeight,
+				width,
+				height,
+			);
+
+	const exceedsWidth = asNumerical.some((v) => v > vWidth);
+	const exceedsHeight = asNumerical.some((v) => v > vHeight);
+
+	if (topOrBot) {
+		if (exceedsHeight) {
+			parent.setAttribute(
+				"viewBox",
+				`0 0 ${vWidth} ${userMax ? max : largest}`,
+			);
+		} else {
+			parent.setAttribute("viewBox", `0 0 ${vWidth} ${vHeight}`);
+		}
 	} else {
-		if (asNumerical.some((v) => v > height))
-			parent.setAttribute("viewBox", `0 0 ${max} ${height}`);
+		if (exceedsWidth) {
+			parent.setAttribute(
+				"viewBox",
+				`0 0 ${userMax ? max : largest} ${vHeight}`,
+			);
+		} else {
+			parent.setAttribute("viewBox", `0 0 ${vWidth} ${vHeight}`);
+		}
 	}
+
 	let isGradient = false;
 	let gradientId: string | null = null;
 	let gradientDef: SVGElement | null = null;
@@ -135,15 +169,6 @@ export function barchartStacked({
 			// color = colors[asNumerical.indexOf(dat) % colors.length];
 		}
 
-		// const color =
-		// 	isGradient && gradientId
-		// 		? gradientMode === "continuous"
-		// 			? "transparent"
-		// 			: `url('#${gradientId}')`
-		// 		: colors && colors.length > 0
-		// 			? colors[i % colors.length]
-		// 			: ["#ffffff", "#aaaaaa"];
-
 		const labelColor =
 			labelColors && labelColors.length > 0
 				? labelColors[i % labelColors.length]
@@ -159,7 +184,7 @@ export function barchartStacked({
 			evenWidth,
 			color,
 			labelColor,
-			{ width, height },
+			{ width: vWidth, height: vHeight },
 			{ labelClass, barClass },
 		);
 

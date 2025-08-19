@@ -4,12 +4,15 @@ export const sum2DArrayInPlace = (arr: number[][]) => {
 	return arr.slice().map((a) => a.flat().reduce((c, p) => c + p, 0));
 };
 
-export const stackedToNumerical = (arr: number[][]) => {
+export const stackedToSummed = (arr: number[][]) => {
 	return arr.slice().map((a) => a.reduce((c, p) => c + p, 0));
 };
 
 export const autoMaxNumerical = (data: number[]) => {
 	return roundToTen(Math.max(...data));
+};
+export const autoMinNumerical = (data: number[]) => {
+	return roundToTen(Math.min(...data));
 };
 
 export const autoMaxStacked = (data: number[][]) => {

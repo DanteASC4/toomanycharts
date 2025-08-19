@@ -32,17 +32,21 @@ app.get('/', (c) => {
             font-size: 1.5rem;
           }
           a:visited {
-            color: blue;
+            color: cyan;
           }
         </style>
       </head>
       <body>
         <a href="./out/barchart.html"> BarChart </a>
         <a href="./out/barchartextras.html"> BarChart Extras </a>
+        <br />
         <a href="./out/barchartstacked.html"> BarChartStacked </a>
         <a href="./out/barchartstackedextras.html"> BarChartStacked Extras </a>
+        <br />
         <a href="./out/linechart.html"> Line Chart </a>
         <a href="./out/linechartextras.html"> Line Chart Extras </a>
+        <br />
+        <a href="./out/tinker.html"> Tinker </a>
       </body>
     </html>`);
 });
