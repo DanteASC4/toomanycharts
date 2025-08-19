@@ -18,21 +18,37 @@ type MaxP = MakeRange<101>;
 type Percentage = `${MaxP[number]}%`;
 
 export type ChartOptions = {
-	// min: number;
 	/**
-	 * Defaults to `300`
-	 */
-	height: number;
-	/**
-	 * Defaults to `300`
+	 * Controls the resulting SVG `width` attribute.
+	 *
+	 * Used in some calculations. Leave blank if you get unexpected results.
+	 *
+	 * Instead use CSS to change the SVG width to any value with no issues!
 	 */
 	width: number;
 	/**
-	 * Defaults to `300`
+	 * Controls the resulting SVG `height` attribute.
+	 *
+	 * Used in some calculations. Leave blank if you get unexpected results.
+	 *
+	 * Instead use CSS to change the SVG height to any value with no issues!
+	 */
+	height: number;
+	/**
+	 * Controls the "viewBox" width of resulting SVG
+	 *
+	 * Defaults to width if unset.
+	 *
+	 * **WARN** Can lead to unexpected results, docs demo usage page is TODO!
 	 */
 	vWidth: number;
 	/**
-	 * Defaults to `300`
+	 *
+	 * Controls the "viewBox" height of resulting SVG
+	 *
+	 * Defaults to height if unset.
+	 *
+	 * **WARN** Can lead to unexpected results, docs demo usage page is TODO!
 	 */
 	vHeight: number;
 };
@@ -115,7 +131,11 @@ export type BarChartOptionsBase = {
 	 */
 	barWidth: number;
 	/**
-	 * When not supplied, defaults to `10` greater than the largest datapoint in the supplied `data` array.
+	 * When not supplied, defaults to largest datapoint in the supplied `data` array.
+	 *
+	 * Will override the SVG `viewBox` height if supplied.
+	 *
+	 * **WARN** Can lead to unexpected results, docs demo usage page is TODO!
 	 */
 	max: number;
 	/**
@@ -190,11 +210,17 @@ type LineTypes = "straight" | "smooth";
 
 export type LineChartOptionsBase = {
 	/**
-	 * When not supplied defaults to `0`
+	 * When not supplied defaults to `0` or a negative value if present in given data.
+	 *
+	 * **WARN** Can lead to unexpected results, leave unset if results are undesirable!
 	 */
 	min: number;
 	/**
-	 * When not supplied defaults to `10` greater than the largest datapoint in the supplied `data` array.
+	 * When not supplied, defaults to largest datapoint in the supplied `data` array.
+	 *
+	 * Will override the SVG `viewBox` height if supplied.
+	 *
+	 * **WARN** Can lead to unexpected results, leave unset if results are undesirable!
 	 */
 	max: number;
 	/**
