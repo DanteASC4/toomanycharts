@@ -1,11 +1,13 @@
-import { createStackedBarAndText } from "./creating/barchartstacked.ts";
 import { createSVGElement, makeSVGParent } from "./creating/common.ts";
 import {
 	createBarChartMask,
 	createLinearGradient,
 } from "./creating/gradients.ts";
-import { autoBarWidth } from "./math/barcharts.ts";
+import { createImageLabel, createLabel } from "./creating/labels.ts";
+import { calcBarCoords, calcBarDims } from "./math/barchart.ts";
+import { autoBarWidth, calcDataLabelCoords } from "./math/barcharts_common.ts";
 import { autoGap } from "./math/common.ts";
+import { calcLabelCoords } from "./math/labels.ts";
 import type { BarChartStackedOpts } from "./types.ts";
 import { BarChartDefaults } from "./utils/defaults.ts";
 import {
@@ -17,6 +19,8 @@ import { fillEmptyArray, fillStrings } from "./utils/misc.ts";
 export function barchartStacked({
 	data,
 	labels = [],
+	dataLabels,
+	imageLabels,
 	height = BarChartDefaults.size,
 	width = BarChartDefaults.size,
 	vWidth,
@@ -29,10 +33,15 @@ export function barchartStacked({
 	parentClass,
 	barClass,
 	labelClass,
+	dataLabelClass,
+	imageLabelClass,
 	barGroupClass,
 	labelGroupClass,
+	dataLabelGroupClass,
+	imageLabelSubGroupClass,
+	imageLabelContainerClass,
 	colors,
-	labelColors,
+	// labelColors,
 	gradientColors,
 	gradientMode,
 	gradientDirection,
@@ -141,6 +150,8 @@ export function barchartStacked({
 
 	const barGroup = createSVGElement("g");
 	const textGroup = createSVGElement("g");
+	const datalabelTextGroup = createSVGElement("g");
+	const imageLabelGroup = createSVGElement("g");
 
 	if (groupClass) {
 		barGroup.classList.add(groupClass);
@@ -148,11 +159,25 @@ export function barchartStacked({
 	}
 	if (barGroupClass) barGroup.classList.add(barGroupClass);
 	if (labelGroupClass) textGroup.classList.add(labelGroupClass);
+	if (dataLabels && dataLabelGroupClass)
+		datalabelTextGroup.classList.add(dataLabelGroupClass);
+	if (imageLabelContainerClass)
+		imageLabelGroup.classList.add(imageLabelContainerClass);
 
 	barGroup.classList.add("nc-bargroup");
 	textGroup.classList.add("nc-textgroup");
+	// Add tmc classes to match barchart implementation
+	barGroup.classList.add("tmc-bargroup");
+	textGroup.classList.add("tmc-textgroup");
+	datalabelTextGroup.classList.add("tmc-textgroup");
+	imageLabelGroup.classList.add("tmc-imagelabelgroup");
 
-	const bars = [];
+	const subgrouping = imageLabels?.some(
+		(item) => item.topText || item.bottomText,
+	);
+	const sum =
+		dataLabels === "percentage" ? asNumerical.reduce((a, b) => a + b, 0) : 0;
+	const bars: SVGElement[] = [];
 
 	for (let i = 0; i < data.length; i++) {
 		const label = labels[i];
@@ -169,30 +194,136 @@ export function barchartStacked({
 			// color = colors[asNumerical.indexOf(dat) % colors.length];
 		}
 
-		const labelColor =
-			labelColors && labelColors.length > 0
-				? labelColors[i % labelColors.length]
-				: "#ffffff";
-		const [stackedbars, text] = createStackedBarAndText(
+		const labelColor = "#ffffff";
+		const dataLabelColor = "#000000";
+
+		// Compute base bar dimensions/coords like barchart (using summed datapoint)
+		const [trueBarHeight, trueBarWidth] = calcBarDims(
+			placement,
+			datapNumerical,
+			evenWidth,
+			barWidth ?? evenWidth,
+		);
+		const [barX, barY] = calcBarCoords(
 			i,
 			placement,
-			datap,
-			datapNumerical,
-			label,
 			gap,
-			barWidth,
+			width,
+			height,
 			evenWidth,
-			color,
-			labelColor,
-			{ width: vWidth, height: vHeight },
-			{ labelClass, barClass },
+			barWidth ?? evenWidth,
+			trueBarWidth,
+			trueBarHeight,
 		);
 
-		stackedbars.map((bar) => barGroup.appendChild(bar));
-		textGroup.appendChild(text);
+		// Draw each stacked segment relative to the base bar
+		for (let si = 0; si < datap.length; si++) {
+			const current = datap[si];
+			const offset = datap.slice(0, si).reduce((c, p) => c + p, 0);
+			const seg = createSVGElement("rect");
+			if (typeof color === "string") seg.setAttribute("fill", color);
+			else seg.setAttribute("fill", color[si % color.length]);
 
-		// Setup for continuous gradient fill
-		if (gradientMode === "continuous" && gradientId) bars.push(...stackedbars);
+			const topOrBot = placement === "top" || placement === "bottom";
+			if (topOrBot) {
+				seg.setAttribute("x", String(barX));
+				seg.setAttribute("y", String(barY + offset));
+				seg.setAttribute("width", String(trueBarWidth));
+				seg.setAttribute("height", String(current));
+			} else {
+				seg.setAttribute("x", String(barX + offset));
+				seg.setAttribute("y", String(barY));
+				seg.setAttribute("width", String(current));
+				seg.setAttribute("height", String(trueBarHeight));
+			}
+			if (barClass) seg.classList.add(barClass);
+			barGroup.appendChild(seg);
+			if (gradientMode === "continuous" && gradientId) bars.push(seg);
+		}
+
+		// Coordinates for label placement derived from shared helper
+		const [labelX, labelY] = calcLabelCoords(
+			placement,
+			barX,
+			barY,
+			trueBarWidth,
+			trueBarHeight,
+		);
+
+		if (imageLabels && imageLabels.length > 0) {
+			const imageLabel = imageLabels[i % imageLabels.length];
+
+			const xOffset =
+				placement === "top" || placement === "bottom"
+					? 0
+					: placement === "left"
+						? 15
+						: -15;
+			const yOffset =
+				placement === "left" || placement === "right"
+					? 0
+					: placement === "top"
+						? 15
+						: -15;
+
+			const imageLabelElement = createImageLabel(
+				imageLabel,
+				labelX + xOffset,
+				labelY + yOffset,
+				labelColor,
+				subgrouping,
+				undefined, // imageLabelTextClass is only for text within image label; handled inside createImageLabel when subgrouping
+				imageLabelClass,
+				imageLabelSubGroupClass,
+				imageLabel.width,
+				imageLabel.height,
+			);
+			imageLabelGroup.appendChild(imageLabelElement);
+		} else if (labels && labels.length > 0) {
+			// Fallback to simple text labels at label coords
+			const text = createLabel(label, labelX, labelY, labelColor);
+			if (labelClass) text.classList.add(labelClass);
+			textGroup.appendChild(text);
+		}
+
+		// Data labels (sum per stacked bar)
+		if (dataLabels === "literal") {
+			const [dataLabelX, dataLabelY] = calcDataLabelCoords(
+				placement,
+				barX,
+				barY,
+				trueBarWidth,
+				trueBarHeight,
+			);
+			const dataLabel = createLabel(
+				String(datapNumerical),
+				dataLabelX,
+				dataLabelY,
+				dataLabelColor,
+			);
+			if (dataLabelClass) dataLabel.classList.add(dataLabelClass);
+			datalabelTextGroup.appendChild(dataLabel);
+		} else if (dataLabels === "percentage") {
+			const percentage =
+				sum === 0 ? "0.0" : ((datapNumerical / sum) * 100).toFixed(1);
+			const [dataLabelX, dataLabelY] = calcDataLabelCoords(
+				placement,
+				barX,
+				barY,
+				trueBarWidth,
+				trueBarHeight,
+			);
+			const dataLabel = createLabel(
+				`${percentage}%`,
+				dataLabelX,
+				dataLabelY,
+				dataLabelColor,
+			);
+			if (dataLabelClass) dataLabel.classList.add(dataLabelClass);
+			datalabelTextGroup.appendChild(dataLabel);
+		}
+
+		// Continuous gradient fill handled while creating segments above
 
 		// if (resultGroup) parent.appendChild(resultGroup);
 	}
@@ -211,7 +342,10 @@ export function barchartStacked({
 	}
 
 	parent.appendChild(barGroup);
-	parent.appendChild(textGroup);
+	if (imageLabels && imageLabels.length > 0)
+		parent.appendChild(imageLabelGroup);
+	else if (labels && labels.length > 0) parent.appendChild(textGroup);
+	if (dataLabels) parent.appendChild(datalabelTextGroup);
 
 	if (parentClass) parent.classList.add(parentClass);
 

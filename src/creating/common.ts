@@ -14,6 +14,19 @@ export const createSVGElement = (ele: string) => {
 	// deno-coverage-ignore-stop
 };
 
+export const createElement = (tag: string) => {
+	// deno-coverage-ignore-start
+	if (typeof document !== "undefined" && document instanceof Document) {
+		return document.createElement(tag);
+	} else {
+		const { document } = parseHTML(
+			`<!doctype html><html><head></head><body></body></html>`,
+		);
+		return document.createElement(tag);
+	}
+	// deno-coverage-ignore-stop
+};
+
 // const { document } = parseHTML(
 // 	`<!doctype html><html><head></head><body></body></html>`,
 // );

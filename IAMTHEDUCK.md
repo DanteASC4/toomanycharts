@@ -803,3 +803,32 @@ HOW DID CHANGING HEIGHT & WIDTH PARAMETERS BREAK GRADIENTS!?!?!? AHHHHHHHHHHHHsi
 Turns out it wasn't the height/width change but rather an ultra simple oversight I fixed for `barchartStacked` but not normal `barchart` ages ago...
 
 That's what I get for not writing actual tests lol. I guess I'll also make the tests more robust soon too.
+
+# 8/20/2025
+
+So I'm working on the label overhaul, all is well and  good. I have also chopped up some implementation bits for things, which I think will lead to both better bundling and DX later on. I have also decided to deprecate `labelColors` in favor of styling via CSS for a few reasons.
+
+With the overhaul I'm introducing more labelling options, and that would mean doing work to check 2 additional arrays of colors which isn't that bad but also feels a bit excessive when you can just target the text class directly. That also will result in a smaller output as that's one less inline attribute for every text element.
+
+Any way, I've gone and done the separation of things, tests looking good. Except I'm now back at that previous conundrum that has to do with sizing. Since the size of the text & font family influence the output element's size it's hard to get perfectly centered. "Alright, I'll go & calculate the true position using the font family & size." Or some other way.
+
+- `SVGTextElement.textLength` > `undefined`
+- `SVGTextElement.getComputedTextLength()` > `Error: Not a function`
+- `SVGTextElement.getBBox()` > `Error: Not a function`
+- `SVGTextElement.getBoundingClientRect()` > `{x: 0, y: 0, top: 0, bottom: 0, left: 0, right: 0, width: 0, height: 0}`
+- Searched all three of the above methods:
+    - in the repo > 0 results
+    - in repo issues (closed/open) > 0 results 
+    - in google with linkedom + method name in quotes > 0 results
+
+![](https://media1.tenor.com/m/UuEiVk4DmyoAAAAd/sad-crying-black-guy.gif)
+
+Time to see what other options I got.
+
+**Update**
+Just as I was about to go digging for the source impllementation for `getBBox` or `getBoundingClientRect` a thought hit me - can't I just 'center-align' the text instead of having it left aligned????............ Yes....
+
+Enter: `text-anchor`! So this is going to need another parameter for choosing either `start`, `middle`, or `end`. But that's a simple one. I was also considering a potential parameter for placing the labels, similar to that of the bars in barchart. Something like `left`,`above`,`right`,`below` which I might end up doing. Would need a 'smart' option for linecharts that checks the previous point to avoid overlapping with the line, unless you give the text a background so it's always visible.
+
+**Update2**
+You know what, actually I'm going to be opinionated here & not expose that option. For now. I think the 'details' side of things is something I will come back to for everything but I don't want to get too caught up in every little possible thing to add currently.

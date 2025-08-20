@@ -1,16 +1,15 @@
 // deno-coverage-ignore-file
-import { format } from "@std/fmt/bytes";
-import { cyan } from "@std/fmt/colors";
-import { randomIntegerBetween } from "@std/random";
+
 import { ensureDirSync } from "jsr:@std/fs";
 import { join, resolve } from "jsr:@std/path";
+import { randomIntegerBetween } from "@std/random";
 
 export type SaveablePairs = ([SVGElement] | [SVGElement, string])[];
 
 const galleryP = (name: string) =>
 	resolve(join(Deno.cwd(), "e2e", "gallery", "out", `${name}.html`));
 const galleryDir = () => resolve(join(Deno.cwd(), "e2e", "gallery", "out"));
-const byteSize = (s: string) => new Blob([s]).size;
+const _byteSize = (s: string) => new Blob([s]).size;
 
 export const buildGalleryPage = (gname: string, data: SaveablePairs) => {
 	if (Deno.env.get("BUILD")) return;
@@ -36,8 +35,6 @@ ${maybepair[0].outerHTML}
 	const out = galleryP(gname.replaceAll(" ", "").toLowerCase());
 	ensureDirSync(galleryDir());
 	Deno.writeTextFileSync(out, page);
-
-	console.log(`Created Gallery: ${cyan(gname)} (${format(byteSize(page))})`);
 };
 
 const toOutP = (group: string, name: string) =>
@@ -56,7 +53,6 @@ export const saveIfReal = (
 	if (result) {
 		const out = toOutP(group, name);
 		ensureDirSync(toOutDir(group));
-		console.log(`%c${name}`, "color:magenta;");
 		Deno.writeTextFileSync(out, result.outerHTML.toString());
 	}
 };

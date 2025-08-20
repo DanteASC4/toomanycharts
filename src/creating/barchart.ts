@@ -2,7 +2,9 @@ import type { BarChartNumericalOpts } from "../types.ts";
 import { createSVGElement } from "./common.ts";
 
 const textOffset = 15;
-
+/**
+ * @deprecated
+ */
 export const createBarAndText = (
 	gIdx: number,
 	placement: BarChartNumericalOpts["placement"],
@@ -104,4 +106,25 @@ export const createBarAndText = (
 	// if (groupClass) group.classList.add(groupClass);
 
 	return [bar, text] as const;
+};
+
+export const createBar = (
+	barX: number,
+	barY: number,
+	trueBarWidth: number,
+	trueBarHeight: number,
+	color: string,
+	// barClass: Pick<BarChartNumericalOpts, "barClass">,
+) => {
+	const bar = createSVGElement("rect");
+
+	bar.setAttribute("fill", color);
+	bar.setAttribute("x", `${barX}`);
+	bar.setAttribute("y", `${barY}`);
+	bar.setAttribute("width", `${trueBarWidth}`);
+	bar.setAttribute("height", `${trueBarHeight}`);
+	// bar.setAttribute("title", `Bar value of ${dataPoint}`);
+	// if (barClass) bar.classList.add(barClass);
+
+	return bar;
 };

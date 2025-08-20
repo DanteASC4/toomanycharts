@@ -1,5 +1,6 @@
 import { assertEquals } from "@std/assert";
 import { afterAll } from "@std/testing/bdd";
+import { barchartStacked } from "../src/barchartstacked.ts";
 import { barchart } from "../src/index.ts";
 import { linechart } from "../src/linechart.ts";
 import { buildGalleryPage, type SaveablePairs } from "./helpers.ts";
@@ -9,6 +10,8 @@ const pairs: SaveablePairs = [];
 Deno.test(function miscTests() {
 	const t0 = barchart({
 		data: [50, 100, 30, 10],
+		labels: ["bar1", "bar2", "bar3", "bar4"],
+		dataLabels: "percentage",
 	});
 	assertEquals(typeof t0.outerHTML, "string");
 	pairs.push([t0]);
@@ -19,7 +22,7 @@ Deno.test(function miscTests() {
 	assertEquals(typeof t1.outerHTML, "string");
 	pairs.push([t1]);
 
-  const t2 = linechart({
+	const t2 = linechart({
 		data: [100, 0, 0, -50, 0, 0, 100],
 	});
 	assertEquals(typeof t2.outerHTML, "string");
@@ -34,6 +37,68 @@ Deno.test(function miscTests() {
 		],
 		gradientDirection: "top-to-bottom",
 	});
+
+	const t3 = barchart({
+		data: [50, 100, 30, 10],
+		imageLabels: [
+			{
+				href: "/out/test.jpg",
+				alt: "Skull",
+			},
+			{
+				href: "/out/test.jpg",
+				alt: "Skull",
+			},
+			{
+				href: "/out/test.jpg",
+				alt: "Skull",
+			},
+			{
+				href: "/out/test.jpg",
+				alt: "Skull",
+			},
+		],
+	});
+	assertEquals(typeof t3.outerHTML, "string");
+	pairs.push([t3]);
+
+	const t4 = barchartStacked({
+		data: [
+			[50, 100, 30, 10],
+			[80, 20, 10, 5],
+			[20, 40, 60, 80],
+		],
+		imageLabels: [
+			{
+				href: "/out/test.jpg",
+				alt: "Skull",
+			},
+			{
+				href: "/out/test.jpg",
+				alt: "Skull",
+			},
+			{
+				href: "/out/test.jpg",
+				alt: "Skull",
+			},
+			{
+				href: "/out/test.jpg",
+				alt: "Skull",
+			},
+		],
+	});
+	assertEquals(typeof t4.outerHTML, "string");
+	pairs.push([t4]);
+	const t5 = barchartStacked({
+		data: [
+			[50, 100, 30, 10],
+			[80, 20, 10, 5],
+			[20, 40, 60, 80],
+		],
+		dataLabels: "literal",
+	});
+	assertEquals(typeof t5.outerHTML, "string");
+	pairs.push([t5]);
 	// pairs.push([t0]);
 });
 

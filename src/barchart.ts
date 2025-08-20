@@ -1,11 +1,14 @@
-import { createBarAndText } from "./creating/barchart.ts";
+import { createBar } from "./creating/barchart.ts";
 import { createSVGElement, makeSVGParent } from "./creating/common.ts";
 import {
 	createBarChartMask,
 	createLinearGradient,
 } from "./creating/gradients.ts";
-import { autoBarWidth } from "./math/barcharts.ts";
+import { createImageLabel, createLabel } from "./creating/labels.ts";
+import { calcBarCoords, calcBarDims } from "./math/barchart.ts";
+import { autoBarWidth, calcDataLabelCoords } from "./math/barcharts_common.ts";
 import { autoGap } from "./math/common.ts";
+import { calcLabelCoords } from "./math/labels.ts";
 import type { BarChartNumericalOpts } from "./types.ts";
 import { BarChartDefaults } from "./utils/defaults.ts";
 import { autoMaxNumerical } from "./utils/general-operations.ts";
@@ -14,6 +17,8 @@ import { fillStrings, fillZeros } from "./utils/misc.ts";
 export function barchart({
 	data,
 	labels = [],
+	dataLabels,
+	imageLabels,
 	height = BarChartDefaults.size,
 	width = BarChartDefaults.size,
 	vWidth,
@@ -26,10 +31,15 @@ export function barchart({
 	parentClass,
 	barClass,
 	labelClass,
+	dataLabelClass,
+	imageLabelClass,
+	imageLabelTextClass,
 	barGroupClass,
 	labelGroupClass,
+	dataLabelGroupClass,
+	imageLabelSubGroupClass,
+	imageLabelContainerClass,
 	colors,
-	labelColors,
 	gradientColors,
 	gradientMode,
 	gradientDirection,
@@ -62,10 +72,10 @@ export function barchart({
 			? autoBarWidth(width, dataPointsAmt)
 			: autoBarWidth(height, dataPointsAmt);
 
-	if (!barWidth) {
-		// barWidth = autoBarWidth(placement, width, height, dataPointsAmt);
-		barWidth = evenWidth;
-	}
+	// if (!barWidth || typeof barWidth !== "number") {
+	// 	// barWidth = autoBarWidth(placement, width, height, dataPointsAmt);
+	// 	barWidth = evenWidth;
+	// }
 
 	if (!gap) {
 		gap =
@@ -143,25 +153,36 @@ export function barchart({
 	// if (gradientBg) parent.appendChild(gradientBg);
 
 	const barGroup = createSVGElement("g");
+	barGroup.classList.add("tmc-bargroup");
 	const textGroup = createSVGElement("g");
+	textGroup.classList.add("tmc-textgroup");
+	const datalabelTextGroup = createSVGElement("g");
+	datalabelTextGroup.classList.add("tmc-textgroup");
+	const imageLabelGroup = createSVGElement("g");
+	imageLabelGroup.classList.add("tmc-imagelabelgroup");
 
+	// TODO remove this
 	if (groupClass) {
 		barGroup.classList.add(groupClass);
 		textGroup.classList.add(groupClass);
 	}
 	if (barGroupClass) barGroup.classList.add(barGroupClass);
 	if (labelGroupClass) textGroup.classList.add(labelGroupClass);
+	if (dataLabels && dataLabelGroupClass)
+		datalabelTextGroup.classList.add(dataLabelGroupClass);
+	if (imageLabelContainerClass)
+		imageLabelGroup.classList.add(imageLabelContainerClass);
 
-	barGroup.classList.add("nc-bargroup");
-	textGroup.classList.add("nc-textgroup");
-
+	const subgrouping = imageLabels?.some(
+		(item) => item.topText || item.bottomText,
+	);
+	const sum = dataLabels === "percentage" ? data.reduce((a, b) => a + b, 0) : 0;
 	const bars = [];
 
 	for (let i = 0; i < data.length; i++) {
-		const label = labels[i];
+		const currentLabelText = labels[i];
 		const datap = data[i];
 
-		// The ternary below is pretty cursed but I don't feel like abstracting currently it so here's a doc comment:
 		/*
 		 * If we're doing a gradient & we have the `gradientId`
 		 *  Then if it's a continuous one, fill is transparent
@@ -177,26 +198,133 @@ export function barchart({
 		} else if (colors && colors.length > 0) {
 			color = colors[i % colors.length];
 		}
+		const labelColor = "#ffffff";
+		const dataLabelColor = color === "#ffffff" ? "#000000" : "#ffffff";
 
-		const labelColor =
-			labelColors && labelColors.length > 0
-				? labelColors[i % labelColors.length]
-				: "#ffffff";
-		const [bar, text] = createBarAndText(
-			i,
+		const [trueBarHeight, trueBarWidth] = calcBarDims(
 			placement,
 			datap,
-			label,
-			gap,
-			barWidth,
 			evenWidth,
-			color,
-			labelColor,
-			{ width: vWidth, height: vHeight },
-			{ labelClass, barClass },
+			barWidth ?? evenWidth,
 		);
+
+		const [barX, barY] = calcBarCoords(
+			i,
+			placement,
+			gap,
+			width,
+			height,
+			evenWidth,
+			barWidth ?? evenWidth,
+			trueBarWidth,
+			trueBarHeight,
+		);
+
+		const bar = createBar(barX, barY, trueBarWidth, trueBarHeight, color);
+		if (barClass) bar.classList.add(barClass);
 		barGroup.appendChild(bar);
-		textGroup.appendChild(text);
+
+		if (imageLabels) {
+			const [labelX, labelY] = calcLabelCoords(
+				placement,
+				barX,
+				barY,
+				trueBarWidth,
+				trueBarHeight,
+			);
+			const imageLabel = imageLabels[i % imageLabels.length];
+
+			const xOffset =
+				placement === "top" || placement === "bottom"
+					? 0
+					: placement === "left"
+						? 15
+						: -15;
+			const yOffset =
+				placement === "left" || placement === "right"
+					? 0
+					: placement === "top"
+						? 15
+						: -15;
+
+			const imageLabelElement = createImageLabel(
+				imageLabel,
+				labelX + xOffset,
+				labelY + yOffset,
+				labelColor,
+				subgrouping,
+				imageLabelTextClass,
+				imageLabelClass,
+				imageLabelSubGroupClass,
+				imageLabel.width,
+				imageLabel.height,
+			);
+			imageLabelGroup.appendChild(imageLabelElement);
+		} else if (labels) {
+			const [labelX, labelY] = calcLabelCoords(
+				placement,
+				barX,
+				barY,
+				trueBarWidth,
+				trueBarHeight,
+			);
+			const label = createLabel(currentLabelText, labelX, labelY, labelColor);
+			if (labelClass) label.classList.add(labelClass);
+			textGroup.appendChild(label);
+		}
+
+		if (dataLabels === "literal") {
+			const [dataLabelX, dataLabelY] = calcDataLabelCoords(
+				placement,
+				barX,
+				barY,
+				trueBarWidth,
+				trueBarHeight,
+			);
+
+			const dataLabel = createLabel(
+				String(datap),
+				dataLabelX,
+				dataLabelY,
+				dataLabelColor,
+			);
+			if (dataLabelClass) dataLabel.classList.add(dataLabelClass);
+			datalabelTextGroup.appendChild(dataLabel);
+		} else if (dataLabels === "percentage") {
+			const percentage = ((datap / sum) * 100).toFixed(1);
+			const [dataLabelX, dataLabelY] = calcDataLabelCoords(
+				placement,
+				barX,
+				barY,
+				trueBarWidth,
+				trueBarHeight,
+			);
+
+			const dataLabel = createLabel(
+				`${percentage}%`,
+				dataLabelX,
+				dataLabelY,
+				dataLabelColor,
+			);
+			if (dataLabelClass) dataLabel.classList.add(dataLabelClass);
+			datalabelTextGroup.appendChild(dataLabel);
+		}
+
+		// const [bar, text] = createBarAndText(
+		// 	i,
+		// 	placement,
+		// 	datap,
+		// 	label,
+		// 	gap,
+		// 	barWidth,
+		// 	evenWidth,
+		// 	color,
+		// 	labelColor,
+		// 	{ width: vWidth, height: vHeight },
+		// 	{ labelClass, barClass },
+		// );
+		// barGroup.appendChild(bar);
+		// textGroup.appendChild(text);
 
 		// Setup for continuous gradient fill
 		if (gradientMode === "continuous" && gradientId) bars.push(bar);
@@ -218,7 +346,9 @@ export function barchart({
 	}
 
 	parent.appendChild(barGroup);
-	parent.appendChild(textGroup);
+	if (imageLabels) parent.appendChild(imageLabelGroup);
+	else if (labels && labels.length > 0) parent.appendChild(textGroup);
+	if (dataLabels) parent.appendChild(datalabelTextGroup);
 
 	if (parentClass) parent.classList.add(parentClass);
 

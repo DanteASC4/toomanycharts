@@ -1,7 +1,9 @@
+import { calcBarCoords, calcBarDims } from "../math/barchart.ts";
+import { calcLabelCoords } from "../math/labels.ts";
 import type { BarChartStackedOpts } from "../types.ts";
 import { createSVGElement } from "./common.ts";
 
-const textOffset = 15;
+// text offset now computed via shared calcLabelCoords
 
 export const createStackedBarAndText = (
 	gIdx: number,
@@ -20,64 +22,33 @@ export const createStackedBarAndText = (
 		labelClass,
 	}: Pick<BarChartStackedOpts, "groupClass" | "barClass" | "labelClass">,
 ) => {
-	// const group = createSVGElement("g");
+	// Compute bar dimensions and coordinates analogous to single-bar charts
+	const [trueBarHeight, trueBarWidth] = calcBarDims(
+		placement,
+		numericalDataPoint,
+		evenWidth,
+		barWidth,
+	);
+	const [barX, barY] = calcBarCoords(
+		gIdx,
+		placement,
+		gap,
+		width,
+		height,
+		evenWidth,
+		barWidth,
+		trueBarWidth,
+		trueBarHeight,
+	);
 
-	let barX = 0;
-	let barY = 0;
-	let trueBarHeight = numericalDataPoint;
-	let trueBarWidth = evenWidth;
-
-	let textX = 0;
-	let textY = 0;
-
-	const initial = evenWidth * 2 * gIdx;
-	barX = initial + gap;
-
-	if (placement === "left") {
-		const tempS = trueBarWidth;
-		trueBarWidth = trueBarHeight;
-		trueBarHeight = tempS;
-
-		const tempC = barX;
-		barX = barY;
-		barY = tempC;
-
-		textX = trueBarWidth + textOffset;
-		textY = barY + trueBarHeight * 0.5;
-	} else if (placement === "top") {
-		textX = barX + trueBarWidth * 0.25;
-		textY = trueBarHeight + textOffset;
-	} else if (placement === "right") {
-		// Width -> height
-		// Datapoint -> width
-		// x = containerWidth - dataPoint
-		// y = x
-		const tempS = trueBarWidth;
-		trueBarWidth = trueBarHeight;
-		trueBarHeight = tempS;
-
-		// const tempC = barY;
-		barY = barX;
-		barX = width - trueBarWidth;
-
-		textX = barX - textOffset * 2;
-		textY = barY + trueBarHeight * 0.5;
-	} else if (placement === "bottom") {
-		barY = height - trueBarHeight;
-
-		textX = barX + trueBarWidth * 0.25;
-		textY = barY - textOffset;
-	}
-
-	if (barWidth !== evenWidth) {
-		if (placement === "top" || placement === "bottom") {
-			trueBarWidth = barWidth;
-			barX += Math.abs(evenWidth * 0.5 - barWidth);
-		} else {
-			trueBarHeight = barWidth;
-			barY += Math.abs(evenWidth * 0.5 - barWidth);
-		}
-	}
+	// Label coordinates consistent with barchart
+	const [textX, textY] = calcLabelCoords(
+		placement,
+		barX,
+		barY,
+		trueBarWidth,
+		trueBarHeight,
+	);
 
 	const bars: SVGElement[] = [];
 	for (let i = 0; i < dataPoint.length; i++) {
@@ -116,11 +87,6 @@ export const createStackedBarAndText = (
 
 	const text = createSVGElement("text");
 	text.setAttribute("fill", labelColor);
-	// if (typeof color === "string") {
-	// 	text.setAttribute("fill", color);
-	// } else {
-	// 	text.setAttribute("fill", color[0]);
-	// }
 	text.setAttribute("x", `${textX}`);
 	text.setAttribute("y", `${textY}`);
 	text.setAttribute("title", `Bar label ${label}`);

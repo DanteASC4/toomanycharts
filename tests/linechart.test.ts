@@ -2,6 +2,7 @@ import { assertEquals } from "@std/assert";
 import { afterAll } from "@std/testing/bdd";
 import { linechart } from "../src/linechart.ts";
 import { buildGalleryPage, type SaveablePairs } from "./helpers.ts";
+
 // import { genControlPoints } from "../src/math/linecharts.ts";
 
 const pairs: SaveablePairs = [];
