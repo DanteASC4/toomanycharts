@@ -11,24 +11,19 @@
     "jsr:@std/data-structures@^1.0.9": "1.0.9",
     "jsr:@std/fmt@1": "1.0.8",
     "jsr:@std/fmt@^1.0.8": "1.0.8",
-    "jsr:@std/fs@*": "1.0.19",
     "jsr:@std/fs@1": "1.0.19",
     "jsr:@std/fs@^1.0.19": "1.0.19",
     "jsr:@std/internal@^1.0.10": "1.0.10",
     "jsr:@std/internal@^1.0.9": "1.0.10",
-    "jsr:@std/path@*": "1.1.1",
     "jsr:@std/path@1": "1.1.1",
     "jsr:@std/path@^1.1.1": "1.1.1",
     "jsr:@std/random@~0.1.2": "0.1.2",
     "jsr:@std/testing@^1.0.15": "1.0.15",
     "jsr:@ts-morph/bootstrap@0.27": "0.27.0",
     "jsr:@ts-morph/common@0.27": "0.27.0",
-    "npm:@biomejs/biome@*": "2.1.2",
-    "npm:@biomejs/biome@2.1.2": "2.1.2",
+    "npm:@biomejs/biome@*": "2.2.0",
     "npm:@biomejs/biome@^2.2.0": "2.2.0",
-    "npm:@types/node@*": "22.15.15",
-    "npm:create-hono@latest": "0.19.2",
-    "npm:hono@^4.8.12": "4.8.12",
+    "npm:hono@^4.8.12": "4.9.2",
     "npm:linkedom@~0.18.11": "0.18.11"
   },
   "jsr": {
@@ -70,9 +65,6 @@
         "jsr:@std/path@^1.1.1"
       ]
     },
-    "@std/internal@1.0.9": {
-      "integrity": "bdfb97f83e4db7a13e8faab26fb1958d1b80cc64366501af78a0aee151696eb8"
-    },
     "@std/internal@1.0.10": {
       "integrity": "e3be62ce42cab0e177c27698e5d9800122f67b766a0bea6ca4867886cbde8cf7"
     },
@@ -111,66 +103,32 @@
     }
   },
   "npm": {
-    "@biomejs/biome@2.1.2": {
-      "integrity": "sha512-yq8ZZuKuBVDgAS76LWCfFKHSYIAgqkxVB3mGVVpOe2vSkUTs7xG46zXZeNPRNVjiJuw0SZ3+J2rXiYx0RUpfGg==",
-      "optionalDependencies": [
-        "@biomejs/cli-darwin-arm64@2.1.2",
-        "@biomejs/cli-darwin-x64@2.1.2",
-        "@biomejs/cli-linux-arm64@2.1.2",
-        "@biomejs/cli-linux-arm64-musl@2.1.2",
-        "@biomejs/cli-linux-x64@2.1.2",
-        "@biomejs/cli-linux-x64-musl@2.1.2",
-        "@biomejs/cli-win32-arm64@2.1.2",
-        "@biomejs/cli-win32-x64@2.1.2"
-      ],
-      "bin": true
-    },
     "@biomejs/biome@2.2.0": {
       "integrity": "sha512-3On3RSYLsX+n9KnoSgfoYlckYBoU6VRM22cw1gB4Y0OuUVSYd/O/2saOJMrA4HFfA1Ff0eacOvMN1yAAvHtzIw==",
       "optionalDependencies": [
-        "@biomejs/cli-darwin-arm64@2.2.0",
-        "@biomejs/cli-darwin-x64@2.2.0",
-        "@biomejs/cli-linux-arm64@2.2.0",
-        "@biomejs/cli-linux-arm64-musl@2.2.0",
-        "@biomejs/cli-linux-x64@2.2.0",
-        "@biomejs/cli-linux-x64-musl@2.2.0",
-        "@biomejs/cli-win32-arm64@2.2.0",
-        "@biomejs/cli-win32-x64@2.2.0"
+        "@biomejs/cli-darwin-arm64",
+        "@biomejs/cli-darwin-x64",
+        "@biomejs/cli-linux-arm64",
+        "@biomejs/cli-linux-arm64-musl",
+        "@biomejs/cli-linux-x64",
+        "@biomejs/cli-linux-x64-musl",
+        "@biomejs/cli-win32-arm64",
+        "@biomejs/cli-win32-x64"
       ],
       "bin": true
-    },
-    "@biomejs/cli-darwin-arm64@2.1.2": {
-      "integrity": "sha512-leFAks64PEIjc7MY/cLjE8u5OcfBKkcDB0szxsWUB4aDfemBep1WVKt0qrEyqZBOW8LPHzrFMyDl3FhuuA0E7g==",
-      "os": ["darwin"],
-      "cpu": ["arm64"]
     },
     "@biomejs/cli-darwin-arm64@2.2.0": {
       "integrity": "sha512-zKbwUUh+9uFmWfS8IFxmVD6XwqFcENjZvEyfOxHs1epjdH3wyyMQG80FGDsmauPwS2r5kXdEM0v/+dTIA9FXAg==",
       "os": ["darwin"],
       "cpu": ["arm64"]
     },
-    "@biomejs/cli-darwin-x64@2.1.2": {
-      "integrity": "sha512-Nmmv7wRX5Nj7lGmz0FjnWdflJg4zii8Ivruas6PBKzw5SJX/q+Zh2RfnO+bBnuKLXpj8kiI2x2X12otpH6a32A==",
-      "os": ["darwin"],
-      "cpu": ["x64"]
-    },
     "@biomejs/cli-darwin-x64@2.2.0": {
       "integrity": "sha512-+OmT4dsX2eTfhD5crUOPw3RPhaR+SKVspvGVmSdZ9y9O/AgL8pla6T4hOn1q+VAFBHuHhsdxDRJgFCSC7RaMOw==",
       "os": ["darwin"],
       "cpu": ["x64"]
     },
-    "@biomejs/cli-linux-arm64-musl@2.1.2": {
-      "integrity": "sha512-qgHvafhjH7Oca114FdOScmIKf1DlXT1LqbOrrbR30kQDLFPEOpBG0uzx6MhmsrmhGiCFCr2obDamu+czk+X0HQ==",
-      "os": ["linux"],
-      "cpu": ["arm64"]
-    },
     "@biomejs/cli-linux-arm64-musl@2.2.0": {
       "integrity": "sha512-egKpOa+4FL9YO+SMUMLUvf543cprjevNc3CAgDNFLcjknuNMcZ0GLJYa3EGTCR2xIkIUJDVneBV3O9OcIlCEZQ==",
-      "os": ["linux"],
-      "cpu": ["arm64"]
-    },
-    "@biomejs/cli-linux-arm64@2.1.2": {
-      "integrity": "sha512-NWNy2Diocav61HZiv2enTQykbPP/KrA/baS7JsLSojC7Xxh2nl9IczuvE5UID7+ksRy2e7yH7klm/WkA72G1dw==",
       "os": ["linux"],
       "cpu": ["arm64"]
     },
@@ -179,18 +137,8 @@
       "os": ["linux"],
       "cpu": ["arm64"]
     },
-    "@biomejs/cli-linux-x64-musl@2.1.2": {
-      "integrity": "sha512-xlB3mU14ZUa3wzLtXfmk2IMOGL+S0aHFhSix/nssWS/2XlD27q+S6f0dlQ8WOCbYoXcuz8BCM7rCn2lxdTrlQA==",
-      "os": ["linux"],
-      "cpu": ["x64"]
-    },
     "@biomejs/cli-linux-x64-musl@2.2.0": {
       "integrity": "sha512-I5J85yWwUWpgJyC1CcytNSGusu2p9HjDnOPAFG4Y515hwRD0jpR9sT9/T1cKHtuCvEQ/sBvx+6zhz9l9wEJGAg==",
-      "os": ["linux"],
-      "cpu": ["x64"]
-    },
-    "@biomejs/cli-linux-x64@2.1.2": {
-      "integrity": "sha512-Km/UYeVowygTjpX6sGBzlizjakLoMQkxWbruVZSNE6osuSI63i4uCeIL+6q2AJlD3dxoiBJX70dn1enjQnQqwA==",
       "os": ["linux"],
       "cpu": ["x64"]
     },
@@ -199,38 +147,18 @@
       "os": ["linux"],
       "cpu": ["x64"]
     },
-    "@biomejs/cli-win32-arm64@2.1.2": {
-      "integrity": "sha512-G8KWZli5ASOXA3yUQgx+M4pZRv3ND16h77UsdunUL17uYpcL/UC7RkWTdkfvMQvogVsAuz5JUcBDjgZHXxlKoA==",
-      "os": ["win32"],
-      "cpu": ["arm64"]
-    },
     "@biomejs/cli-win32-arm64@2.2.0": {
       "integrity": "sha512-n9a1/f2CwIDmNMNkFs+JI0ZjFnMO0jdOyGNtihgUNFnlmd84yIYY2KMTBmMV58ZlVHjgmY5Y6E1hVTnSRieggA==",
       "os": ["win32"],
       "cpu": ["arm64"]
-    },
-    "@biomejs/cli-win32-x64@2.1.2": {
-      "integrity": "sha512-9zajnk59PMpjBkty3bK2IrjUsUHvqe9HWwyAWQBjGLE7MIBjbX2vwv1XPEhmO2RRuGoTkVx3WCanHrjAytICLA==",
-      "os": ["win32"],
-      "cpu": ["x64"]
     },
     "@biomejs/cli-win32-x64@2.2.0": {
       "integrity": "sha512-Nawu5nHjP/zPKTIryh2AavzTc/KEg4um/MxWdXW0A6P/RZOyIpa7+QSjeXwAwX/utJGaCoXRPWtF3m5U/bB3Ww==",
       "os": ["win32"],
       "cpu": ["x64"]
     },
-    "@types/node@22.15.15": {
-      "integrity": "sha512-R5muMcZob3/Jjchn5LcO8jdKwSCbzqmPB6ruBxMcf9kbxtniZHP327s6C37iOfuw8mbKK3cAQa7sEl7afLrQ8A==",
-      "dependencies": [
-        "undici-types"
-      ]
-    },
     "boolbase@1.0.0": {
       "integrity": "sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww=="
-    },
-    "create-hono@0.19.2": {
-      "integrity": "sha512-Bl5mqiZaWwwNOUjLBwQtVzj066DtB6g0FrWK++C5uSM1OPZ3t//9W29xPQznyVe4p6ijY3osDeiOG4Cxlc+zGQ==",
-      "bin": true
     },
     "css-select@5.2.2": {
       "integrity": "sha512-TizTzUddG/xYLA3NXodFM0fSbNizXjOKhqiQQwvhlspadZokn1KDy0NZFS0wuEubIYAV5/c1/lAr0TaaFXEXzw==",
@@ -279,8 +207,8 @@
     "entities@6.0.1": {
       "integrity": "sha512-aN97NXWF6AWBTahfVOIrB/NShkzi5H7F9r1s9mD3cDj4Ko5f2qhhVoYMibXF7GlLveb/D2ioWay8lxI97Ven3g=="
     },
-    "hono@4.8.12": {
-      "integrity": "sha512-MQSKk1Mg7b74k8l+A025LfysnLtXDKkE4pLaSsYRQC5iy85lgZnuyeQ1Wynair9mmECzoLu+FtJtqNZSoogBDQ=="
+    "hono@4.9.2": {
+      "integrity": "sha512-UG2jXGS/gkLH42l/1uROnwXpkjvvxkl3kpopL3LBo27NuaDPI6xHNfuUSilIHcrBkPfl4y0z6y2ByI455TjNRw=="
     },
     "html-escaper@3.0.3": {
       "integrity": "sha512-RuMffC89BOWQoY0WKGpIhn5gX3iI54O6nRA0yC124NYVtzjmFWBIiFd8M0x+ZdX0P9R4lADg1mgP8C7PxGOWuQ=="
@@ -312,9 +240,6 @@
     },
     "uhyphen@0.2.0": {
       "integrity": "sha512-qz3o9CHXmJJPGBdqzab7qAYuW8kQGKNEuoHFYrBwV6hWIMcpAmxDLXojcHfFr9US1Pe6zUswEIJIbLI610fuqA=="
-    },
-    "undici-types@6.21.0": {
-      "integrity": "sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ=="
     }
   },
   "workspace": {
