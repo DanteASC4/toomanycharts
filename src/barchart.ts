@@ -12,11 +12,12 @@ import { calcLabelCoords } from "./math/labels.ts";
 import type { BarChartNumericalOpts } from "./types.ts";
 import { BarChartDefaults, ClassNameDefaults } from "./utils/defaults.ts";
 import { autoMaxNumerical } from "./utils/general-operations.ts";
-import { fillStrings, fillZeros } from "./utils/misc.ts";
+import { fillZeros } from "./utils/misc.ts";
 
 export function barchart({
 	data,
-	labels = [],
+	labels,
+	labelColors,
 	dataLabels,
 	imageLabels,
 	height = BarChartDefaults.size,
@@ -56,12 +57,13 @@ export function barchart({
 	// if (!placement) placement = BarChartDefaults.placement;
 	// if (!labels) labels = []
 
-	const padLabels = labels.length < data.length;
+	/* const padLabels = labels.length < data.length;
 	if (padLabels) {
 		const diff = Math.abs(labels.length - data.length);
 		fillStrings(labels, diff);
 	}
-	const padData = data.length < labels.length;
+		*/
+	const padData = labels && data.length < labels.length;
 	if (padData) {
 		const diff = Math.abs(labels.length - data.length);
 		fillZeros(data, diff);
@@ -181,7 +183,6 @@ export function barchart({
 	const bars = [];
 
 	for (let i = 0; i < data.length; i++) {
-		const currentLabelText = labels[i];
 		const datap = data[i];
 
 		/*
@@ -199,7 +200,9 @@ export function barchart({
 		} else if (colors && colors.length > 0) {
 			color = colors[i % colors.length];
 		}
-		const labelColor = "#ffffff";
+		const labelColor = labelColors
+			? labelColors[i % labelColors.length]
+			: "#ffffff";
 		const dataLabelColor = color === "#ffffff" ? "#000000" : "#ffffff";
 
 		const [trueBarHeight, trueBarWidth] = calcBarDims(
@@ -225,7 +228,7 @@ export function barchart({
 		if (barClass) bar.classList.add(barClass);
 		barGroup.appendChild(bar);
 
-		if (imageLabels) {
+		if (imageLabels && imageLabels.length > 0) {
 			const [labelX, labelY] = calcLabelCoords(
 				placement,
 				barX,
@@ -261,7 +264,8 @@ export function barchart({
 				imageLabel.height,
 			);
 			imageLabelGroup.appendChild(imageLabelElement);
-		} else if (labels) {
+		} else if (labels && labels.length > 0) {
+			const currentLabelText = labels[i];
 			const [labelX, labelY] = calcLabelCoords(
 				placement,
 				barX,

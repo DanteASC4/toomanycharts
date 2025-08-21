@@ -18,6 +18,7 @@ import {
 export function linechart({
 	data,
 	labels = [],
+	labelColors,
 	dataLabels,
 	imageLabels,
 	height,
@@ -157,6 +158,10 @@ export function linechart({
 			);
 		}
 
+		const labelColor = labelColors
+			? labelColors[i % labelColors.length]
+			: "#ffffff";
+
 		// Image labels & normal labels are to be applied only on the last point
 		if (imageLabels && imageLabels.length > 0) {
 			const lastCoord = coords[coords.length - 1];
@@ -168,7 +173,7 @@ export function linechart({
 				imageLabel,
 				lastCoord[0] + imageLabelOffset,
 				lastCoord[1],
-				lineColor,
+				labelColor,
 				subgrouping,
 				imageLabelTextClass,
 				imageLabelClass,
@@ -184,7 +189,7 @@ export function linechart({
 				label,
 				lastCoord[0] + labelOffset,
 				lastCoord[1] - labelOffset,
-				lineColor,
+				labelColor,
 			);
 			if (labelClass) text.classList.add(labelClass);
 			labelGroup.appendChild(text);
@@ -194,7 +199,7 @@ export function linechart({
 			const lineLabelGroup = createLineDataLabels(
 				coords,
 				lineData.map(String),
-				lineColor,
+				labelColor,
 				vHeight,
 				dataLabelClass,
 			);
@@ -208,7 +213,7 @@ export function linechart({
 			const lineLabelGroup = createLineDataLabels(
 				coords,
 				percentages,
-				lineColor,
+				labelColor,
 				vHeight,
 				dataLabelClass,
 			);

@@ -81,6 +81,7 @@ export type ImageLabel = {
 };
 
 export type Labels = {
+	labelColors: string[];
 	/**
 	 * An array of strings attached to various datasets of charts. See chart's themselves for specifics.
 	 */
@@ -340,26 +341,16 @@ export type LineChartOptionsBase = {
 	 * Defaults to false
 	 */
 	fullWidthLine: boolean;
-};
-
-export type LineChartColors = {
 	/**
 	 * Used for the resulting path's `stroke` attribute, effectively coloring the line
 	 * Defaults to `#ffffff`
 	 * Will alternate between colors if there are less colors than the number of drawn lines.
 	 */
 	colors: string | string[];
-	/**
-	 * Used for the resulting label text color
-	 * Defaults to `#ffffff`
-	 * Will alternate between colors if there are less colors than labels.
-	 */
-	labelColors: string | string[];
 };
 
 export type LineChartOptions = Optional<
 	LineChartOptionsBase &
-		LineChartColors &
 		ChartOptions &
 		LinearGradientOptions &
 		LineChartClasses &

@@ -101,3 +101,13 @@ export const randShortString = () => {
 	}
 	return str;
 };
+
+export const getRects = (svg: SVGElement) => {
+	if (!svg) return [];
+	return Array.from(svg.querySelectorAll("rect")) as SVGRectElement[];
+};
+
+export const getTexts = (svg: SVGElement) => {
+	if (!svg) return [];
+	return Array.from(svg.querySelectorAll("text")) as SVGTextElement[];
+};

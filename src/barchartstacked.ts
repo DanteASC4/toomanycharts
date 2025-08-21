@@ -19,6 +19,7 @@ import { fillEmptyArray, fillStrings } from "./utils/misc.ts";
 export function barchartStacked({
 	data,
 	labels = [],
+	labelColors,
 	dataLabels,
 	imageLabels,
 	height = BarChartDefaults.size,
@@ -192,7 +193,9 @@ export function barchartStacked({
 			// color = colors[asNumerical.indexOf(dat) % colors.length];
 		}
 
-		const labelColor = "#ffffff";
+		const labelColor = labelColors
+			? labelColors[i % labelColors.length]
+			: "#ffffff";
 		const dataLabelColor = "#000000";
 
 		const [trueBarHeight, trueBarWidth] = calcBarDims(

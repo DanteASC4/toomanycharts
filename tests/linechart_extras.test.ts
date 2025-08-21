@@ -98,7 +98,7 @@ Deno.test(function linechartCoverageTests() {
 	const tlc0 = linechart({
 		data: [50, 100, 30],
 		labels: ["1", "2", "3"],
-		labelColors: "red",
+		labelColors: ["red"],
 	});
 	assertEquals(tlc0.getAttribute("width"), "300");
 	assertEquals(tlc0.getAttribute("height"), "110");

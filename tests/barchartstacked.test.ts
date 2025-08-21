@@ -3,6 +3,8 @@ import { afterAll } from "@std/testing/bdd";
 import { barchartStacked } from "../src/barchartstacked.ts";
 import {
 	buildGalleryPage,
+	getRects,
+	getTexts,
 	randomStackedDataArray,
 	randShortString,
 	type SaveablePairs,
@@ -24,6 +26,7 @@ Deno.test(function barchartStackedTests() {
 	});
 	assertEquals(tbcs0.getAttribute("width"), "300");
 	assertEquals(tbcs0.getAttribute("height"), "300");
+	assertEquals(getRects(tbcs0).length, 9);
 
 	// With labels
 	const rsd1 = randomStackedDataArray();
@@ -31,9 +34,10 @@ Deno.test(function barchartStackedTests() {
 		data: rsd1.dataArray,
 		labels: new Array(rsd1.dataArray.length).fill(randShortString()),
 	});
-	assertEquals(tbcs1.querySelectorAll("rect").length, rsd1.totalDatapoints);
 	assertEquals(tbcs1.getAttribute("width"), "300");
 	assertEquals(tbcs1.getAttribute("height"), "300");
+	assertEquals(getRects(tbcs1).length, rsd1.totalDatapoints);
+	assertEquals(getTexts(tbcs1).length, rsd1.dataArray.length);
 
 	// With labels & placement,
 	const rsd2 = randomStackedDataArray();
@@ -42,9 +46,10 @@ Deno.test(function barchartStackedTests() {
 		labels: new Array(rsd2.dataArray.length).fill(randShortString()),
 		placement: "top",
 	});
-	assertEquals(tbcs2.querySelectorAll("rect").length, rsd2.totalDatapoints);
 	assertEquals(tbcs2.getAttribute("width"), "300");
 	assertEquals(tbcs2.getAttribute("height"), "300");
+	assertEquals(getRects(tbcs2).length, rsd2.totalDatapoints);
+	assertEquals(getTexts(tbcs2).length, rsd2.dataArray.length);
 
 	const rsd3 = randomStackedDataArray();
 	const tbcs3 = barchartStacked({
@@ -52,9 +57,10 @@ Deno.test(function barchartStackedTests() {
 		labels: new Array(rsd3.dataArray.length).fill(randShortString()),
 		placement: "left",
 	});
-	assertEquals(tbcs3.querySelectorAll("rect").length, rsd3.totalDatapoints);
 	assertEquals(tbcs3.getAttribute("width"), "300");
 	assertEquals(tbcs3.getAttribute("height"), "300");
+	assertEquals(getRects(tbcs3).length, rsd3.totalDatapoints);
+	assertEquals(getTexts(tbcs3).length, rsd3.dataArray.length);
 
 	const rsd4 = randomStackedDataArray();
 	const tbcs4 = barchartStacked({
@@ -62,9 +68,10 @@ Deno.test(function barchartStackedTests() {
 		labels: new Array(rsd4.dataArray.length).fill(randShortString()),
 		placement: "right",
 	});
-	assertEquals(tbcs4.querySelectorAll("rect").length, rsd4.totalDatapoints);
 	assertEquals(tbcs4.getAttribute("width"), "300");
 	assertEquals(tbcs4.getAttribute("height"), "300");
+	assertEquals(getRects(tbcs4).length, rsd4.totalDatapoints);
+	assertEquals(getTexts(tbcs4).length, rsd4.dataArray.length);
 
 	// Test for data padding
 	const tbcs5 = barchartStacked({
@@ -75,9 +82,10 @@ Deno.test(function barchartStackedTests() {
 		labels: ["a", "b", "c"],
 		placement: "top",
 	});
-	assertEquals(tbcs5.querySelectorAll("rect").length, 6);
 	assertEquals(tbcs5.getAttribute("width"), "300");
 	assertEquals(tbcs5.getAttribute("height"), "300");
+	assertEquals(getRects(tbcs5).length, 6);
+	assertEquals(getTexts(tbcs5).length, 3);
 
 	// Test gap
 	const rsd6 = randomStackedDataArray();
@@ -87,9 +95,10 @@ Deno.test(function barchartStackedTests() {
 		placement: "top",
 		gap: 3,
 	});
-	assertEquals(tbcs6.querySelectorAll("rect").length, rsd6.totalDatapoints);
 	assertEquals(tbcs6.getAttribute("width"), "300");
 	assertEquals(tbcs6.getAttribute("height"), "300");
+	assertEquals(getRects(tbcs6).length, rsd6.totalDatapoints);
+	assertEquals(getTexts(tbcs6).length, rsd6.dataArray.length);
 
 	// Test gradient + label colors & non-square
 	const rsd7 = randomStackedDataArray();
@@ -102,9 +111,10 @@ Deno.test(function barchartStackedTests() {
 		gradientColors: ["#ff00ff", "#00ffff"],
 		labelColors: ["#ff00ff", "#00ffff"],
 	});
-	assertEquals(tbcs7.querySelectorAll("rect").length, rsd7.totalDatapoints);
 	assertEquals(tbcs7.getAttribute("width"), "500");
 	assertEquals(tbcs7.getAttribute("height"), "350");
+	assertEquals(getRects(tbcs7).length, rsd7.totalDatapoints);
+	assertEquals(getTexts(tbcs7).length, rsd7.dataArray.length);
 
 	// Test gradient continuous, gradientdir, & non-square
 	const rsd8 = randomStackedDataArray();
@@ -125,6 +135,8 @@ Deno.test(function barchartStackedTests() {
 	);
 	assertEquals(tbcs8.getAttribute("width"), "500");
 	assertEquals(tbcs8.getAttribute("height"), "350");
+	assertEquals(getRects(tbcs8).length, rsd8.totalDatapoints * 2 + 2);
+	assertEquals(getTexts(tbcs8).length, rsd8.dataArray.length);
 
 	// Test all classes & normal coloring
 	const rsd9 = randomStackedDataArray();

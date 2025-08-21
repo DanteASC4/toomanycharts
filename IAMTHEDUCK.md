@@ -818,7 +818,7 @@ Any way, I've gone and done the separation of things, tests looking good. Except
 - `SVGTextElement.getBoundingClientRect()` > `{x: 0, y: 0, top: 0, bottom: 0, left: 0, right: 0, width: 0, height: 0}`
 - Searched all three of the above methods:
     - in the repo > 0 results
-    - in repo issues (closed/open) > 0 results 
+    - in repo issues (closed/open) > 0 results
     - in google with linkedom + method name in quotes > 0 results
 
 ![](https://media1.tenor.com/m/UuEiVk4DmyoAAAAd/sad-crying-black-guy.gif)
@@ -832,3 +832,7 @@ Enter: `text-anchor`! So this is going to need another parameter for choosing ei
 
 **Update2**
 You know what, actually I'm going to be opinionated here & not expose that option. For now. I think the 'details' side of things is something I will come back to for everything but I don't want to get too caught up in every little possible thing to add currently.
+
+# 8/21/2025
+
+And now I'm thinking of re-adding `labeColors` and it would just be used for all types of labels. Hmmm... Ok! It's a simple addition so I digress.

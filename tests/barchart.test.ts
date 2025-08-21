@@ -1,7 +1,12 @@
 import { assertEquals } from "@std/assert";
 import { afterAll } from "@std/testing/bdd";
 import { barchart } from "../src/index.ts";
-import { buildGalleryPage, type SaveablePairs } from "./helpers.ts";
+import {
+	buildGalleryPage,
+	getRects,
+	getTexts,
+	type SaveablePairs,
+} from "./helpers.ts";
 
 const pairs: SaveablePairs = [];
 
@@ -12,6 +17,7 @@ Deno.test(function barchartTests() {
 	});
 	assertEquals(tbc0.getAttribute("width"), "300");
 	assertEquals(tbc0.getAttribute("height"), "300");
+	assertEquals(getRects(tbc0).length, 3);
 
 	// Labels, auto-placed
 	const tbc1 = barchart({
@@ -20,6 +26,8 @@ Deno.test(function barchartTests() {
 	});
 	assertEquals(tbc1.getAttribute("width"), "300");
 	assertEquals(tbc1.getAttribute("height"), "300");
+	assertEquals(getRects(tbc1).length, 3);
+	assertEquals(getTexts(tbc1).length, 3);
 
 	// Labels, placed on top
 	const tbc2 = barchart({
@@ -29,6 +37,8 @@ Deno.test(function barchartTests() {
 	});
 	assertEquals(tbc2.getAttribute("width"), "300");
 	assertEquals(tbc2.getAttribute("height"), "300");
+	assertEquals(getRects(tbc2).length, 3);
+	assertEquals(getTexts(tbc2).length, 3);
 
 	// Labels, placed on right
 	const tbc3 = barchart({
@@ -38,6 +48,8 @@ Deno.test(function barchartTests() {
 	});
 	assertEquals(tbc3.getAttribute("width"), "300");
 	assertEquals(tbc3.getAttribute("height"), "300");
+	assertEquals(getRects(tbc3).length, 3);
+	assertEquals(getTexts(tbc3).length, 3);
 
 	// Labels, placed on bottom
 	const tbc4 = barchart({
@@ -47,6 +59,8 @@ Deno.test(function barchartTests() {
 	});
 	assertEquals(tbc4.getAttribute("width"), "300");
 	assertEquals(tbc4.getAttribute("height"), "300");
+	assertEquals(getRects(tbc4).length, 3);
+	assertEquals(getTexts(tbc4).length, 3);
 
 	// Custom bar width & placement
 	const tbc5 = barchart({
@@ -57,6 +71,9 @@ Deno.test(function barchartTests() {
 	});
 	assertEquals(tbc5.getAttribute("width"), "300");
 	assertEquals(tbc5.getAttribute("height"), "300");
+	assertEquals(getRects(tbc5).length, 3);
+	// assertEquals(getRects(tbc5)[0].getAttribute("width"), "5");
+	assertEquals(getTexts(tbc5).length, 3);
 
 	// Non-square with labels
 	const tbc6 = barchart({
@@ -68,6 +85,8 @@ Deno.test(function barchartTests() {
 	});
 	assertEquals(tbc6.getAttribute("width"), "500");
 	assertEquals(tbc6.getAttribute("height"), "200");
+	assertEquals(getRects(tbc6).length, 3);
+	assertEquals(getTexts(tbc6).length, 3);
 
 	// No labels, non-square, top
 	const tbc7 = barchart({
@@ -78,10 +97,13 @@ Deno.test(function barchartTests() {
 	});
 	assertEquals(tbc7.getAttribute("width"), "500");
 	assertEquals(tbc7.getAttribute("height"), "200");
+	assertEquals(getRects(tbc7).length, 3);
+	assertEquals(getTexts(tbc7).length, 0);
 
 	// Non-square /w custom bar width, bar class & label class,
 	const tbc8 = barchart({
 		data: [50, 100, 30],
+		labels: ["aaa", "bbb", "ccc"],
 		placement: "top",
 		height: 200,
 		width: 500,
@@ -91,12 +113,13 @@ Deno.test(function barchartTests() {
 	});
 	assertEquals(tbc8.getAttribute("width"), "500");
 	assertEquals(tbc8.getAttribute("height"), "200");
+
 	assertEquals(
-		tbc8?.querySelectorAll("rect")[0].classList.contains("mybars"),
+		tbc8.querySelectorAll("rect")[0].classList.contains("mybars"),
 		true,
 	);
 	assertEquals(
-		tbc8?.querySelectorAll("text")[0].classList.contains("mytext"),
+		tbc8.querySelectorAll("text")[0].classList.contains("mytext"),
 		true,
 	);
 
@@ -112,10 +135,10 @@ Deno.test(function barchartTests() {
 	});
 	assertEquals(tbc9.getAttribute("width"), "300");
 	assertEquals(tbc9.getAttribute("height"), "300");
-	assertEquals(tbc9?.querySelectorAll(".mybargroup").length, 1);
-	assertEquals(tbc9?.querySelectorAll(".mylabelgroup").length, 1);
-	assertEquals(tbc9?.querySelectorAll(".mygroups").length, 2);
-	assertEquals(tbc9?.outerHTML.includes('class="myparent"'), true);
+	assertEquals(tbc9.querySelectorAll(".mybargroup").length, 1);
+	assertEquals(tbc9.querySelectorAll(".mylabelgroup").length, 1);
+	assertEquals(tbc9.querySelectorAll(".mygroups").length, 2);
+	assertEquals(tbc9.outerHTML.includes('class="myparent"'), true);
 
 	pairs.push(
 		[tbc0, "simplest possible"],
