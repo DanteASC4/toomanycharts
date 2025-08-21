@@ -10,7 +10,7 @@ import { autoBarWidth, calcDataLabelCoords } from "./math/barcharts_common.ts";
 import { autoGap } from "./math/common.ts";
 import { calcLabelCoords } from "./math/labels.ts";
 import type { BarChartNumericalOpts } from "./types.ts";
-import { BarChartDefaults } from "./utils/defaults.ts";
+import { BarChartDefaults, ClassNameDefaults } from "./utils/defaults.ts";
 import { autoMaxNumerical } from "./utils/general-operations.ts";
 import { fillStrings, fillZeros } from "./utils/misc.ts";
 
@@ -155,11 +155,12 @@ export function barchart({
 	const barGroup = createSVGElement("g");
 	barGroup.classList.add("tmc-bargroup");
 	const textGroup = createSVGElement("g");
-	textGroup.classList.add("tmc-textgroup");
 	const datalabelTextGroup = createSVGElement("g");
-	datalabelTextGroup.classList.add("tmc-textgroup");
 	const imageLabelGroup = createSVGElement("g");
-	imageLabelGroup.classList.add("tmc-imagelabelgroup");
+
+	textGroup.classList.add(ClassNameDefaults.labelGroupClass);
+	datalabelTextGroup.classList.add(ClassNameDefaults.dataLabelGroupClass);
+	imageLabelGroup.classList.add(ClassNameDefaults.imageLabelGroupClass);
 
 	// TODO remove this
 	if (groupClass) {

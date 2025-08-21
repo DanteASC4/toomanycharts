@@ -89,6 +89,7 @@ Deno.test(function miscTests() {
 	});
 	assertEquals(typeof t4.outerHTML, "string");
 	pairs.push([t4]);
+
 	const t5 = barchartStacked({
 		data: [
 			[50, 100, 30, 10],
@@ -99,6 +100,56 @@ Deno.test(function miscTests() {
 	});
 	assertEquals(typeof t5.outerHTML, "string");
 	pairs.push([t5]);
+
+	const t6 = linechart({
+		data: [
+			[50, 100, 30, 40],
+			[80, 20, 10, 5],
+			[20, 40, 60, 80],
+		],
+		imageLabels: [
+			{
+				href: "/out/test.jpg",
+				alt: "Skull",
+				height: 25,
+				width: 25,
+			},
+			{
+				href: "/out/test.jpg",
+				alt: "Skull",
+				height: 25,
+				width: 25,
+			},
+			{
+				href: "/out/test.jpg",
+				alt: "Skull",
+				height: 25,
+				width: 25,
+			},
+			{
+				href: "/out/test.jpg",
+				alt: "Skull",
+				height: 25,
+				width: 25,
+			},
+		],
+		dataLabels: "percentage",
+	});
+	assertEquals(typeof t6.outerHTML, "string");
+	pairs.push([t6]);
+
+	const t7 = linechart({
+		data: [
+			[50, 100, 30, 40],
+			[80, 20, 10, 5],
+			[20, 40, 60, 80],
+		],
+		labels: ["A", "B", "C", "D"],
+		dataLabels: "literal",
+	});
+	assertEquals(typeof t7.outerHTML, "string");
+	pairs.push([t7]);
+
 	// pairs.push([t0]);
 });
 

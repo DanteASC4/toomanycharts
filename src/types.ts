@@ -362,7 +362,8 @@ export type LineChartOptions = Optional<
 		LineChartColors &
 		ChartOptions &
 		LinearGradientOptions &
-		LineChartClasses
+		LineChartClasses &
+		Labels
 > & {
 	readonly data: number[][] | number[];
 	readonly labels?: string[][] | string[];

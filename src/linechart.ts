@@ -1,22 +1,25 @@
 import { createSVGElement, makeSVGParent } from "./creating/common.ts";
 import { createLinearGradient, createLinesMask } from "./creating/gradients.ts";
+import { createImageLabel, createLabel } from "./creating/labels.ts";
 import {
-	createLineLabels,
+	createLineDataLabels,
 	drawLineSmooth,
 	drawLineStraight,
 } from "./creating/linechart.ts";
 import { roundUpTo100 } from "./math/common.ts";
 import { autoOffset, genCoordsStraight } from "./math/linecharts.ts";
 import type { LineChartOptions } from "./types.ts";
+import { ClassNameDefaults } from "./utils/defaults.ts";
 import {
 	autoMaxNumerical,
 	autoMinNumerical,
 } from "./utils/general-operations.ts";
-import { fillStrings } from "./utils/misc.ts";
 
 export function linechart({
 	data,
 	labels = [],
+	dataLabels,
+	imageLabels,
 	height,
 	width,
 	vWidth,
@@ -32,17 +35,22 @@ export function linechart({
 	parentClass,
 	labelClass,
 	labelGroupClass,
+	dataLabelClass,
+	dataLabelGroupClass,
+	imageLabelClass,
+	imageLabelSubGroupClass,
+	imageLabelContainerClass,
+	imageLabelTextClass,
 	colors,
-	labelColors,
 	gradientColors,
 	gradientMode,
 	gradientDirection,
 }: LineChartOptions) {
 	// Arrays, arrays everywhere!
 	if (data.every((item) => typeof item === "number")) data = [data];
-	if (labels.every((l) => typeof l === "string")) labels = [labels];
+	// if (labels.every((l) => typeof l === "string")) labels = [labels];
 	if (typeof colors === "string") colors = [colors];
-	if (typeof labelColors === "string") labelColors = [labelColors];
+	// if (typeof labelColors === "string") labelColors = [labelColors];
 	if (typeof thickness === "number") thickness = [thickness];
 	if (typeof lineType === "string") lineType = [lineType];
 	if (typeof cap === "string") cap = [cap];
@@ -59,21 +67,6 @@ export function linechart({
 	if (!vWidth) vWidth = width;
 	if (!vHeight) vHeight = height;
 
-	// Might skip padding entirely here, significantly more overhead in padding here.
-	const toPad: number[] = [];
-	const padLabels = labels.some((labelset, i) => {
-		// I think this will need some addtl logic to make sure we're not checking against undefined or something
-		const needsPadding = labelset.length < data[i].length;
-		if (needsPadding) toPad.push(i);
-		return needsPadding;
-	});
-	if (padLabels) {
-		for (const padTarget of toPad) {
-			const diff = Math.abs(labels[padTarget].length - data[padTarget].length);
-			fillStrings(labels[padTarget], diff);
-		}
-	}
-	const hasLabels = labels.flat().filter((l) => l !== "").length > 0;
 	const parent = makeSVGParent(vWidth, vHeight, width, height, 0, min);
 
 	let isGradient = false;
@@ -106,9 +99,31 @@ export function linechart({
 	// }
 
 	const lineGroup = createSVGElement("g");
-	const lines = [];
+	const labelGroup = createSVGElement("g");
+	const datalabelTextGroup = createSVGElement("g");
+	const imageLabelGroup = createSVGElement("g");
 
-	const labelGroups = [];
+	labelGroup.classList.add(ClassNameDefaults.labelGroupClass);
+	datalabelTextGroup.classList.add(ClassNameDefaults.dataLabelGroupClass);
+	imageLabelGroup.classList.add(ClassNameDefaults.imageLabelGroupClass);
+
+	if (labelGroupClass) labelGroup.classList.add(labelGroupClass);
+	if (dataLabels && dataLabelGroupClass)
+		datalabelTextGroup.classList.add(dataLabelGroupClass);
+	if (imageLabelContainerClass)
+		imageLabelGroup.classList.add(imageLabelContainerClass);
+
+	const subgrouping = imageLabels?.some(
+		(item) => item.topText || item.bottomText,
+	);
+	const sum =
+		dataLabels === "percentage"
+			? asNumerical.flat().reduce((a, b) => a + b, 0)
+			: 0;
+
+	const lines = [];
+	const imageLabelOffset = 25;
+	const labelOffset = 15;
 
 	for (let i = 0; i < data.length; i++) {
 		const lineData = data[i];
@@ -119,7 +134,6 @@ export function linechart({
 			colors && !isGradient ? colors[i % colors.length] : "#ffffff";
 		const lineCap = cap[i % cap.length];
 
-		// Straight line coordinates
 		const coords = genCoordsStraight(lineData, offset, vHeight, min);
 		// Future me, ended up not needing any control point calculation here
 		// Ended up only needing a first control point thanks to reflection
@@ -143,23 +157,65 @@ export function linechart({
 			);
 		}
 
-		let linelabelGroup: SVGElement | null = null;
-		if (hasLabels) {
-			const theLabelColor = labelColors
-				? labelColors[i % labelColors.length]
-				: "#ffffff";
-			// const theLabelColor = labelColors ?? "#ffffff";
-			linelabelGroup = createLineLabels(
-				coords,
-				labels[i],
-				theLabelColor,
-				labelClass,
+		// Image labels & normal labels are to be applied only on the last point
+		if (imageLabels && imageLabels.length > 0) {
+			const lastCoord = coords[coords.length - 1];
+
+			const imageLabel = imageLabels[i % imageLabels.length];
+			// Static offsets here because lines don't have placement options
+
+			const imageLabelElement = createImageLabel(
+				imageLabel,
+				lastCoord[0] + imageLabelOffset,
+				lastCoord[1],
+				lineColor,
+				subgrouping,
+				imageLabelTextClass,
+				imageLabelClass,
+				imageLabelSubGroupClass,
+				imageLabel.width,
+				imageLabel.height,
 			);
+			imageLabelGroup.appendChild(imageLabelElement);
+		} else if (labels && labels.length > 0) {
+			const lastCoord = coords[coords.length - 1];
+			const label = labels[i % labels.length];
+			const text = createLabel(
+				label,
+				lastCoord[0] + labelOffset,
+				lastCoord[1] - labelOffset,
+				lineColor,
+			);
+			if (labelClass) text.classList.add(labelClass);
+			labelGroup.appendChild(text);
 		}
-		if (linelabelGroup) {
-			labelGroups.push(linelabelGroup);
-			if (labelGroupClass) linelabelGroup.classList.add(labelGroupClass);
+
+		if (dataLabels === "literal") {
+			const lineLabelGroup = createLineDataLabels(
+				coords,
+				lineData.map(String),
+				lineColor,
+				vHeight,
+				dataLabelClass,
+			);
+			if (dataLabelClass) lineLabelGroup.classList.add(dataLabelClass);
+			datalabelTextGroup.appendChild(lineLabelGroup);
+		} else if (dataLabels === "percentage") {
+			const percentages = lineData.map((datap) => {
+				const percentage = sum === 0 ? "0.0" : ((datap / sum) * 100).toFixed(1);
+				return `${percentage}%`;
+			});
+			const lineLabelGroup = createLineDataLabels(
+				coords,
+				percentages,
+				lineColor,
+				vHeight,
+				dataLabelClass,
+			);
+			if (dataLabelClass) lineLabelGroup.classList.add(dataLabelClass);
+			datalabelTextGroup.appendChild(lineLabelGroup);
 		}
+
 		if (lineClass) line.classList.add(lineClass);
 		lineGroup.appendChild(line);
 		lines.push(line);
@@ -181,9 +237,14 @@ export function linechart({
 		parent.appendChild(gradientBg);
 	}
 
-	if (hasLabels && labelGroups.length > 0)
-		labelGroups.forEach((lg) => parent.appendChild(lg));
+	// if (hasLabels && labelGroups.length > 0)
+	// 	labelGroups.forEach((lg) => parent.appendChild(lg));
 	parent.appendChild(lineGroup);
+
+	if (imageLabels && imageLabels.length > 0)
+		parent.appendChild(imageLabelGroup);
+	else if (labels && labels.length > 0) parent.appendChild(labelGroup);
+	if (dataLabels) parent.appendChild(datalabelTextGroup);
 
 	return parent;
 }

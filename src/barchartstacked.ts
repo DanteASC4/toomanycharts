@@ -9,7 +9,7 @@ import { autoBarWidth, calcDataLabelCoords } from "./math/barcharts_common.ts";
 import { autoGap } from "./math/common.ts";
 import { calcLabelCoords } from "./math/labels.ts";
 import type { BarChartStackedOpts } from "./types.ts";
-import { BarChartDefaults } from "./utils/defaults.ts";
+import { BarChartDefaults, ClassNameDefaults } from "./utils/defaults.ts";
 import {
 	autoMaxNumerical,
 	stackedToSummed,
@@ -34,6 +34,7 @@ export function barchartStacked({
 	barClass,
 	labelClass,
 	dataLabelClass,
+	imageLabelTextClass,
 	imageLabelClass,
 	barGroupClass,
 	labelGroupClass,
@@ -164,13 +165,10 @@ export function barchartStacked({
 	if (imageLabelContainerClass)
 		imageLabelGroup.classList.add(imageLabelContainerClass);
 
-	barGroup.classList.add("nc-bargroup");
-	textGroup.classList.add("nc-textgroup");
-	// Add tmc classes to match barchart implementation
 	barGroup.classList.add("tmc-bargroup");
-	textGroup.classList.add("tmc-textgroup");
-	datalabelTextGroup.classList.add("tmc-textgroup");
-	imageLabelGroup.classList.add("tmc-imagelabelgroup");
+	textGroup.classList.add(ClassNameDefaults.labelGroupClass);
+	datalabelTextGroup.classList.add(ClassNameDefaults.dataLabelGroupClass);
+	imageLabelGroup.classList.add(ClassNameDefaults.imageLabelGroupClass);
 
 	const subgrouping = imageLabels?.some(
 		(item) => item.topText || item.bottomText,
@@ -197,7 +195,6 @@ export function barchartStacked({
 		const labelColor = "#ffffff";
 		const dataLabelColor = "#000000";
 
-		// Compute base bar dimensions/coords like barchart (using summed datapoint)
 		const [trueBarHeight, trueBarWidth] = calcBarDims(
 			placement,
 			datapNumerical,
@@ -272,7 +269,7 @@ export function barchartStacked({
 				labelY + yOffset,
 				labelColor,
 				subgrouping,
-				undefined, // imageLabelTextClass is only for text within image label; handled inside createImageLabel when subgrouping
+				imageLabelTextClass,
 				imageLabelClass,
 				imageLabelSubGroupClass,
 				imageLabel.width,
@@ -280,13 +277,11 @@ export function barchartStacked({
 			);
 			imageLabelGroup.appendChild(imageLabelElement);
 		} else if (labels && labels.length > 0) {
-			// Fallback to simple text labels at label coords
 			const text = createLabel(label, labelX, labelY, labelColor);
 			if (labelClass) text.classList.add(labelClass);
 			textGroup.appendChild(text);
 		}
 
-		// Data labels (sum per stacked bar)
 		if (dataLabels === "literal") {
 			const [dataLabelX, dataLabelY] = calcDataLabelCoords(
 				placement,
@@ -322,10 +317,6 @@ export function barchartStacked({
 			if (dataLabelClass) dataLabel.classList.add(dataLabelClass);
 			datalabelTextGroup.appendChild(dataLabel);
 		}
-
-		// Continuous gradient fill handled while creating segments above
-
-		// if (resultGroup) parent.appendChild(resultGroup);
 	}
 
 	if (

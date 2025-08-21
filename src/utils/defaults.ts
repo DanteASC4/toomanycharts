@@ -11,3 +11,9 @@ export const LineChartDefaults = {
 	width: 300,
 	lineType: "straight",
 } as const;
+
+export const ClassNameDefaults = {
+	labelGroupClass: "tmc-label-group",
+	dataLabelGroupClass: "tmc-data-label-group",
+	imageLabelGroupClass: "tmc-image-label-group",
+};

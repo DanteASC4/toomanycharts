@@ -104,10 +104,11 @@ export const drawLineSmooth = (
 	return path as SVGPathElement;
 };
 
-export const createLineLabels = (
+export const createLineDataLabels = (
 	coords: [number, number][],
 	labels: string[],
 	labelColor: string,
+	height: number,
 	labelClass?: string,
 ) => {
 	const lg = createSVGElement("g");
@@ -124,8 +125,24 @@ export const createLineLabels = (
 		// console.log("x", x, "y", y);
 
 		text.setAttribute("fill", labelColor);
-		text.setAttribute("x", `${x - label.length}`);
-		text.setAttribute("y", `${y - 10}`);
+		text.setAttribute("dominant-baseline", "hanging");
+		text.setAttribute("dy", "0.5em");
+		text.setAttribute("alignment-baseline", "middle");
+		text.setAttribute("text-anchor", "middle");
+		if (i === 0) {
+			text.setAttribute("x", `${x + 10}`);
+		} else if (i === labels.length - 1) {
+			text.setAttribute("x", `${x - 10}`);
+		} else {
+			text.setAttribute("x", `${x}`);
+		}
+		if (y <= 20) {
+			text.setAttribute("y", `${y + 20}`);
+		} else if (y >= height - 20) {
+			text.setAttribute("y", `${y - 15}`);
+		} else {
+			text.setAttribute("y", `${y - 20}`);
+		}
 		text.setAttribute("title", `Bar label ${label}`);
 		text.textContent = label;
 		if (labelClass) text.classList.add(labelClass);

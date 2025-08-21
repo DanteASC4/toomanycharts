@@ -80,8 +80,6 @@ export const createImageLabel = (
 		img.setAttribute("y", String(textY - height / 2));
 
 		img.setAttribute("class", "tmc-image-label");
-		img.setAttribute("alignment-baseline", "middle");
-		img.setAttribute("text-anchor", "middle");
 
 		if (imgLabelClass) img.classList.add(imgLabelClass);
 
