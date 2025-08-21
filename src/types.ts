@@ -81,6 +81,10 @@ export type ImageLabel = {
 };
 
 export type Labels = {
+	/**
+	 * Defaults to `#ffffff`
+	 * Will alternate between colors if there are less colors than the number of drawn labels.
+	 */
 	labelColors: string[];
 	/**
 	 * An array of strings attached to various datasets of charts. See chart's themselves for specifics.
@@ -99,19 +103,6 @@ export type Labels = {
 	 * @see {@link ImageLabel}
 	 */
 	imageLabels: ImageLabel[];
-
-	/**
-	 * Used to color label text
-	 */
-	// labelColors: string[];
-	/**
-	 * Attached to each individual label `<text ... />` element
-	 */
-	// dataLabelColors: string[];
-	/**
-	 * Image label colors
-	 */
-	// imageLabelColors: string[]
 
 	/**
 	 * Attached to each individual label `<text>` element
@@ -267,10 +258,16 @@ export type BarChartOptionsBase = {
 	ChartOptions;
 
 export type BarChartNumericalOpts = Optional<BarChartOptionsBase> & {
+	/**
+	 * A single array of numbers, each number representing a bar.
+	 */
 	readonly data: number[];
 };
 
 export type BarChartStackedOpts = Optional<BarChartOptionsBase> & {
+	/**
+	 * A 2D array of numbers, each sub-array representing a stack of bars.
+	 */
 	readonly data: number[][];
 };
 

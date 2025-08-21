@@ -5,7 +5,7 @@
       "command": "watchexec --restart --exts ts -- deno task go",
       "description": "Uses watchexec to restart the recursive dev command running both the root-level 'dev' which runs all tests but also the gallery server for output visual inspection "
     },
-    "dev": "deno test --allow-write --allow-read --allow-env tests/tinker.test.ts",
+    "dev": "deno test --allow-write --allow-read --allow-env tests",
     "cov": "deno test tests/ --allow-write --allow-read --coverage=coverage",
     "covdev": {
       "command":"watchexec --restart --exts ts -- deno task cov",
