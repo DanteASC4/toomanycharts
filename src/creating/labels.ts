@@ -42,7 +42,7 @@ export const createImageLabel = (
 		if (imgLabelGroupClass)
 			imageLabelSubGroup.classList.add(imgLabelGroupClass);
 
-		const topText = createLabel(imgLabel.topText || "", 0, -10, labelColor);
+		const topText = createLabel(imgLabel.topText || "", 0, -20, labelColor);
 		const bottomText = createLabel(
 			imgLabel.bottomText || "",
 			0,

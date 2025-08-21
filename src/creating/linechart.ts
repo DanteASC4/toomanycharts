@@ -121,16 +121,13 @@ export const createLineDataLabels = (
 		const text = createSVGElement("text");
 		const [x, y] = coord;
 
-		// console.log("label", label);
-		// console.log("x", x, "y", y);
-
 		text.setAttribute("fill", labelColor);
 		text.setAttribute("dominant-baseline", "hanging");
 		text.setAttribute("dy", "0.5em");
 		text.setAttribute("alignment-baseline", "middle");
 		text.setAttribute("text-anchor", "middle");
 		if (i === 0) {
-			text.setAttribute("x", `${x + 10}`);
+			text.setAttribute("x", `${x + 25}`);
 		} else if (i === labels.length - 1) {
 			text.setAttribute("x", `${x - 10}`);
 		} else {

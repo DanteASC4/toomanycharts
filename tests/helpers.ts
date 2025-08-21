@@ -1,8 +1,8 @@
 // deno-coverage-ignore-file
 
+import { randomIntegerBetween } from "@std/random";
 import { ensureDirSync } from "jsr:@std/fs";
 import { join, resolve } from "jsr:@std/path";
-import { randomIntegerBetween } from "@std/random";
 
 export type SaveablePairs = ([SVGElement] | [SVGElement, string])[];
 
@@ -11,7 +11,11 @@ const galleryP = (name: string) =>
 const galleryDir = () => resolve(join(Deno.cwd(), "e2e", "gallery", "out"));
 const _byteSize = (s: string) => new Blob([s]).size;
 
-export const buildGalleryPage = (gname: string, data: SaveablePairs) => {
+export const buildGalleryPage = (
+	gname: string,
+	data: SaveablePairs,
+	extraStyles?: string,
+) => {
 	if (Deno.env.get("BUILD")) return;
 	const viewable = data.map((maybepair) => {
 		return `<div class="svg-view">
@@ -26,6 +30,7 @@ ${maybepair[0].outerHTML}
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>${gname}</title>
     <link rel="stylesheet" href="./app.css" />
+		${extraStyles ? `<style>${extraStyles}</style>` : ""}
   </head>
   <body>
     ${viewable.join("\n")}

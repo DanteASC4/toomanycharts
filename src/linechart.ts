@@ -169,10 +169,18 @@ export function linechart({
 			const imageLabel = imageLabels[i % imageLabels.length];
 			// Static offsets here because lines don't have placement options
 
+			let adjustedY = lastCoord[1];
+
+			if (adjustedY <= 20) {
+				adjustedY += imageLabel.width ?? 50 / 2;
+			} else if (adjustedY >= vHeight - 20) {
+				adjustedY -= imageLabel.width ?? 50 / 2;
+			}
+
 			const imageLabelElement = createImageLabel(
 				imageLabel,
-				lastCoord[0] + imageLabelOffset,
-				lastCoord[1],
+				lastCoord[0] + imageLabelOffset + (subgrouping ? 20 : 0),
+				adjustedY,
 				labelColor,
 				subgrouping,
 				imageLabelTextClass,

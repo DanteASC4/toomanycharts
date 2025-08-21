@@ -103,9 +103,9 @@ Deno.test(function miscTests() {
 
 	const t6 = linechart({
 		data: [
-			[50, 100, 30, 40],
-			[80, 20, 10, 5],
-			[20, 40, 60, 80],
+			[50, 50, 50, 40],
+			[80, 20, 10, 105],
+			[220, 240, 260, 280],
 		],
 		imageLabels: [
 			{
@@ -113,27 +113,26 @@ Deno.test(function miscTests() {
 				alt: "Skull",
 				height: 25,
 				width: 25,
+				topText: "Top",
 			},
 			{
 				href: "/out/test.jpg",
 				alt: "Skull",
 				height: 25,
 				width: 25,
+				bottomText: "Bottom",
 			},
 			{
 				href: "/out/test.jpg",
 				alt: "Skull",
 				height: 25,
 				width: 25,
-			},
-			{
-				href: "/out/test.jpg",
-				alt: "Skull",
-				height: 25,
-				width: 25,
+				topText: "Top",
+				bottomText: "Bottom",
 			},
 		],
 		dataLabels: "percentage",
+		parentClass: "test-parent",
 	});
 	assertEquals(typeof t6.outerHTML, "string");
 	pairs.push([t6]);
@@ -154,5 +153,7 @@ Deno.test(function miscTests() {
 });
 
 afterAll(() => {
-	buildGalleryPage("Tinker", pairs);
+	const tinkerStyles = `.test-parent {
+}`;
+	buildGalleryPage("Tinker", pairs, tinkerStyles);
 });
