@@ -31,7 +31,7 @@ app.get('/', (c) => {
             padding: 0.15rem 0.25rem;
             font-size: 1.5rem;
           }
-          a:visited {
+          a, a:visited {
             color: cyan;
           }
         </style>
@@ -39,6 +39,8 @@ app.get('/', (c) => {
       <body>
         <a href="./out/barchart.html"> BarChart </a>
         <a href="./out/barchartextras.html"> BarChart Extras </a>
+        <a href="./out/barchartdocsexamples.html"> BarChart Docs Examples </a>
+
         <br />
         <a href="./out/barchartstacked.html"> BarChartStacked </a>
         <a href="./out/barchartstackedextras.html"> BarChartStacked Extras </a>

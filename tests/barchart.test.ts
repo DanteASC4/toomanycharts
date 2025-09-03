@@ -9,6 +9,7 @@ import {
 } from "./helpers.ts";
 
 const pairs: SaveablePairs = [];
+const docPairs: SaveablePairs = [];
 
 Deno.test(function barchartTests() {
 	// Only the data
@@ -154,6 +155,100 @@ Deno.test(function barchartTests() {
 	);
 });
 
+Deno.test(function docsExamplesSet() {
+	const tbc0 = barchart({
+		data: [50, 100, 30],
+	});
+	assertEquals(tbc0.getAttribute("width"), "300");
+	assertEquals(tbc0.getAttribute("height"), "300");
+
+	const tbc1 = barchart({
+		data: [50, 100, 30],
+		labels: ["1st", "2nd", "3rd"],
+	});
+	assertEquals(tbc1.getAttribute("width"), "300");
+	assertEquals(tbc1.getAttribute("height"), "300");
+
+	const tbc2 = barchart({
+		data: [50, 100, 30],
+		labels: ["1st", "2nd", "3rd"],
+		placement: "top",
+	});
+	assertEquals(tbc2.getAttribute("width"), "300");
+	assertEquals(tbc2.getAttribute("height"), "300");
+
+	const tbc3 = barchart({
+		data: [50, 1000, 100],
+		placement: "left",
+	});
+	assertEquals(tbc3.getAttribute("width"), "300");
+	assertEquals(tbc3.getAttribute("height"), "300");
+
+	const tbc4 = barchart({
+		data: [50, 1000, 100],
+		placement: "top",
+	});
+	assertEquals(tbc4.getAttribute("width"), "300");
+	assertEquals(tbc4.getAttribute("height"), "300");
+
+	const tbc5 = barchart({
+		data: [100, 50, 100],
+		placement: "top",
+		colors: ["#ff00ff", "#00ffff"],
+	});
+	assertEquals(tbc5.getAttribute("width"), "300");
+	assertEquals(tbc5.getAttribute("height"), "300");
+
+	const tbc6 = barchart({
+		data: [100, 100, 100],
+		placement: "left",
+		gradientColors: ["#ff00ff", "#00ffff"],
+		gradientDirection: "left-to-right",
+		width: 110,
+		height: 110,
+	});
+	assertEquals(tbc6.getAttribute("width"), "110");
+	assertEquals(tbc6.getAttribute("height"), "110");
+
+	const tbc7 = barchart({
+		data: [100, 50, 100],
+		placement: "top",
+		gradientColors: [
+			"oklch(0.7017 0.3225 328.36)",
+			"oklch(0.9054 0.15455 194.769)",
+		],
+		gradientDirection: "top-to-bottom",
+	});
+	assertEquals(tbc7.getAttribute("width"), "300");
+	assertEquals(tbc7.getAttribute("height"), "300");
+
+	const tbc8 = barchart({
+		data: [250, 50, 100, 150, 100],
+		placement: "top",
+		gradientColors: [
+			"oklch(0.7017 0.3225 328.36)",
+			"oklch(0.9054 0.15455 194.769)",
+		],
+		gradientDirection: "top-to-bottom",
+		gradientMode: "continuous",
+	});
+	assertEquals(tbc8.getAttribute("width"), "300");
+	assertEquals(tbc8.getAttribute("height"), "300");
+
+	docPairs.push(
+		[tbc0, "docs simplest possible"],
+		[tbc1, "docs labels"],
+		[tbc2, "docs on top"],
+		[tbc3, "docs middle value 1000 place left"],
+		[tbc4, "docs middle value 1000 place top"],
+		[tbc5, "docs colors"],
+		[tbc6, "docs gradient left-to-right"],
+		[tbc7, "docs gradient oklch"],
+		[tbc8, "docs gradient continuous"],
+	);
+});
+
 afterAll(() => {
 	buildGalleryPage("Bar Chart", pairs);
+	buildGalleryPage("Bar Chart Docs Examples", docPairs);
 });

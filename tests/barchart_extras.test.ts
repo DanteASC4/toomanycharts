@@ -98,12 +98,6 @@ Deno.test(function barChartsColored() {
 	assertEquals(tbc5.getAttribute("width"), "300");
 	assertEquals(tbc5.getAttribute("height"), "125");
 
-	// saveIfReal(tbc1, "barchart_extras", "tbc1_gradient");
-	// saveIfReal(tbc2, "barchart_extras", "tbc2_colors_lessthandata");
-	// saveIfReal(tbc3, "barchart_extras", "tbc3_gradient_oklch");
-	// saveIfReal(tbc4, "barchart_extras", "tbc4_gradient_continuous");
-	// saveIfReal(tbc5, "barchart_extras", "tbc5_gradient_logobase");
-	// saveIfReal(tbc6, "barchart_extras", "tbc6_logobase");
 	pairs.push(
 		[tbc0, "gradient"],
 		[tbc1, "fewer colors"],
