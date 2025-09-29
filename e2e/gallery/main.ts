@@ -39,7 +39,11 @@ app.get('/', (c) => {
       <body>
         <a href="./out/barchart.html"> BarChart </a>
         <a href="./out/barchartextras.html"> BarChart Extras </a>
+        <br />
+
         <a href="./out/barchartdocsexamples.html"> BarChart Docs Examples </a>
+        <a href="./out/labelsdocsexamples.html"> Labels Docs Examples </a>
+        <br />
 
         <br />
         <a href="./out/barchartstacked.html"> BarChartStacked </a>
