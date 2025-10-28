@@ -835,4 +835,164 @@ You know what, actually I'm going to be opinionated here & not expose that optio
 
 # 8/21/2025
 
-And now I'm thinking of re-adding `labeColors` and it would just be used for all types of labels. Hmmm... Ok! It's a simple addition so I digress.
+And now I'm thinking of re-adding `labelColors` and it would just be used for all types of labels. Hmmm... Ok! It's a simple addition so I digress.
+
+# 10/28/2025
+
+Wow it's been a while since I've written here! But I'm back and looking to continue making progress.
+
+So I haven't written here in a while, but I *have* worked on the lib more recently. The last thing I did was overhaul labels! Now images can be used with labels, with or without text labelling said image which personally I think is quite cool!!
+
+Going back to the roadmap in the docs site, after the labelling overhaul the next thing on the list is 'framework-specific imports' which I think is mainly the TSX side of things as this lib generates inline SVGs for use in pages & I'm not sure making it a component that you can pass values to via props or attributes has much value. In fact I think that would add another step of work as now it would also need to be taken care of by the framework itself as opposed to the universal inlining. But I'll need to do more research on that & whether that thought is accurate as I'm not opposed to making a framework specific component if it really adds value. Like for svelte, maybe then you can take advantage of the `transition:` syntax. We'll see!
+
+Before that though I think I need to do some more chore / cleaning & standards / bigger picture decisioning. Since I've not worked on this project for a bit I have a fresh lens for making sure I'm makign the right decisions with how I'm doing things. 
+
+It's essential that prior to continuing to add new features and functionality I vet my foundation, otherwise continuing to build on top will lead to what I've built crumbling! Of course that's being a bit dramatic but basically the better things are for the foundation, the better everything built on top will be!
+
+So now I'm going to go through & do a bit of reflection on decisions, identify a list of "foundation strengthing todos" and that will be my next task before moving onto the next feature!
+
+## Ultimate goal(s) & Lib Intention
+
+So one important question that I must be confident in, is "why am I making this library?"
+
+For that, I think I have a pretty great answer for. The bottom line for this is to make an **intuitive, low footprint library for making charts.** 
+I want to save developers (and maybe anyone trying to make charts) time.
+
+### Learning curve
+
+Making charts should be intuitive and easy, users should be able to install the library and have a chart rendered on their webpage with as few lines of code as possible.
+
+Developers ideally wouldn't need to worry about tons of config to get charts to show up, to have them be responsive, or to render properly with minimal performance overhead. 
+
+The goal is to have this philosophy of ease of use with minimal drawbacks to output effectiveness should always remain true!
+
+I also want to continue to enable powerful visuals *while keeping the way of doing so as simple as possible.* Everything should be intuitive!
+
+### Performance & Footprint
+
+This library should always be highly performant! Having the output be inline SVGs is already amazing, but I will do my best to keep the library itself and all operations as performant as possible.
+
+Additionally the import cost should be minimal which it currently is, and should also hold true.
+
+Here's a current benchmark result (see `tests/speed.bench.ts`) which is mostly acceptable given how many things it's doing, but I bet I can do even better. I want it to be extremely fast, such that speed is never a concern.
+
+| benchmark                      | time/iter (avg) |        iter/s |      (min … max)      |      p75 |      p99 |     p995 |
+| ------------------------------ | --------------- | ------------- | --------------------- | -------- | -------- | -------- |
+| test1kRandomBarCharts          |         79.3 ms |          12.6 | ( 48.2 ms … 333.2 ms) |  74.0 ms | 333.2 ms | 333.2 ms |
+| test1kRandomStackedBarCharts   |        227.4 ms |           4.4 | (140.7 ms … 507.0 ms) | 254.0 ms | 507.0 ms | 507.0 ms |
+| test1kRandomSingleLineCharts   |         71.3 ms |          14.0 | ( 22.6 ms … 491.5 ms) |  41.4 ms | 491.5 ms | 491.5 ms |
+| test1kRandomMultiLineCharts    |         96.1 ms |          10.4 | ( 50.0 ms … 526.9 ms) |  65.2 ms | 526.9 ms | 526.9 ms |
+
+## Styling
+
+So this is something that I'd been constantly thinking about, "should I make this colorable?" "should I add an option here for this attribute?" 
+
+And while I so far I've done a good job of deciding on that, I'm going to set in stone a stance on what should and shouldn't be styled.
+
+**CSS today is more powerful than ever before.** That being said I think it would make sense to **enable as much CSS-based styling as possible.** But also providing **useful** styling where possible. Because, on one-hand the less end-users need to do to get good looking visuals, the better. BUT I also don't want to limit what can be done to the output.
+
+What does "useful" entail? Well according to library goals, styling that would otherwise be non-trivial / extra time consuming / introduce additional overhead to implement manually that provide significant value to output.
+
+**Useful Styling**
+
+For example; alternating colors. To get alternating colors with CSS you'd need something like so:
+
+```css
+.target:nth-child(odd) {
+  fill: #ff0000; 
+}
+.barchart:nth-child(even) {
+  fill: #00ff00;
+}
+```
+
+Which isn't that huge of a task, but now you need to write that, targetting the correct bar chart, and you may need to re-write this targetting a different charrt for that to have separate alternating colors. But as an option:
+
+```ts
+barchart({
+    data: [1,2,3],
+    colors: ['#00ff00', '#ff0000']
+});
+```
+
+That's much less to write, especially when not counting the rest of the function invokation that would be written anyway.
+
+Stuff like this are integral to appearance, any of which would be more work to write manually. So all basic styling *should* be doable easily in the place that the chart is initally created. It would suck if to get a red bar chart if that's all I wanted I need to set a specific class on the barchart I'm making & then add a new style tag or stylesheet that I might not have had otherwise.
+
+But users *should* be able to do that if they want.
+
+Then of course there's things like gradients which would be loads more work to do via CSS.
+
+## Naming
+
+> "The two hardest things in programming are cache invalidation & naming things."
+
+So far I think I've done a pretty solid job naming most things. But I think I've also come to realize I can do better...
+
+A more complex chart invokation could look something like:
+
+```ts
+barchart({
+    data: [250, 50, 100, 150, 100],
+    width: 300,
+    height: 300,
+    placement: 'top',
+    gap: 3,
+    gradientColors: [
+    'oklch(0.7017 0.3225 328.36)',
+    'oklch(0.9054 0.15455 194.769)',
+    ],
+    gradientDirection: 'top-to-bottom',
+    gradientMode: 'continuous', 
+    dataLabels: "percentage",
+    labels: ["A", "B", "C"],
+    barClass: 'chart1-bar',
+    parentClass: 'chart1-parent'
+});
+```
+
+Which I personally think isn't too bad. One thing I've been **intentionally not doing** is creating nested params, because I really wanted to steer very clear of nesting way too much as I think that really makes things over complicated for end-users & for internals.
+
+But I'm thinking that one-level nesting for related configuration options, would actually greatly improve readability & enhance intuitiveness. Particularly for classes.
+
+I was also thinking styling, but then that starts going into that rabbit hole of how nested should things. Like gradients, should they remain top level? Well they're styling so it should be in the styles, but now "colors" would be potentially another object like:
+
+```ts
+barchart({
+    styles: {
+        fill: {
+            gradientColors: []
+        }
+    }
+})
+```
+
+Or it could be top-level in the stlyes but then you'd still be typing more for the same param name. Etc.
+I think for now just classes can be nested.
+
+Anyway, that's one bit of naming the other half though is finding that balance between accuracy & verbosity.
+
+Coming back to this project after taking a break, I'm seeing some issues with some names. One that sticks out to me is `"colors"`. 
+
+```ts
+barchart({
+    data: [250, 50, 100, 150, 100],
+    colors: ['red','blue']
+});
+```
+
+Seeing that on it's own, you wouldn't know what those colors are doing! IASHdijwqjdqwjiowdjiowqdijoq damn. Now I need to change this in a ton of places. 
+
+The only silver lining here is that this would be way worse to change later on.
+
+Additionally, I think because the function name includes the chart type, I don't need to repeat that in the parameter names. Meaning instead of `"barFillColors"` I think just `fillColors` is fine.
+
+Anyway I think I'm done rambling for now. So that's the next order thing to do, naming & I'll combine that task with adding some more basic styling options.
+
+## The "Foundation Update" ToDo list
+
+- [ ] Revamp some parameter naming
+  - Important, but this is going to be really annoying
+- [ ] Standardize styling choices
+- [ ] Document project structure
+- [ ] Improve performance significantly!

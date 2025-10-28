@@ -1,0 +1,63 @@
+<svg class="test-parent" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 400 290" height="290" width="400">
+  <g>
+    <path stroke-linecap="round" stroke-width="3" stroke="#ffffff" fill="none" d="M 0,240
+  L 0,240
+ 100,240
+ 200,240
+ 300,250"></path>
+    <path stroke-linecap="round" stroke-width="3" stroke="#ffffff" fill="none" d="M 0,210
+  L 0,210
+ 100,270
+ 200,280
+ 300,185"></path>
+    <path stroke-linecap="round" stroke-width="3" stroke="#ffffff" fill="none" d="M 0,70
+  L 0,70
+ 100,50
+ 200,30
+ 300,10"></path>
+  </g>
+  <g class="tmc-image-label-group">
+    <g transform="translate(345, 250)" class="tmc-image-label-group"><text alignment-baseline="middle"
+        text-anchor="middle" title="Bar label Top" y="-20" x="0" fill="#ffffff">Top</text>
+      <image class="tmc-image-label" y="-12.5" x="-12.5" height="25" width="25" alt="Skull" href="/toomanycharts/imgs/misc/test.jpg">
+      </image><text alignment-baseline="middle" text-anchor="middle" title="Bar label " y="20" x="0"
+        fill="#ffffff"></text>
+    </g>
+    <g transform="translate(345, 185)" class="tmc-image-label-group"><text alignment-baseline="middle"
+        text-anchor="middle" title="Bar label " y="-20" x="0" fill="#ffffff"></text>
+      <image class="tmc-image-label" y="-12.5" x="-12.5" height="25" width="25" alt="Skull" href="/toomanycharts/imgs/misc/test.jpg">
+      </image><text alignment-baseline="middle" text-anchor="middle" title="Bar label Bottom" y="20" x="0"
+        fill="#ffffff">Bottom</text>
+    </g>
+    <g transform="translate(345, 35)" class="tmc-image-label-group"><text alignment-baseline="middle"
+        text-anchor="middle" title="Bar label Top" y="-20" x="0" fill="#ffffff">Top</text>
+      <image class="tmc-image-label" y="-12.5" x="-12.5" height="25" width="25" alt="Skull" href="/toomanycharts/imgs/misc/test.jpg">
+      </image><text alignment-baseline="middle" text-anchor="middle" title="Bar label Bottom" y="20" x="0"
+        fill="#ffffff">Bottom</text>
+    </g>
+  </g>
+  <g class="tmc-data-label-group">
+    <g><text title="Bar label 3.6%" y="220" x="25" text-anchor="middle" alignment-baseline="middle" dy="0.5em"
+        dominant-baseline="hanging" fill="#ffffff">3.6%</text><text title="Bar label 3.6%" y="220" x="100"
+        text-anchor="middle" alignment-baseline="middle" dy="0.5em" dominant-baseline="hanging"
+        fill="#ffffff">3.6%</text><text title="Bar label 3.6%" y="220" x="200" text-anchor="middle"
+        alignment-baseline="middle" dy="0.5em" dominant-baseline="hanging" fill="#ffffff">3.6%</text><text
+        title="Bar label 2.8%" y="230" x="290" text-anchor="middle" alignment-baseline="middle" dy="0.5em"
+        dominant-baseline="hanging" fill="#ffffff">2.8%</text></g>
+    <g><text title="Bar label 5.7%" y="190" x="25" text-anchor="middle" alignment-baseline="middle" dy="0.5em"
+        dominant-baseline="hanging" fill="#ffffff">5.7%</text><text title="Bar label 1.4%" y="255" x="100"
+        text-anchor="middle" alignment-baseline="middle" dy="0.5em" dominant-baseline="hanging"
+        fill="#ffffff">1.4%</text><text title="Bar label 0.7%" y="265" x="200" text-anchor="middle"
+        alignment-baseline="middle" dy="0.5em" dominant-baseline="hanging" fill="#ffffff">0.7%</text><text
+        title="Bar label 7.5%" y="165" x="290" text-anchor="middle" alignment-baseline="middle" dy="0.5em"
+        dominant-baseline="hanging" fill="#ffffff">7.5%</text></g>
+    <g><text title="Bar label 15.7%" y="50" x="25" text-anchor="middle" alignment-baseline="middle" dy="0.5em"
+        dominant-baseline="hanging" fill="#ffffff">15.7%</text><text title="Bar label 17.1%" y="30" x="100"
+        text-anchor="middle" alignment-baseline="middle" dy="0.5em" dominant-baseline="hanging"
+        fill="#ffffff">17.1%</text><text title="Bar label 18.5%" y="10" x="200" text-anchor="middle"
+        alignment-baseline="middle" dy="0.5em" dominant-baseline="hanging" fill="#ffffff">18.5%</text><text
+        title="Bar label 19.9%" y="30" x="290" text-anchor="middle" alignment-baseline="middle" dy="0.5em"
+        dominant-baseline="hanging" fill="#ffffff">19.9%</text></g>
+  </g>
+</svg>
